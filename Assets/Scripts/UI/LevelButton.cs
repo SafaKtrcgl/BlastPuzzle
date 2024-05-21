@@ -1,5 +1,4 @@
 using Helper;
-using Singleton;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +12,7 @@ namespace UI
 
         public void Init()
         {
-            levelButtonText.text = $"Level {HelperResources.Instance.GetHelper<PlayerPrefsHelper>(HelpersEnum.PlayerPrefsHelper).GetCurrentLevel()}";
+            levelButtonText.text = $"Level {PlayerPrefsHelper.GetCurrentLevel()}";
         }
     }
 }

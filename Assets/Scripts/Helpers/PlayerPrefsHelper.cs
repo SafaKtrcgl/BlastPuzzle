@@ -5,17 +5,16 @@ namespace Helper
 {
     public class PlayerPrefsHelper : HelperBase
     {
-        private readonly string _currentLevelKey = "CurrentCompletedLevel";
+        private const string _currentLevelKey = "CurrentCompletedLevel";
 
-        public int GetCurrentLevel()
+        public static int GetCurrentLevel()
         {
             return PlayerPrefs.GetInt(_currentLevelKey, 1);
         }
 
-        public void SetCurrentLevel(int level)
+        public static void SetCurrentLevel(int level)
         {
             PlayerPrefs.SetInt(_currentLevelKey, level);
         }
-
     }
 }
