@@ -1,4 +1,3 @@
-using Singleton;
 using UnityEngine;
 
 [CreateAssetMenu]

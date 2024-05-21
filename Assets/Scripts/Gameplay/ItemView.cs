@@ -5,7 +5,11 @@ namespace Gameplay
 {
     public abstract class ItemView : MonoBehaviour
     {
-        protected ItemTypeEnum itemType;
+        [SerializeField] public RectTransform rectTransform;
+
+        public ItemTypeEnum itemType { get; private set; }
+        public abstract void Init(MatchTypeEnum matchType);
         public abstract void OnInteract();
+
     }
 }

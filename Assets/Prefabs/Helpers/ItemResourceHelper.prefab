@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2617523430231945436}
-  - component: {fileID: 2517265765140625919}
+  - component: {fileID: 2597316039262391970}
   m_Layer: 0
-  m_Name: PlayerPrefsHelper
+  m_Name: ItemResourceHelper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -32,7 +32,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2517265765140625919
+--- !u!114 &2597316039262391970
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,6 +41,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 6196974758248589364}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ab71efb26d8b2e48ac342ab5cca4a44, type: 3}
+  m_Script: {fileID: 11500000, guid: e19fa77b44edbe248aba82662f96c444, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemResources:
+  - {fileID: 11400000, guid: b662bb17763669849814fa597000c174, type: 2}
+  - {fileID: 11400000, guid: 154d942592f861648bf27074dd3e9502, type: 2}
+  - {fileID: 11400000, guid: ca94071c7152a9a468a8d0cf4b92573f, type: 2}
+  - {fileID: 11400000, guid: a7fcfecd833c0ac4cb9d916bb9c149c9, type: 2}
+  - {fileID: 11400000, guid: c557969f706b6ab43819c30f4a48ec28, type: 2}
+  cubeSprites:
+  - {fileID: 21300000, guid: 28402ccd5ffc1cb4f8cbffd9ad60f983, type: 3}
+  - {fileID: 21300000, guid: 929533c7251bc4d4fbf918a095d84896, type: 3}
+  - {fileID: 21300000, guid: e5426f76938bb0f4f956b8345f0b821e, type: 3}
+  - {fileID: 21300000, guid: 01c642959c4587846aeb0f4ee10fed6b, type: 3}

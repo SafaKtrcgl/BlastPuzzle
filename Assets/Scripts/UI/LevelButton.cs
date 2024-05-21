@@ -2,6 +2,7 @@ using Helper;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Utility;
 
 namespace UI
 {
@@ -12,7 +13,7 @@ namespace UI
 
         public void Init()
         {
-            levelButtonText.text = $"Level {PlayerPrefsHelper.GetCurrentLevel()}";
+            levelButtonText.text = $"Level {PlayerPrefsUtility.GetCurrentLevel()}";
         }
     }
 }

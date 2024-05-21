@@ -14,7 +14,10 @@ namespace Context
         public void Start()
         {
             var arenaResource = HelperResources.Instance.GetHelper<ArenaResourceHelper>(HelperEnum.ArenaResourceHelper).TryGetArenaResource(0);
-            arenaBackgroundImage.sprite = arenaResource.ArenaBackgroundSprite;
+            if (arenaResource != null )
+            {
+                arenaBackgroundImage.sprite = arenaResource.ArenaBackgroundSprite;
+            }
 
             levelButton.Init();
         }

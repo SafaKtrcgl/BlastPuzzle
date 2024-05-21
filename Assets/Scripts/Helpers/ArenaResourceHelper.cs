@@ -1,5 +1,5 @@
 using Singleton;
-using System.Diagnostics;
+using System.Linq;
 using UnityEngine;
 
 namespace Helper
@@ -8,10 +8,9 @@ namespace Helper
     {
         [SerializeField] private ArenaResource[] arenaResources;
 
-        public ArenaResource TryGetArenaResource(int arenaIndex)
+        public ArenaResource TryGetArenaResource(int arenaId)
         {
-            if (arenaIndex >= arenaResources.Length) return null;
-            return arenaResources[arenaIndex];
+            return arenaResources.FirstOrDefault(x => x.ArenaId == arenaId);
         }
     }
 }

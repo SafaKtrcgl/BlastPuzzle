@@ -1,9 +1,8 @@
-using Singleton;
 using UnityEngine;
 
-namespace Helper
+namespace Utility
 {
-    public class PlayerPrefsHelper : HelperBase
+    public class PlayerPrefsUtility
     {
         private const string _currentLevelKey = "CurrentCompletedLevel";
 

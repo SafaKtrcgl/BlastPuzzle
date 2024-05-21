@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 928303f0d1ff08e4b8350a61ae819e69, type: 3}
-  m_Name: PlayerPrefsHelper
+  m_Script: {fileID: 11500000, guid: 851febbb22be76841aed9cf94bdf4eff, type: 3}
+  m_Name: CubeItemResources
   m_EditorClassIdentifier: 
-  helperEnum: 2
-  helperClass: {fileID: 2517265765140625919, guid: 0453d40c113ee0b47a832d41947070e0, type: 3}
+  itemType: 1
+  itemPrefab: {fileID: 6184004391965871859, guid: 077522537d9d5234f9ddf6a9fd8defb3, type: 3}
