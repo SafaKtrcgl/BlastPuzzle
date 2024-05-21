@@ -4,9 +4,9 @@ using UnityEngine;
 [CreateAssetMenu]
 public class HelperResource : ScriptableObject
 {
-    [SerializeField] private HelpersEnum helperEnum;
+    [SerializeField] private HelperEnum helperEnum;
     [SerializeField] private HelperBase helperClass;
 
-    public HelpersEnum HelpersEnum => helperEnum;
+    public HelperEnum HelpersEnum => helperEnum;
     public HelperBase HelperClass => helperClass;
 }

@@ -9,9 +9,9 @@ namespace Singleton
     {
         [SerializeField] private HelperResource[] helpers;
 
-        private Dictionary<HelpersEnum, HelperBase> helpersDictionary = new();
+        private Dictionary<HelperEnum, HelperBase> helpersDictionary = new();
 
-        public T GetHelper<T>(HelpersEnum helperEnum) where T : HelperBase
+        public T GetHelper<T>(HelperEnum helperEnum) where T : HelperBase
         {
             if (helpersDictionary.ContainsKey(helperEnum))
             {
@@ -23,7 +23,7 @@ namespace Singleton
             }
         }
 
-        private T CreateHelper<T>(HelpersEnum helperEnum) where T : HelperBase
+        private T CreateHelper<T>(HelperEnum helperEnum) where T : HelperBase
         {
             var helper = helpers.Where(x => x.HelpersEnum == helperEnum).FirstOrDefault();
             if (helper == null) return null;

@@ -388,14 +388,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2397567381794650844, guid: d0dbfc02da97ac649a2e957743c2047e, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2397567381794650844, guid: d0dbfc02da97ac649a2e957743c2047e, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6746759264797351557, guid: d0dbfc02da97ac649a2e957743c2047e, type: 3}
       propertyPath: m_Name
       value: GameplayContext
@@ -412,13 +404,7 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 7496665751128619428, guid: d0dbfc02da97ac649a2e957743c2047e, type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 1560161099175985686, guid: d0dbfc02da97ac649a2e957743c2047e, type: 3}
-    - {fileID: 7642302684122252285, guid: d0dbfc02da97ac649a2e957743c2047e, type: 3}
+    m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []

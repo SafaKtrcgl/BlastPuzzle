@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1285497241170946850}
   - component: {fileID: 1166375179307948964}
-  - component: {fileID: 1031848588400608954}
   - component: {fileID: 777315450095411311}
   m_Layer: 0
   m_Name: CellView
@@ -46,19 +45,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 193694548413225990}
   m_CullTransparentMesh: 1
---- !u!114 &1031848588400608954
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 193694548413225990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f1580325d18221741bf56d664588cb4a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rectTransform: {fileID: 1285497241170946850}
 --- !u!114 &777315450095411311
 MonoBehaviour:
   m_ObjectHideFlags: 0

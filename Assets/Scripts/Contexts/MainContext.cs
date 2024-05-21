@@ -13,7 +13,7 @@ namespace Context
 
         public void Start()
         {
-            var arenaResource = HelperResources.Instance.GetHelper<ArenaResourceHelper>(HelpersEnum.ArenaResourceHelper).TryGetArenaResource(0);
+            var arenaResource = HelperResources.Instance.GetHelper<ArenaResourceHelper>(HelperEnum.ArenaResourceHelper).TryGetArenaResource(0);
             arenaBackgroundImage.sprite = arenaResource.ArenaBackgroundSprite;
 
             levelButton.Init();
@@ -21,7 +21,7 @@ namespace Context
 
         public void OnLevelButtonClicked()
         {
-            HelperResources.Instance.GetHelper<ContextHelper>(HelpersEnum.ContextHelper).LoadGameplayScene();
+            HelperResources.Instance.GetHelper<ContextHelper>(HelperEnum.ContextHelper).LoadGameplayScene();
         }
     }
 }

@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1285497241170946850}
   - component: {fileID: 1166375179307948964}
-  - component: {fileID: -9031513498818529457}
   - component: {fileID: 777315450095411311}
   m_Layer: 0
   m_Name: ItemView
@@ -46,24 +45,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 193694548413225990}
   m_CullTransparentMesh: 1
---- !u!114 &-9031513498818529457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 193694548413225990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 445f49bf2cb19854fb8c1f80629563b1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rectTransform: {fileID: 1285497241170946850}
-  image: {fileID: 777315450095411311}
-  redSprite: {fileID: 21300000, guid: 28402ccd5ffc1cb4f8cbffd9ad60f983, type: 3}
-  blueSprite: {fileID: 21300000, guid: e5426f76938bb0f4f956b8345f0b821e, type: 3}
-  greenSprite: {fileID: 21300000, guid: 929533c7251bc4d4fbf918a095d84896, type: 3}
-  yellowSprite: {fileID: 21300000, guid: 01c642959c4587846aeb0f4ee10fed6b, type: 3}
 --- !u!114 &777315450095411311
 MonoBehaviour:
   m_ObjectHideFlags: 0

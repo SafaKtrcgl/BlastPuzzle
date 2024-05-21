@@ -1,4 +1,4 @@
-public enum HelpersEnum
+public enum HelperEnum
 {
     ContextHelper,
     ArenaResourceHelper,
