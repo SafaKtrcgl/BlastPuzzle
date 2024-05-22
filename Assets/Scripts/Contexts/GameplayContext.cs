@@ -13,7 +13,6 @@ namespace Context
         [SerializeField] private Image arenaBackgroundImage;
 
         [SerializeField] private RectTransform topPanelRectTransform;
-        [SerializeField] private RectTransform gridCellHolder;
 
         private const float TopPanelDestinationPosY = 50f;
         private const float PanelAnimationDuration = .5f;
@@ -35,7 +34,6 @@ namespace Context
         private void PlayInitializationAnimations()
         {
             topPanelRectTransform.DOAnchorPosY(TopPanelDestinationPosY, PanelAnimationDuration).SetEase(Ease.OutBack);
-            gridCellHolder.DOAnchorPosX(0, PanelAnimationDuration).SetEase(Ease.OutBack);
         }
     }
 }

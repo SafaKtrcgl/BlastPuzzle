@@ -6,6 +6,7 @@ namespace Enums
         Red,
         Green,
         Blue,
-        Yellow
+        Yellow,
+        Combo
     }
 }

@@ -1,25 +1,28 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
+using UnityEngine.EventSystems;
 
 namespace Gameplay
 {
-    public class CellView : MonoBehaviour
+    public class CellView : MonoBehaviour, IPointerDownHandler
     {
-        public const int CellSize = 70;
+        public Action<int, int> OnClickAction;
 
-        [SerializeField] public RectTransform rectTransform;
+        public const int CellSize = 70;
 
         private BoardView _boardView;
 
         private int _x;
+        public int X => _x;
         private int _y;
+        public int Y => _y;
 
         private Dictionary<DirectionEnum, CellView> _neighbours = new();
         public Dictionary<DirectionEnum, CellView> Neighbours => _neighbours;
 
-        private Item _itemInside;
-        public Item ItemInside { get => _itemInside; }
+        private ItemView _itemInside;
+        public ItemView ItemInside { get => _itemInside; }
 
         public void Init(BoardView boardView, int x, int y)
         {
@@ -28,9 +31,24 @@ namespace Gameplay
             _boardView = boardView;
         }
 
-        public void SetItemInside(Item item)
+        public void SetItemInside(ItemView item)
         {
             _itemInside = item;
+        }
+
+        public void Execute() 
+        {
+            _itemInside?.Execute();
+        }
+
+        public void OnPointerDown(PointerEventData eventData)
+        {
+            OnClickAction?.Invoke(_x, _y);
+        }
+
+        public void AssignNeighbourCell(DirectionEnum neighbourCellDirection, CellView cellView)
+        {
+            _neighbours.Add(neighbourCellDirection, cellView);
         }
     }
 }

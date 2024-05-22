@@ -8,7 +8,7 @@ public class TntItemView : SpecialItemView
         throw new System.NotImplementedException();
     }
 
-    public override void OnInteract()
+    public override void Execute()
     {
         throw new System.NotImplementedException();
     }

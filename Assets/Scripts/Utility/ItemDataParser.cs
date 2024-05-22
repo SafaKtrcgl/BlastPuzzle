@@ -39,7 +39,7 @@ public class ItemDataParser
             case "y":
                 return MatchTypeEnum.Yellow;
             case "rand":
-                return (MatchTypeEnum) _random.Next(1, Enum.GetNames(typeof(MatchTypeEnum)).Length);
+                return (MatchTypeEnum) _random.Next(1, Enum.GetNames(typeof(MatchTypeEnum)).Length - 1);
             default:
                 return MatchTypeEnum.None;
         }
