@@ -1,26 +1,57 @@
+using Enums;
+using Gameplay;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FillManager : MonoBehaviour
 {
     private BoardView _boardView;
     private ItemFactory _itemFactory;
+    private FallManager _fallManager;
 
-    public void Init(BoardView boardView, ItemFactory itemFactory)
+    public readonly static int InitialPositionCellPadding = 2;
+
+    public void Init(BoardView boardView, ItemFactory itemFactory, FallManager fallManager)
     {
         _boardView = boardView;
         _itemFactory = itemFactory;
+        _fallManager = fallManager;
     }
 
-    /*
-    public List<ItemView> FillBoard()
+    public void FillBoard()
     {
-        var emptyCells = _boardView.GetCellViews(cell => cell.ItemInside == null);
-        
-        
-        foreach (var emptyCell in emptyCells)
+        List<ItemView> fillItems = new();
+        Vector2 topCellPosition;
+
+        for (int x = 0; x < _boardView.Width; x++)
         {
-            FillColumn(emptyCellGroup.Key, emptyCellGroup.Count());
+            fillItems.Clear();
+            topCellPosition = ((RectTransform)_boardView.GetCellView(x, _boardView.Height - 1).transform).anchoredPosition;
+
+            for (int y = _boardView.Height - 1; y > -1; y--)
+            {
+                var cellView = _boardView.GetCellView(x, y);
+
+                if (cellView.ItemInside == null)
+                {
+                    var fillItem = _itemFactory.CreateItem(ItemTypeEnum.CubeItem);
+                    var initialPositionoffSet = Vector2.up * ((InitialPositionCellPadding + fillItems.Count) * CellView.CellSize);
+                    ((RectTransform)fillItem.transform).anchoredPosition = topCellPosition + initialPositionoffSet;
+                    fillItem.Init((MatchTypeEnum)Random.Range(0, ItemDataParser.cubeItemTypes.Length));
+                    fillItems.Add(fillItem);
+                }
+                else if (!cellView.ItemInside.IsFallable)
+                {
+                    break;
+                }
+            }
+
+
+            if (fillItems.Count > 0)
+            {
+                fillItems.Reverse();
+                _fallManager.HandleFillItems(fillItems, x);
+            }
         }
     }
-    */
 }

@@ -39,7 +39,7 @@ public class BoardView : MonoBehaviour
 
         inputListener.Init(this);
         fallManager.Init(this);
-        fillManager.Init(this, itemFactory);
+        fillManager.Init(this, itemFactory, fallManager);
 
         ConstructBoard(content);
 
@@ -103,7 +103,8 @@ public class BoardView : MonoBehaviour
             cellView.Execute(executeType);
         }
 
-        fallManager.SettleBoard();
+        fallManager.HandleBoardItems();
+        fillManager.FillBoard();
     }
 
     public List<CellView> GetCellViews(Func<CellView, bool> condition)
