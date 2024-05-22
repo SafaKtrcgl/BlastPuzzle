@@ -2,11 +2,11 @@ namespace Enums
 {
     public enum MatchTypeEnum
     {
-        None = 0,
-        Red,
+        Red = 0,
         Green,
         Blue,
         Yellow,
+        None,
         Combo
     }
 }

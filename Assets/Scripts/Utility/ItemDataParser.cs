@@ -5,6 +5,8 @@ public class ItemDataParser
 {
     private static Random _random = new();
 
+    public static readonly MatchTypeEnum[] cubeItemTypes = { MatchTypeEnum.Red, MatchTypeEnum.Green, MatchTypeEnum.Blue, MatchTypeEnum.Yellow };
+
     public static ItemTypeEnum GetItemType(string key)
     {
         switch (key)
@@ -39,7 +41,9 @@ public class ItemDataParser
             case "y":
                 return MatchTypeEnum.Yellow;
             case "rand":
-                return (MatchTypeEnum) _random.Next(1, Enum.GetNames(typeof(MatchTypeEnum)).Length - 1);
+                return (MatchTypeEnum) _random.Next(0, cubeItemTypes.Length);
+            case "t":
+                return MatchTypeEnum.Combo;
             default:
                 return MatchTypeEnum.None;
         }

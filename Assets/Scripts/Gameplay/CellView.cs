@@ -1,3 +1,4 @@
+using Enums;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,6 +9,7 @@ namespace Gameplay
     public class CellView : MonoBehaviour, IPointerDownHandler
     {
         public Action<int, int> OnClickAction;
+        public Action<ExecuteTypeEnum> OnExecuteAction;
 
         public const int CellSize = 70;
 
@@ -29,16 +31,33 @@ namespace Gameplay
             _x = x;
             _y = y;
             _boardView = boardView;
+
+            ((RectTransform)transform).anchoredPosition = new Vector2((x - ((_boardView.Width - 1) / 2f)) * CellSize, (y - ((_boardView.Height - 1) / 2f)) * CellSize);
         }
 
-        public void SetItemInside(ItemView item)
+        public void InsertItem(ItemView item)
         {
             _itemInside = item;
+            _itemInside.OnItemExecute += OnItemExecute;
         }
 
-        public void Execute() 
+        public ItemView ExtractItem()
         {
-            _itemInside?.Execute();
+            var itemView = _itemInside;
+            _itemInside.OnItemExecute -= OnItemExecute;
+            _itemInside = null;
+            return itemView;
+        }
+
+        public void Execute(ExecuteTypeEnum executeType)
+        {
+            _itemInside?.Execute(executeType);
+            OnExecuteAction?.Invoke(executeType);
+        }
+
+        public void OnNeighbourExecute(ExecuteTypeEnum executeType)
+        {
+            _itemInside?.OnNeighbourExecute(executeType);
         }
 
         public void OnPointerDown(PointerEventData eventData)
@@ -49,6 +68,12 @@ namespace Gameplay
         public void AssignNeighbourCell(DirectionEnum neighbourCellDirection, CellView cellView)
         {
             _neighbours.Add(neighbourCellDirection, cellView);
+            cellView.OnExecuteAction += OnNeighbourExecute;
+        }
+
+        public void OnItemExecute()
+        {
+            _itemInside = null;
         }
     }
 }

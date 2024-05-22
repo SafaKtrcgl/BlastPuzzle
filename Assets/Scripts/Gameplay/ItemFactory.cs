@@ -6,16 +6,10 @@ using UnityEngine;
 
 public class ItemFactory : MonoBehaviour
 {
+    [SerializeField] private Transform itemHolderTransform;
     public ItemView CreateItem(ItemTypeEnum itemType)
     {
         var itemResource = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(itemType);
-        return Instantiate(itemResource.ItemPrefab, transform);
+        return Instantiate(itemResource.ItemPrefab, itemHolderTransform);
     }
-    /*
-    public T CreateItem<T>(ItemTypeEnum itemType) where T : ItemView
-    {
-        var itemResource = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(itemType);
-        return Instantiate(itemResource.ItemPrefab, transform) as T;
-    }
-    */
 }

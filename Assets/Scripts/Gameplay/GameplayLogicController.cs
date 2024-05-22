@@ -1,8 +1,13 @@
+using Enums;
 using UnityEngine;
 
-public class InputListener : MonoBehaviour
+public class GameplayLogicController : MonoBehaviour
 {
     private BoardView _boardView;
+
+    private readonly int minimumRequiredMatch = 2;
+
+
     public void Init(BoardView boardView)
     {
         _boardView = boardView;
@@ -17,9 +22,9 @@ public class InputListener : MonoBehaviour
         {
             var matchingCells = MatchFinder.FindMatchCluster(cellView);
             
-            if (matchingCells != null && matchingCells.Count < 2) return;
+            if (matchingCells != null && matchingCells.Count < minimumRequiredMatch) return;
 
-            _boardView.ExecuteCells(matchingCells);
+            _boardView.ExecuteCells(matchingCells, ExecuteTypeEnum.Blast);
         }
     }
 }

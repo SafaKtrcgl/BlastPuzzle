@@ -1,5 +1,101 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &262515804690604072
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6206714962606322550}
+  - component: {fileID: 2226917561875900781}
+  m_Layer: 0
+  m_Name: FillManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &6206714962606322550
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 262515804690604072}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2397567381794650844}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &2226917561875900781
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 262515804690604072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3657bb62135bf374480a985e3840eea9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &586072761122828195
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1281927355626093366}
+  - component: {fileID: 5366414906988184631}
+  m_Layer: 0
+  m_Name: FallManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1281927355626093366
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 586072761122828195}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2397567381794650844}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &5366414906988184631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 586072761122828195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7bac66b6b6e4514cac0bf2cea6af03f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1657835411417786966
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,6 +892,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 963bcb45137392040ba1d54eb4931056, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemHolderTransform: {fileID: 7688425142554852176}
 --- !u!1 &6562372582373715982
 GameObject:
   m_ObjectHideFlags: 0
@@ -829,6 +926,8 @@ RectTransform:
   - {fileID: 7688425142554852176}
   - {fileID: 2043049975079157860}
   - {fileID: 5296730450050014272}
+  - {fileID: 6206714962606322550}
+  - {fileID: 1281927355626093366}
   m_Father: {fileID: 8351125738902493479}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
@@ -850,6 +949,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemFactory: {fileID: 5663662957792814983}
   inputListener: {fileID: 7386019501400357864}
+  fillManager: {fileID: 2226917561875900781}
+  fallManager: {fileID: 5366414906988184631}
   cellViewPrefab: {fileID: -2406232475158916004, guid: 741eee56dbdcab04f9673399e0e34653, type: 3}
   boardBackgroundRecttransform: {fileID: 7688425142554852176}
 --- !u!222 &9146491581378131953
@@ -919,7 +1020,7 @@ GameObject:
   - component: {fileID: 5296730450050014272}
   - component: {fileID: 7386019501400357864}
   m_Layer: 0
-  m_Name: InputListener
+  m_Name: LogicController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

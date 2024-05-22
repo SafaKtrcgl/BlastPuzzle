@@ -6,7 +6,14 @@ namespace Gameplay
     {
         public override void Init(MatchTypeEnum matchType)
         {
+            ItemType = ItemTypeEnum.BoxItem;
+            MatchType = matchType;
+        }
 
+        public override void OnNeighbourExecute(ExecuteTypeEnum executeType)
+        {
+            OnItemExecute?.Invoke();
+            Destroy(gameObject);
         }
     }
 }

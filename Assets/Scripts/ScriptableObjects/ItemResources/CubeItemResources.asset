@@ -14,3 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemType: 1
   itemPrefab: {fileID: 6184004391965871859, guid: 077522537d9d5234f9ddf6a9fd8defb3, type: 3}
+  itemSprites:
+  - {fileID: 21300000, guid: 28402ccd5ffc1cb4f8cbffd9ad60f983, type: 3}
+  - {fileID: 21300000, guid: 929533c7251bc4d4fbf918a095d84896, type: 3}
+  - {fileID: 21300000, guid: e5426f76938bb0f4f956b8345f0b821e, type: 3}
+  - {fileID: 21300000, guid: 01c642959c4587846aeb0f4ee10fed6b, type: 3}
+  - {fileID: 21300000, guid: d73b3ea73aa65d743907a8001b1ab077, type: 3}
+  - {fileID: 21300000, guid: 8f98d5b0b42e7bd43854ce93d10ccb81, type: 3}
+  - {fileID: 21300000, guid: e80cb9f37165d804bbbb5c31d59cc91c, type: 3}
+  - {fileID: 21300000, guid: bb03688e196394d409cbf3dda5f5a10b, type: 3}

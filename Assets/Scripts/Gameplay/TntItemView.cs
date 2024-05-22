@@ -5,11 +5,14 @@ public class TntItemView : SpecialItemView
 {
     public override void Init(MatchTypeEnum matchType)
     {
-        throw new System.NotImplementedException();
+        IsMatchable = true;
+        IsFallable = true;
+        ItemType = ItemTypeEnum.TntItem;
+        MatchType = matchType;
     }
 
-    public override void Execute()
+    public override void Execute(ExecuteTypeEnum executeType)
     {
-        throw new System.NotImplementedException();
+
     }
 }

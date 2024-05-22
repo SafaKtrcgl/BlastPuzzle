@@ -1,13 +1,17 @@
 using DG.Tweening;
+using Enums;
 using Gameplay;
+using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BoardView : MonoBehaviour
 {
     [SerializeField] private ItemFactory itemFactory;
-    [SerializeField] private InputListener inputListener;
+    [SerializeField] private GameplayLogicController inputListener;
+    [SerializeField] private FillManager fillManager;
+    [SerializeField] private FallManager fallManager;
     [SerializeField] private CellView cellViewPrefab;
     [SerializeField] private RectTransform boardBackgroundRecttransform;
 
@@ -20,8 +24,8 @@ public class BoardView : MonoBehaviour
     private readonly float BackgroundWidthPadding = 35f;
     private readonly float BackgroundHeightPadding = 50f;
 
-    private CellView[] _cellViews;
-    public CellView GetCellView(int x, int y) => _cellViews[y * Width + x];
+    private CellView[,] _cellViews;
+    public CellView GetCellView(int x, int y) => _cellViews[x, y];
 
     private bool _isBussy = true;
     public bool IsBussy => _isBussy;
@@ -31,7 +35,11 @@ public class BoardView : MonoBehaviour
         _width = width;
         _height = height;
 
-        _cellViews = new CellView[_width * _height];
+        _cellViews = new CellView[_width, _height];
+
+        inputListener.Init(this);
+        fallManager.Init(this);
+        fillManager.Init(this, itemFactory);
 
         ConstructBoard(content);
 
@@ -44,23 +52,19 @@ public class BoardView : MonoBehaviour
         {
             for (int x = 0; x < _width; x++)
             {
-                var anchoredPos = new Vector2((x - ((Width - 1) / 2f)) * CellView.CellSize, (y - ((Height - 1) / 2f)) * CellView.CellSize);
-
                 var cellView = Instantiate(cellViewPrefab, transform);
-                ((RectTransform)cellView.transform).anchoredPosition = anchoredPos;
                 cellView.Init(this, x, y);
 
-                inputListener.Init(this);
                 cellView.OnClickAction += inputListener.OnCellTap;
-
+                _cellViews[x, y] = cellView;
+                
                 var index = y * Width + x;
-                _cellViews[index] = cellView;
 
                 var itemView = itemFactory.CreateItem(ItemDataParser.GetItemType(content[index]));
-                ((RectTransform)itemView.transform).anchoredPosition = anchoredPos;
+                ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)cellView.transform).anchoredPosition;
                 itemView.Init(ItemDataParser.GetMatchType(content[index]));
 
-                cellView.SetItemInside(itemView);
+                cellView.InsertItem(itemView);
             }
         }
 
@@ -75,28 +79,49 @@ public class BoardView : MonoBehaviour
         {
             if (cellView.X != Width - 1)
             {
-                cellView.AssignNeighbourCell(DirectionEnum.Right, _cellViews[cellView.Y * Width + cellView.X + 1]);
+                cellView.AssignNeighbourCell(DirectionEnum.Right, _cellViews[cellView.X + 1, cellView.Y]);
             }
             if (cellView.X != 0)
             {
-                cellView.AssignNeighbourCell(DirectionEnum.Left, _cellViews[cellView.Y * Width + cellView.X - 1]);
+                cellView.AssignNeighbourCell(DirectionEnum.Left, _cellViews[cellView.X - 1, cellView.Y]);
             }
             if (cellView.Y != Height - 1)
             {
-                cellView.AssignNeighbourCell(DirectionEnum.Up, _cellViews[(cellView.Y + 1) * Width + cellView.X]);
+                cellView.AssignNeighbourCell(DirectionEnum.Up, _cellViews[cellView.X, cellView.Y + 1]);
             }
             if (cellView.Y != 0)
             {
-                cellView.AssignNeighbourCell(DirectionEnum.Down, _cellViews[(cellView.Y - 1) * Width + cellView.X]);
+                cellView.AssignNeighbourCell(DirectionEnum.Down, _cellViews[cellView.X, cellView.Y - 1]);
             }
         }
     }
 
-    public void ExecuteCells(List<CellView> cellsToExecute)
+    public void ExecuteCells(List<CellView> cellsToExecute, ExecuteTypeEnum executeType)
     {
         foreach (var cellView in cellsToExecute)
         {
-            cellView.Execute();
+            cellView.Execute(executeType);
         }
+
+        fallManager.SettleBoard();
+    }
+
+    public List<CellView> GetCellViews(Func<CellView, bool> condition)
+    {
+        List<CellView> matchingCells = new ();
+
+        for (int y = 0; y < Height; y++)
+        {
+            for (int x = 0; x < Width; x++)
+            {
+                CellView cellView = _cellViews[x, y];
+                if (condition(cellView))
+                {
+                    matchingCells.Add(cellView);
+                }
+            }
+        }
+
+        return matchingCells;
     }
 }
