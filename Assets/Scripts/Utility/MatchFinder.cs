@@ -17,8 +17,6 @@ public static class MatchFinder
 
     private static void FindMatchCluster(CellView cellView, MatchTypeEnum matchType, List<CellView> matchingCells)
     {
-        
-
         if (matchingCells.Contains(cellView))
         {
             return;

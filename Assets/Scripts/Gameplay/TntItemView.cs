@@ -13,6 +13,7 @@ public class TntItemView : SpecialItemView
 
     public override void Execute(ExecuteTypeEnum executeType)
     {
-
+        OnItemExecute?.Invoke();
+        Destroy(gameObject);
     }
 }

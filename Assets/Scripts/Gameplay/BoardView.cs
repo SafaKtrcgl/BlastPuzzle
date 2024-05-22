@@ -2,9 +2,9 @@ using DG.Tweening;
 using Enums;
 using Gameplay;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class BoardView : MonoBehaviour
 {
@@ -96,15 +96,99 @@ public class BoardView : MonoBehaviour
         }
     }
 
-    public void ExecuteCells(List<CellView> cellsToExecute, ExecuteTypeEnum executeType)
+    public IEnumerator ExecuteCells(CellView tappedCell, List<CellView> cellsToExecute, ExecuteTypeEnum executeType, ItemTypeEnum itemType)
     {
-        foreach (var cellView in cellsToExecute)
+        Sequence executeSequence = DOTween.Sequence();
+
+        switch (executeType)
         {
-            cellView.Execute(executeType);
+            case ExecuteTypeEnum.Blast:
+
+                foreach (var cellView in cellsToExecute)
+                {
+                    cellView.Execute(executeType);
+                }
+                break;
+            case ExecuteTypeEnum.Merge:
+
+                executeSequence.OnComplete(() =>
+                {
+                    foreach (var cellView in cellsToExecute)
+                    {
+                        cellView.Execute(executeType);
+                    }
+
+                    var itemView = itemFactory.CreateItem(itemType);
+                    ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)tappedCell.transform).anchoredPosition;
+                    itemView.Init(MatchTypeEnum.Combo);
+
+                    tappedCell.InsertItem(itemView);
+                });
+
+                var mergePos = ((RectTransform)tappedCell.transform).anchoredPosition;
+
+                foreach (var cellView in cellsToExecute)
+                {
+                    if (cellView != tappedCell)
+                    {
+                        executeSequence.Join(((RectTransform)cellView.ItemInside.transform).DOAnchorPos(mergePos, .35f));
+                    }
+                }
+
+                break;
+            case ExecuteTypeEnum.Special:
+
+                switch (itemType)
+                {
+                    case ItemTypeEnum.TntItem:
+                        var executeCells = GetCellsInPerimeter(tappedCell, 2);
+
+                        foreach (var cellView in executeCells)
+                        {
+                            cellView.Execute(executeType);
+                        }
+
+                        break;
+
+                    default:
+                        break;
+                }
+
+                break;
+            default:
+                break;
+        }
+
+        while (executeSequence.IsPlaying())
+        {
+            yield return null;
         }
 
         fallManager.HandleBoardItems();
         fillManager.FillBoard();
+    }
+
+    public List<CellView> GetCellsInPerimeter(CellView centerCell, int perimeterRadius)
+    {
+        List<CellView> effectedCells = new();
+
+        for (int y = -perimeterRadius; y <= perimeterRadius; y++)
+        {
+            var _y = centerCell.Y + y;
+            if (_y < 0) continue;
+            else if (_y >= Height - 1) break;
+
+            for (int x = -perimeterRadius; x <= perimeterRadius; x++)
+            {
+                var _x = centerCell.X + x;
+                if (_x < 0) continue;
+                else if (_x >= Width - 1) break;
+
+                effectedCells.Add(GetCellView(_x, _y));
+            }
+        }
+
+        return effectedCells;
     }
 
     public List<CellView> GetCellViews(Func<CellView, bool> condition)

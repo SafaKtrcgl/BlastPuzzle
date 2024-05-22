@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Enums;
 using UnityEngine;
 
@@ -5,7 +6,8 @@ public class GameplayLogicController : MonoBehaviour
 {
     private BoardView _boardView;
 
-    private readonly int minimumRequiredMatch = 2;
+    private readonly int blastMinimumRequiredMatch = 2;
+    private readonly int tntMinimumRequiredMatch = 5;
 
 
     public void Init(BoardView boardView)
@@ -17,14 +19,31 @@ public class GameplayLogicController : MonoBehaviour
     {
         if (_boardView.IsBussy) return;
 
-        var cellView = _boardView.GetCellView(x, y);
-        if (cellView.ItemInside != null && cellView.ItemInside.IsMatchable)
-        {
-            var matchingCells = MatchFinder.FindMatchCluster(cellView);
-            
-            if (matchingCells != null && matchingCells.Count < minimumRequiredMatch) return;
+        var tappedCell = _boardView.GetCellView(x, y);
+        var tappedCellItem = tappedCell.ItemInside;
+        if (tappedCellItem == null) return;
 
-            _boardView.ExecuteCells(matchingCells, ExecuteTypeEnum.Blast);
+        if (tappedCellItem.IsSpecial)
+        {
+            StartCoroutine(_boardView.ExecuteCells(tappedCell, null, ExecuteTypeEnum.Special, ItemTypeEnum.TntItem));
+        }
+        else if (tappedCell.ItemInside != null && tappedCell.ItemInside.IsMatchable)
+        {
+            var matchingCells = MatchFinder.FindMatchCluster(tappedCell);
+
+            if (matchingCells.Count < blastMinimumRequiredMatch)
+            {
+                tappedCell.ItemInside.transform.DOPunchRotation(Vector3.forward * 25, .25f, 25, .75f);
+                return;
+            }
+            else if (matchingCells.Count >= tntMinimumRequiredMatch)
+            {
+                StartCoroutine(_boardView.ExecuteCells(tappedCell, matchingCells, ExecuteTypeEnum.Merge, ItemTypeEnum.TntItem));
+            }
+            else
+            {
+                StartCoroutine(_boardView.ExecuteCells(tappedCell, matchingCells, ExecuteTypeEnum.Blast, ItemTypeEnum.None));
+            }
         }
     }
 }

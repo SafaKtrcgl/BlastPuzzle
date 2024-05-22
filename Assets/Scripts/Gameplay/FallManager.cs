@@ -3,7 +3,6 @@ using Gameplay;
 using System.Collections.Generic;
 using Unity.Mathematics;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class FallManager : MonoBehaviour
 {

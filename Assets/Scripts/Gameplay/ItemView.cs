@@ -6,8 +6,10 @@ namespace Gameplay
 {
     public abstract class ItemView : MonoBehaviour
     {
-        public bool IsMatchable = false;
-        public bool IsFallable = false;
+        [NonSerialized] public bool IsMatchable = false;
+        [NonSerialized] public bool IsFallable = false;
+
+        public virtual bool IsSpecial { get; set; } = false;
 
         public Action OnItemExecute;
         public ItemTypeEnum ItemType { get; protected set; }

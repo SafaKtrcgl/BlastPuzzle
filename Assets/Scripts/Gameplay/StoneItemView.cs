@@ -8,11 +8,17 @@ public class StoneItemView : ObstacleItemView
         MatchType = matchType;
     }
 
-    public override void OnNeighbourExecute(ExecuteTypeEnum executeType)
+    public override void Execute(ExecuteTypeEnum executeType)
     {
         if (executeType == ExecuteTypeEnum.Special)
         {
+            OnItemExecute?.Invoke();
             Destroy(gameObject);
         }
+    }
+
+    public override void OnNeighbourExecute(ExecuteTypeEnum executeType)
+    {
+        
     }
 }

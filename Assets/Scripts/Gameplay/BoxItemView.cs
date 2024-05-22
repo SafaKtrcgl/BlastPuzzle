@@ -10,10 +10,22 @@ namespace Gameplay
             MatchType = matchType;
         }
 
+        public override void Execute(ExecuteTypeEnum executeType)
+        {
+            if (executeType == ExecuteTypeEnum.Special)
+            {
+                OnItemExecute?.Invoke();
+                Destroy(gameObject);
+            }
+        }
+
         public override void OnNeighbourExecute(ExecuteTypeEnum executeType)
         {
-            OnItemExecute?.Invoke();
-            Destroy(gameObject);
+            if (executeType == ExecuteTypeEnum.Blast)
+            {
+                OnItemExecute?.Invoke();
+                Destroy(gameObject);
+            }
         }
     }
 }
