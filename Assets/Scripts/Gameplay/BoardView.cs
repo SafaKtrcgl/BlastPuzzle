@@ -160,12 +160,10 @@ public class BoardView : MonoBehaviour
     {
         if (GetCellViews(cellView => cellView.ItemInside.ItemType.IsObstacle()).Count == 0)
         {
-            Debug.Log("Game Won!");
             _isBussy = true;
         }
         else if (GameplayInputController.MoveCount == 0)
         {
-            Debug.Log("Game Lost!");
             _isBussy = true;
         }
     }

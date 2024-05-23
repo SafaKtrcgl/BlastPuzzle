@@ -46,7 +46,6 @@ namespace Gameplay
 
         private void OnDestroy()
         {
-            Debug.Log("Selamas");
             OnItemExecute = null;
         }
     }
