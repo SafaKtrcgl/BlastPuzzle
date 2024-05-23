@@ -1,23 +1,29 @@
 using Enums;
 using Gameplay;
-using System.Collections.Generic;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SpecialExecutionStrategy : IExecutionStrategy
 {
-    private readonly Func<CellView, int, List<CellView>> getCellsInPerimeter;
+    private readonly BoardView _boardView;
 
-    public SpecialExecutionStrategy(Func<CellView, int, List<CellView>> getCellsInPerimeter)
+    public SpecialExecutionStrategy(BoardView boardView)
     {
-        this.getCellsInPerimeter = getCellsInPerimeter;
+        _boardView = boardView;
     }
 
     public IEnumerator Execute(CellView tappedCell, List<CellView> cellsToExecute, ItemTypeEnum itemType)
     {
         if (itemType == ItemTypeEnum.TntItem)
         {
-            var executeCells = getCellsInPerimeter(tappedCell, 2);
+            var executeCells = _boardView.GetCellViews(cellView =>
+            {
+                int deltaX = Math.Abs(cellView.X - tappedCell.X);
+                int deltaY = Math.Abs(cellView.Y - tappedCell.Y);
+                return deltaX <= 2 && deltaY <= 2 && !(deltaX == 0 && deltaY == 0);
+            });
+
             foreach (var cellView in executeCells)
             {
                 cellView?.Execute(ExecuteTypeEnum.Special);

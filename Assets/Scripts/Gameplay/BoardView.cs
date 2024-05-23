@@ -109,7 +109,7 @@ public class BoardView : MonoBehaviour
         {
             ExecuteTypeEnum.Blast => new BlastExecutionStrategy(),
             ExecuteTypeEnum.Merge => new MergeExecutionStrategy(itemFactory),
-            ExecuteTypeEnum.Special => new SpecialExecutionStrategy(GetCellsInPerimeter),
+            ExecuteTypeEnum.Special => new SpecialExecutionStrategy(this),
             _ => throw new NotImplementedException()
         };
 
@@ -121,6 +121,7 @@ public class BoardView : MonoBehaviour
         fillManager.FillBoard();
     }
 
+    /*
     public List<CellView> GetCellsInPerimeter(CellView centerCell, int perimeterRadius)
     {
         List<CellView> effectedCells = new();
@@ -143,6 +144,7 @@ public class BoardView : MonoBehaviour
 
         return effectedCells;
     }
+    */
 
     public List<CellView> GetCellViews(Func<CellView, bool> condition)
     {
