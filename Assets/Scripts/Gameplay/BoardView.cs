@@ -9,11 +9,12 @@ using UnityEngine;
 public class BoardView : MonoBehaviour
 {
     [SerializeField] private ItemFactory itemFactory;
-    [SerializeField] private GameplayLogicController inputListener;
     [SerializeField] private FillManager fillManager;
     [SerializeField] private FallManager fallManager;
     [SerializeField] private CellView cellViewPrefab;
     [SerializeField] private RectTransform boardBackgroundRecttransform;
+
+    public Action<int, int> OnCellTapped;
 
     private int _width;
     public int Width => _width;
@@ -37,7 +38,6 @@ public class BoardView : MonoBehaviour
 
         _cellViews = new CellView[_width, _height];
 
-        inputListener.Init(this);
         fallManager.Init(this);
         fillManager.Init(this, itemFactory, fallManager);
 
@@ -55,7 +55,7 @@ public class BoardView : MonoBehaviour
                 var cellView = Instantiate(cellViewPrefab, transform);
                 cellView.Init(this, x, y);
 
-                cellView.OnClickAction += inputListener.OnCellTap;
+                cellView.OnClickAction += OnCellTap;
                 _cellViews[x, y] = cellView;
                 
                 var index = y * Width + x;
@@ -71,6 +71,11 @@ public class BoardView : MonoBehaviour
         AssignCellNeighbours();
 
         boardBackgroundRecttransform.sizeDelta = new Vector2(Width * CellView.CellSize + BackgroundWidthPadding, Height * CellView.CellSize + BackgroundHeightPadding);
+    }
+
+    private void OnCellTap(int x, int y)
+    {
+        OnCellTapped?.Invoke(x, y);
     }
 
     private void AssignCellNeighbours()
@@ -98,71 +103,19 @@ public class BoardView : MonoBehaviour
 
     public IEnumerator ExecuteCells(CellView tappedCell, List<CellView> cellsToExecute, ExecuteTypeEnum executeType, ItemTypeEnum itemType)
     {
-        Sequence executeSequence = DOTween.Sequence();
+        _isBussy = true;
 
-        switch (executeType)
+        IExecutionStrategy executionStrategy = executeType switch
         {
-            case ExecuteTypeEnum.Blast:
+            ExecuteTypeEnum.Blast => new BlastExecutionStrategy(),
+            ExecuteTypeEnum.Merge => new MergeExecutionStrategy(itemFactory),
+            ExecuteTypeEnum.Special => new SpecialExecutionStrategy(GetCellsInPerimeter),
+            _ => throw new NotImplementedException()
+        };
 
-                foreach (var cellView in cellsToExecute)
-                {
-                    cellView.Execute(executeType);
-                }
-                break;
-            case ExecuteTypeEnum.Merge:
+        yield return executionStrategy.Execute(tappedCell, cellsToExecute, itemType);
 
-                executeSequence.OnComplete(() =>
-                {
-                    foreach (var cellView in cellsToExecute)
-                    {
-                        cellView.Execute(executeType);
-                    }
-
-                    var itemView = itemFactory.CreateItem(itemType);
-                    ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)tappedCell.transform).anchoredPosition;
-                    itemView.Init(MatchTypeEnum.Combo);
-
-                    tappedCell.InsertItem(itemView);
-                });
-
-                var mergePos = ((RectTransform)tappedCell.transform).anchoredPosition;
-
-                foreach (var cellView in cellsToExecute)
-                {
-                    if (cellView != tappedCell)
-                    {
-                        executeSequence.Join(((RectTransform)cellView.ItemInside.transform).DOAnchorPos(mergePos, .35f));
-                    }
-                }
-
-                break;
-            case ExecuteTypeEnum.Special:
-
-                switch (itemType)
-                {
-                    case ItemTypeEnum.TntItem:
-                        var executeCells = GetCellsInPerimeter(tappedCell, 2);
-
-                        foreach (var cellView in executeCells)
-                        {
-                            cellView.Execute(executeType);
-                        }
-
-                        break;
-
-                    default:
-                        break;
-                }
-
-                break;
-            default:
-                break;
-        }
-
-        while (executeSequence.IsPlaying())
-        {
-            yield return null;
-        }
+        _isBussy = false;
 
         fallManager.HandleBoardItems();
         fillManager.FillBoard();
@@ -176,13 +129,13 @@ public class BoardView : MonoBehaviour
         {
             var _y = centerCell.Y + y;
             if (_y < 0) continue;
-            else if (_y >= Height - 1) break;
+            else if (_y > Height - 1) break;
 
             for (int x = -perimeterRadius; x <= perimeterRadius; x++)
             {
                 var _x = centerCell.X + x;
                 if (_x < 0) continue;
-                else if (_x >= Width - 1) break;
+                else if (_x > Width - 1) break;
 
                 effectedCells.Add(GetCellView(_x, _y));
             }

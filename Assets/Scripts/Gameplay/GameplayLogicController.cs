@@ -1,18 +1,22 @@
 using DG.Tweening;
 using Enums;
+using System;
 using UnityEngine;
 
 public class GameplayLogicController : MonoBehaviour
 {
+    public Action<int> OnTapPerform;
+
     private BoardView _boardView;
+    private int _moveCount;
 
     private readonly int blastMinimumRequiredMatch = 2;
     private readonly int tntMinimumRequiredMatch = 5;
 
-
-    public void Init(BoardView boardView)
+    public void Init(BoardView boardView, int moveCount)
     {
         _boardView = boardView;
+        _moveCount = moveCount;
     }
 
     public void OnCellTap(int x, int y)
@@ -22,6 +26,8 @@ public class GameplayLogicController : MonoBehaviour
         var tappedCell = _boardView.GetCellView(x, y);
         var tappedCellItem = tappedCell.ItemInside;
         if (tappedCellItem == null) return;
+
+        _moveCount--;
 
         if (tappedCellItem.IsSpecial)
         {
@@ -45,5 +51,7 @@ public class GameplayLogicController : MonoBehaviour
                 StartCoroutine(_boardView.ExecuteCells(tappedCell, matchingCells, ExecuteTypeEnum.Blast, ItemTypeEnum.None));
             }
         }
+
+        OnTapPerform?.Invoke(_moveCount);
     }
 }

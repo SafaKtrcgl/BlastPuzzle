@@ -10,12 +10,10 @@ namespace Context
     public class GameplayContext : ContextBase
     {
         [SerializeField] private BoardView boardView;
+        [SerializeField] private GameplayTopPanel gameplayTopPanel;
+        [SerializeField] private GameplayLogicController logicController;
+
         [SerializeField] private Image arenaBackgroundImage;
-
-        [SerializeField] private RectTransform topPanelRectTransform;
-
-        private const float TopPanelDestinationPosY = 50f;
-        private const float PanelAnimationDuration = .5f;
 
         private void Start()
         {
@@ -25,15 +23,14 @@ namespace Context
                 arenaBackgroundImage.sprite = arenaResource.ArenaBackgroundSprite;
             }
 
-            PlayInitializationAnimations();
-
             var levelData = LevelDataParser.GetLevelData(PlayerPrefsUtility.GetCurrentLevel());
-            boardView.Init(levelData.grid_width, levelData.grid_height, levelData.grid);
-        }
 
-        private void PlayInitializationAnimations()
-        {
-            topPanelRectTransform.DOAnchorPosY(TopPanelDestinationPosY, PanelAnimationDuration).SetEase(Ease.OutBack);
-        }
+            boardView.OnCellTapped += logicController.OnCellTap;
+            logicController.OnTapPerform += gameplayTopPanel.OnMovePerformed;
+
+            boardView.Init(levelData.grid_width, levelData.grid_height, levelData.grid);
+            logicController.Init(boardView, levelData.move_count);
+            gameplayTopPanel.Init(boardView, levelData.move_count);
+        }        
     }
 }
