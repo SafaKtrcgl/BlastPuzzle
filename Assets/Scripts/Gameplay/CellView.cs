@@ -8,8 +8,6 @@ namespace Gameplay
 {
     public class CellView : MonoBehaviour, IPointerDownHandler
     {
-        public Action<int, int> OnClickAction;
-
         public Action<ExecuteTypeEnum> OnCellExecuteAction;
         public Action<ItemTypeEnum> OnItemExecutedAction;
 
@@ -53,8 +51,11 @@ namespace Gameplay
 
         public void Execute(ExecuteTypeEnum executeType)
         {
-            _itemInside?.Execute(executeType);
-            OnCellExecuteAction?.Invoke(executeType);
+            if (ItemInside != null && !ItemInside.IsDestinedToDie)
+            {
+                OnCellExecuteAction?.Invoke(executeType);
+                ItemInside?.Execute(this, executeType);
+            }
         }
 
         public void OnNeighbourExecute(ExecuteTypeEnum executeType)
@@ -64,7 +65,9 @@ namespace Gameplay
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            OnClickAction?.Invoke(_x, _y);
+            if (_boardView.IsBussy) return;
+
+            ItemInside.Interact(this);
         }
 
         public void AssignNeighbourCell(DirectionEnum neighbourCellDirection, CellView cellView)

@@ -9,23 +9,39 @@ namespace Gameplay
 {
     public abstract class ItemView : MonoBehaviour
     {
-        [NonSerialized] public bool IsMatchable = false;
-        [NonSerialized] public bool IsFallable = false;
-
         [SerializeField] protected Image mainImage;
 
-        public virtual bool IsSpecial { get; set; } = false;
+        protected BoardView _boardView;
+
+        public bool IsDestinedToDie { protected set; get; }
 
         public Action<ItemTypeEnum> OnItemExecute;
         public ItemTypeEnum ItemType { get; protected set; }
         public MatchTypeEnum MatchType { get; protected set; }
-        public abstract void Execute(ExecuteTypeEnum executeType);
-        public abstract void OnNeighbourExecute(ExecuteTypeEnum executeType);
+        
+        public abstract void Execute(CellView currentCellView, ExecuteTypeEnum executeType);
 
-        public virtual void Init(MatchTypeEnum matchType)
+        public virtual void OnNeighbourExecute(ExecuteTypeEnum executeType)
         {
+
+        }
+
+        public virtual void Interact(CellView currentCellView)
+        {
+
+        }
+
+        public virtual void Init(BoardView boardView, MatchTypeEnum matchType)
+        {
+            _boardView = boardView;
             MatchType = matchType;
             mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(0);
+        }
+
+        public virtual void DestroyItem()
+        {
+            OnItemExecute?.Invoke(ItemType);
+            Destroy(gameObject);
         }
     }
 }

@@ -5,11 +5,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MergeExecutionStrategy : IExecutionStrategy
+public class ComboExecutionStrategy : IExecutionStrategy
 {
     private readonly ItemFactory _itemFactory;
 
-    public MergeExecutionStrategy(ItemFactory itemFactory)
+    private bool _animationPlaying = true;
+
+    public ComboExecutionStrategy(ItemFactory itemFactory)
     {
         _itemFactory = itemFactory;
     }
@@ -24,23 +26,34 @@ public class MergeExecutionStrategy : IExecutionStrategy
         {
             if (cellView != tappedCell)
             {
-                executeSequence.Join(((RectTransform)cellView.ItemInside.transform).DOAnchorPos(mergePos, .35f));
+                executeSequence.Join(((RectTransform)cellView.ItemInside?.transform).DOAnchorPos(mergePos, .35f));
             }
         }
 
-        executeSequence.OnComplete(() =>
+        executeSequence.AppendCallback(() =>
         {
             foreach (var cellView in cellsToExecute)
             {
-                cellView?.Execute(ExecuteTypeEnum.Merge);
+                cellView.ItemInside.DestroyItem();
             }
 
-            var itemView = _itemFactory.CreateItem(ItemTypeEnum.TntItem, MatchTypeEnum.Special);
+            var itemView = _itemFactory.CreateItem(ItemTypeEnum.TntTntItem, MatchTypeEnum.None);
             ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)tappedCell.transform).anchoredPosition;
 
             tappedCell.InsertItem(itemView);
         });
 
-        yield return new WaitWhile(() => executeSequence.IsPlaying());
+        executeSequence.OnComplete(() =>
+        {
+            tappedCell.ItemInside.transform.DOScale(Vector3.one * 1.25f, .25f).OnComplete(() =>
+            {
+                tappedCell.ItemInside.Execute(tappedCell, ExecuteTypeEnum.Special);
+                _animationPlaying = false;
+            });
+        });
+
+        yield return new WaitWhile(() => _animationPlaying);
+
+        yield break;
     }
 }

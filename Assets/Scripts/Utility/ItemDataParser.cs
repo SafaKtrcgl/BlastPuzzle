@@ -43,7 +43,7 @@ public class ItemDataParser
             case "rand":
                 return (MatchTypeEnum) _random.Next(0, cubeItemTypes.Length);
             case "t":
-                return MatchTypeEnum.Combo;
+                return MatchTypeEnum.Special;
             default:
                 return MatchTypeEnum.None;
         }

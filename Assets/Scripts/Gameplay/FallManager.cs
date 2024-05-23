@@ -29,7 +29,7 @@ public class FallManager : MonoBehaviour
                 {
                     fallDistance++;
                 }
-                else if (!cellView.ItemInside.IsFallable)
+                else if (!cellView.ItemInside.ItemType.IsFallable())
                 {
                     fallDistance = 0;
                 }

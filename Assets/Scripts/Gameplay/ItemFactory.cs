@@ -7,15 +7,23 @@ using UnityEngine;
 
 public class ItemFactory : MonoBehaviour
 {
+    [SerializeField] private Transform itemHolderTransform;
+
     public Action<ItemTypeEnum> OnObstacleItemCreated;
 
-    [SerializeField] private Transform itemHolderTransform;
+    private BoardView _boardView;
+
+    public void Init(BoardView boardView)
+    {
+        _boardView = boardView;
+    }
+
     public ItemView CreateItem(ItemTypeEnum itemType, MatchTypeEnum matchType)
     {
         var itemResource = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(itemType);
 
         var itemView = Instantiate(itemResource.ItemPrefab, itemHolderTransform);
-        itemView.Init(matchType);
+        itemView.Init(_boardView, matchType);
 
         if (itemType.IsObstacle()) OnObstacleItemCreated?.Invoke(itemType);
         

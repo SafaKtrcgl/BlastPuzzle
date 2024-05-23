@@ -7,6 +7,6 @@ namespace Enums
         Blue,
         Yellow,
         None,
-        Combo
+        Special
     }
 }

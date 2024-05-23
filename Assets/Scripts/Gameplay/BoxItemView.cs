@@ -2,20 +2,19 @@ using Enums;
 
 namespace Gameplay
 {
-    public class BoxItemView : ObstacleItemView
+    public class BoxItemView : ItemView
     {
-        public override void Init(MatchTypeEnum matchType)
+        public override void Init(BoardView boardView, MatchTypeEnum matchType)
         {
             ItemType = ItemTypeEnum.BoxItem;
-            base.Init(matchType);
+            base.Init(boardView, matchType);
         }
 
-        public override void Execute(ExecuteTypeEnum executeType)
+        public override void Execute(CellView currentCellView, ExecuteTypeEnum executeType)
         {
             if (executeType == ExecuteTypeEnum.Special)
             {
-                OnItemExecute?.Invoke(ItemType);
-                Destroy(gameObject);
+                DestroyItem();
             }
         }
 
@@ -23,8 +22,7 @@ namespace Gameplay
         {
             if (executeType == ExecuteTypeEnum.Blast || executeType == ExecuteTypeEnum.Merge)
             {
-                OnItemExecute?.Invoke(ItemType);
-                Destroy(gameObject);
+                DestroyItem();
             }
         }
     }

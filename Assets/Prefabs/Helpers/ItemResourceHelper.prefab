@@ -50,8 +50,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ca94071c7152a9a468a8d0cf4b92573f, type: 2}
   - {fileID: 11400000, guid: a7fcfecd833c0ac4cb9d916bb9c149c9, type: 2}
   - {fileID: 11400000, guid: c557969f706b6ab43819c30f4a48ec28, type: 2}
-  cubeSprites:
-  - {fileID: 21300000, guid: 28402ccd5ffc1cb4f8cbffd9ad60f983, type: 3}
-  - {fileID: 21300000, guid: 929533c7251bc4d4fbf918a095d84896, type: 3}
-  - {fileID: 21300000, guid: e5426f76938bb0f4f956b8345f0b821e, type: 3}
-  - {fileID: 21300000, guid: 01c642959c4587846aeb0f4ee10fed6b, type: 3}
+  - {fileID: 11400000, guid: 6ed9e6a1b3d412b4a9620c34e51c9d06, type: 2}

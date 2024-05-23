@@ -1,14 +1,18 @@
 using Enums;
 using Gameplay;
+using Helper;
+using Singleton;
 using System;
 using UnityEngine;
 
-public class TntItemView : ItemView
+public class TntTntItemView : ComboItemView
 {
     public override void Init(BoardView boardView, MatchTypeEnum matchType)
     {
-        ItemType = ItemTypeEnum.TntItem;
-        base.Init(boardView, matchType);
+        ItemType = ItemTypeEnum.TntTntItem;
+        _boardView = boardView;
+        MatchType = matchType;
+        mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemTypeEnum.TntItem).ItemSprite(0);
     }
 
     public override void Execute(CellView currentCellView, ExecuteTypeEnum executeType)
@@ -17,7 +21,7 @@ public class TntItemView : ItemView
         {
             int deltaX = Math.Abs(cellView.X - currentCellView.X);
             int deltaY = Math.Abs(cellView.Y - currentCellView.Y);
-            return deltaX <= 2 && deltaY <= 2 && !(deltaX == 0 && deltaY == 0);
+            return deltaX <= 3 && deltaY <= 3 && !(deltaX == 0 && deltaY == 0);
         });
 
         IsDestinedToDie = true;
@@ -25,19 +29,5 @@ public class TntItemView : ItemView
         _boardView.ExecuteCellViews(currentCellView, cellsToExecute, executeType);
 
         DestroyItem();
-    }
-
-    public override void Interact(CellView currentCellView)
-    {
-        var cellsToExecute = MatchFinder.FindMatchCluster(currentCellView);
-
-        if (cellsToExecute.Count >= 2)
-        {
-            _boardView.ExecuteCellViews(currentCellView, cellsToExecute, ExecuteTypeEnum.Combo);
-        }
-        else
-        {
-            Execute(currentCellView, ExecuteTypeEnum.Special);
-        }
     }
 }

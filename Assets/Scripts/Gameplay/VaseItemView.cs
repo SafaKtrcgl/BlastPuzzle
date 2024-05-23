@@ -1,14 +1,14 @@
 using Enums;
+using Gameplay;
 
-public class VaseItemView : ObstacleItemView
+public class VaseItemView : ItemView
 {
-    public override void Init(MatchTypeEnum matchType)
+    public override void Init(BoardView boardView, MatchTypeEnum matchType)
     {
-        IsFallable = true;
         ItemType = ItemTypeEnum.VaseItem;
-        base.Init(matchType);
+        base.Init(boardView, matchType);
     }
-    public override void Execute(ExecuteTypeEnum executeType)
+    public override void Execute(CellView currentCellView, ExecuteTypeEnum executeType)
     {
         if (executeType == ExecuteTypeEnum.Special)
         {

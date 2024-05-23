@@ -4,6 +4,7 @@ namespace Enums
     {
         Blast = 0,
         Merge,
-        Special
+        Special,
+        Combo
     }
 }

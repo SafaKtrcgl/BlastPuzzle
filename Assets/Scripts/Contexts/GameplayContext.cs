@@ -11,7 +11,7 @@ namespace Context
     {
         [SerializeField] private BoardView boardView;
         [SerializeField] private GameplayTopPanel gameplayTopPanel;
-        [SerializeField] private GameplayLogicController logicController;
+        //[SerializeField] private GameplayInputController inputController;
         [SerializeField] private ItemFactory itemFactory;
 
         [SerializeField] private Image arenaBackgroundImage;
@@ -26,13 +26,14 @@ namespace Context
 
             var levelData = LevelDataParser.GetLevelData(PlayerPrefsUtility.GetCurrentLevel());
 
-            boardView.OnCellTapped += logicController.OnCellTap;
-            logicController.OnTapPerform += gameplayTopPanel.OnMovePerformed;
+            //boardView.OnCellTapped += inputController.OnCellTap;
+            //inputController.OnTapPerform += gameplayTopPanel.OnMovePerformed;
             itemFactory.OnObstacleItemCreated += gameplayTopPanel.OnObstacleCreated;
             boardView.OnObstacleItemExecuted += gameplayTopPanel.OnObstacleExecuted;
 
+            itemFactory.Init(boardView);
             boardView.Init(itemFactory, levelData.grid_width, levelData.grid_height, levelData.grid);
-            logicController.Init(boardView, levelData.move_count);
+            //inputController.Init(boardView, levelData.move_count);
             gameplayTopPanel.Init(boardView, levelData.move_count);
         }        
     }

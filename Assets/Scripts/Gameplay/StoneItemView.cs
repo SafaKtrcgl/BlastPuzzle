@@ -1,24 +1,20 @@
 using Enums;
+using Gameplay;
 
-public class StoneItemView : ObstacleItemView
+public class StoneItemView : ItemView
 {
-    public override void Init(MatchTypeEnum matchType)
+    public override void Init(BoardView boardView, MatchTypeEnum matchType)
     {
         ItemType = ItemTypeEnum.StoneItem;
-        base.Init(matchType);
+        base.Init(boardView, matchType);
     }
 
-    public override void Execute(ExecuteTypeEnum executeType)
+    public override void Execute(CellView currentCellView, ExecuteTypeEnum executeType)
     {
         if (executeType == ExecuteTypeEnum.Special)
         {
             OnItemExecute?.Invoke(ItemType);
             Destroy(gameObject);
         }
-    }
-
-    public override void OnNeighbourExecute(ExecuteTypeEnum executeType)
-    {
-        
     }
 }

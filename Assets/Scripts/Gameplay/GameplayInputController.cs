@@ -3,7 +3,7 @@ using Enums;
 using System;
 using UnityEngine;
 
-public class GameplayLogicController : MonoBehaviour
+public class GameplayInputController : MonoBehaviour
 {
     public Action<int> OnTapPerform;
 
@@ -23,6 +23,7 @@ public class GameplayLogicController : MonoBehaviour
 
     public void OnCellTap(int x, int y)
     {
+        /*
         if (_boardView.IsBussy) return;
         if (_moveCount < 1) return;
 
@@ -31,7 +32,10 @@ public class GameplayLogicController : MonoBehaviour
         if (tappedCellItem == null) return;
 
         _moveCount--;
+        OnTapPerform?.Invoke(_moveCount);
 
+        _boardView.OnCellTapped(x, y);
+        /*
         if (tappedCellItem.IsSpecial)
         {
             StartCoroutine(_boardView.ExecuteCells(tappedCell, null, ExecuteTypeEnum.Special, ItemTypeEnum.TntItem));
@@ -54,7 +58,6 @@ public class GameplayLogicController : MonoBehaviour
                 StartCoroutine(_boardView.ExecuteCells(tappedCell, matchingCells, ExecuteTypeEnum.Blast, ItemTypeEnum.None));
             }
         }
-
-        OnTapPerform?.Invoke(_moveCount);
+        */
     }
 }

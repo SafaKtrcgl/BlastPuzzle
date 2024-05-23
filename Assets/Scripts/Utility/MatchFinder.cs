@@ -4,18 +4,18 @@ using System.Collections.Generic;
 
 public static class MatchFinder
 {
-    public static List<CellView> FindMatchCluster(CellView tappedCell)
+    public static HashSet<CellView> FindMatchCluster(CellView tappedCell)
     {
         if (tappedCell.ItemInside == null || tappedCell.ItemInside.MatchType == MatchTypeEnum.None) return null;
 
-        List<CellView> matchingCells = new List<CellView>();
+        HashSet<CellView> matchingCells = new HashSet<CellView>();
 
         FindMatchCluster(tappedCell, tappedCell.ItemInside.MatchType, matchingCells);
 
         return matchingCells;
     }
 
-    private static void FindMatchCluster(CellView cellView, MatchTypeEnum matchType, List<CellView> matchingCells)
+    private static void FindMatchCluster(CellView cellView, MatchTypeEnum matchType, HashSet<CellView> matchingCells)
     {
         if (matchingCells.Contains(cellView))
         {

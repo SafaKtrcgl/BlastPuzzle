@@ -41,12 +41,11 @@ public class FillManager : MonoBehaviour
 
                     fillItems.Add(fillItem);
                 }
-                else if (!cellView.ItemInside.IsFallable)
+                else if (!cellView.ItemInside.ItemType.IsFallable())
                 {
                     break;
                 }
             }
-
 
             if (fillItems.Count > 0)
             {

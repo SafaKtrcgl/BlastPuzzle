@@ -5,5 +5,5 @@ using System.Collections.Generic;
 
 public interface IExecutionStrategy
 {
-    IEnumerator Execute(CellView tappedCell, List<CellView> cellsToExecute, ItemTypeEnum itemType);
+    IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute);
 }

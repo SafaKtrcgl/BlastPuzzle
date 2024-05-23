@@ -5,6 +5,7 @@ namespace Enums
         None = 0,
         CubeItem,
         TntItem,
+        TntTntItem,
         BoxItem,
         StoneItem,
         VaseItem

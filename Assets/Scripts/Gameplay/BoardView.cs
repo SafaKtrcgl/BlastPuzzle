@@ -13,7 +13,6 @@ public class BoardView : MonoBehaviour
     [SerializeField] private CellView cellViewPrefab;
     [SerializeField] private RectTransform boardBackgroundRecttransform;
 
-    public Action<int, int> OnCellTapped;
     public Action<ItemTypeEnum> OnObstacleItemExecuted;
 
     private int _width;
@@ -59,14 +58,14 @@ public class BoardView : MonoBehaviour
                 var cellView = Instantiate(cellViewPrefab, transform);
                 cellView.Init(this, x, y);
 
-                cellView.OnItemExecutedAction += OnItemExecuted;
-
-                cellView.OnClickAction += OnCellTap;
                 _cellViews[x, y] = cellView;
                 
                 var index = y * Width + x;
 
-                var itemView = _itemFactory.CreateItem(ItemDataParser.GetItemType(content[index]), ItemDataParser.GetMatchType(content[index]));
+                var itemType = ItemDataParser.GetItemType(content[index]);
+                var matchType = ItemDataParser.GetMatchType(content[index]);
+                
+                var itemView = _itemFactory.CreateItem(itemType, matchType);
                 ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)cellView.transform).anchoredPosition;
 
                 cellView.InsertItem(itemView);
@@ -76,11 +75,6 @@ public class BoardView : MonoBehaviour
         AssignCellNeighbours();
 
         boardBackgroundRecttransform.sizeDelta = new Vector2(Width * CellView.CellSize + BackgroundWidthPadding, Height * CellView.CellSize + BackgroundHeightPadding);
-    }
-
-    private void OnCellTap(int x, int y)
-    {
-        OnCellTapped?.Invoke(x, y);
     }
 
     private void AssignCellNeighbours()
@@ -106,7 +100,12 @@ public class BoardView : MonoBehaviour
         }
     }
 
-    public IEnumerator ExecuteCells(CellView tappedCell, List<CellView> cellsToExecute, ExecuteTypeEnum executeType, ItemTypeEnum itemType)
+    public void ExecuteCellViews(CellView originCellView, HashSet<CellView> cellViewsToExecute, ExecuteTypeEnum executeType)
+    {
+        StartCoroutine(ExecuteCellViewsCoroutine(originCellView, cellViewsToExecute, executeType));
+    }
+
+    private IEnumerator ExecuteCellViewsCoroutine(CellView originCellView, HashSet<CellView> cellViewsToExecute, ExecuteTypeEnum executeType)
     {
         _isBussy = true;
 
@@ -114,11 +113,12 @@ public class BoardView : MonoBehaviour
         {
             ExecuteTypeEnum.Blast => new BlastExecutionStrategy(),
             ExecuteTypeEnum.Merge => new MergeExecutionStrategy(_itemFactory),
-            ExecuteTypeEnum.Special => new SpecialExecutionStrategy(this),
+            ExecuteTypeEnum.Special => new SpecialExecutionStrategy(),
+            ExecuteTypeEnum.Combo => new ComboExecutionStrategy(_itemFactory),
             _ => throw new NotImplementedException()
         };
 
-        yield return executionStrategy.Execute(tappedCell, cellsToExecute, itemType);
+        yield return StartCoroutine(executionStrategy.Execute(originCellView, cellViewsToExecute));
 
         _isBussy = false;
 
@@ -128,17 +128,29 @@ public class BoardView : MonoBehaviour
         CheckIfGameEnded();
     }
 
-    public void OnItemExecuted(ItemTypeEnum itemType)
+    /*
+    private ExecuteTypeEnum GetExecuteType(CellView originCellView, HashSet<CellView> cellViewsToExecute)
     {
-        if (itemType.IsObstacle())
+        Debug.Log("Selamlar : > " + cellViewsToExecute.Count);
+
+        if (originCellView.ItemInside.ItemType.IsSpecial())
         {
-            OnObstacleItemExecuted?.Invoke(itemType);
+            return ExecuteTypeEnum.Special;
+        }
+        else
+        {
+            Debug.Log("Selamlar unspecial : > " + cellViewsToExecute.Count);
+            if (cellViewsToExecute.Count >= 5)
+                return ExecuteTypeEnum.Merge;
+            else
+                return ExecuteTypeEnum.Blast;
         }
     }
+    */
 
-    public List<CellView> GetCellViews(Func<CellView, bool> condition)
+    public HashSet<CellView> GetCellViews(Func<CellView, bool> condition)
     {
-        List<CellView> matchingCells = new ();
+        HashSet<CellView> matchingCells = new ();
 
         for (int y = 0; y < Height; y++)
         {
@@ -157,14 +169,16 @@ public class BoardView : MonoBehaviour
 
     private void CheckIfGameEnded()
     {
+        /*
         if (GetCellViews(cellView => cellView.ItemInside.ItemType.IsObstacle()).Count == 0)
         {
             Debug.Log("Game Won!");
-            _isBussy = true;
+            //_isBussy = true;
         }
         else if (GameplayLogicController.MoveCount == 0)
         {
             Debug.Log("Game Lost!");
         }
+        */
     }
 }
