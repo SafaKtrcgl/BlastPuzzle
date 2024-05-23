@@ -10,6 +10,7 @@ namespace Gameplay
     {
         public Action<ExecuteTypeEnum> OnCellExecuteAction;
         public Action<ItemTypeEnum> OnItemExecutedAction;
+        public Action<CellView> OnCellClicked;
 
         public const int CellSize = 70;
 
@@ -65,9 +66,7 @@ namespace Gameplay
 
         public void OnPointerDown(PointerEventData eventData)
         {
-            if (_boardView.IsBussy) return;
-
-            ItemInside.Interact(this);
+            OnCellClicked?.Invoke(this);
         }
 
         public void AssignNeighbourCell(DirectionEnum neighbourCellDirection, CellView cellView)
@@ -80,6 +79,13 @@ namespace Gameplay
         {
             OnItemExecutedAction?.Invoke(itemType);
             _itemInside = null;
+        }
+
+        private void OnDestroy()
+        {
+            OnCellExecuteAction = null;
+            OnItemExecutedAction = null;
+            OnCellClicked = null;
         }
     }
 }

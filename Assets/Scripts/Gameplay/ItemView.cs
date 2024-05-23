@@ -26,9 +26,9 @@ namespace Gameplay
 
         }
 
-        public virtual void Interact(CellView currentCellView)
+        public virtual bool TryInteract(CellView currentCellView)
         {
-
+            return false;
         }
 
         public virtual void Init(BoardView boardView, MatchTypeEnum matchType)
@@ -42,6 +42,12 @@ namespace Gameplay
         {
             OnItemExecute?.Invoke(ItemType);
             Destroy(gameObject);
+        }
+
+        private void OnDestroy()
+        {
+            Debug.Log("Selamas");
+            OnItemExecute = null;
         }
     }
 }

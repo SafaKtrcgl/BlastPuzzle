@@ -27,7 +27,7 @@ public class TntItemView : ItemView
         DestroyItem();
     }
 
-    public override void Interact(CellView currentCellView)
+    public override bool TryInteract(CellView currentCellView)
     {
         var cellsToExecute = MatchFinder.FindMatchCluster(currentCellView);
 
@@ -39,5 +39,7 @@ public class TntItemView : ItemView
         {
             Execute(currentCellView, ExecuteTypeEnum.Special);
         }
+
+        return true;
     }
 }

@@ -57,9 +57,10 @@ public class BoardView : MonoBehaviour
             {
                 var cellView = Instantiate(cellViewPrefab, transform);
                 cellView.Init(this, x, y);
-
                 _cellViews[x, y] = cellView;
-                
+
+                cellView.OnItemExecutedAction += OnItemExecuted;
+
                 var index = y * Width + x;
 
                 var itemType = ItemDataParser.GetItemType(content[index]);
@@ -128,26 +129,6 @@ public class BoardView : MonoBehaviour
         CheckIfGameEnded();
     }
 
-    /*
-    private ExecuteTypeEnum GetExecuteType(CellView originCellView, HashSet<CellView> cellViewsToExecute)
-    {
-        Debug.Log("Selamlar : > " + cellViewsToExecute.Count);
-
-        if (originCellView.ItemInside.ItemType.IsSpecial())
-        {
-            return ExecuteTypeEnum.Special;
-        }
-        else
-        {
-            Debug.Log("Selamlar unspecial : > " + cellViewsToExecute.Count);
-            if (cellViewsToExecute.Count >= 5)
-                return ExecuteTypeEnum.Merge;
-            else
-                return ExecuteTypeEnum.Blast;
-        }
-    }
-    */
-
     public HashSet<CellView> GetCellViews(Func<CellView, bool> condition)
     {
         HashSet<CellView> matchingCells = new ();
@@ -167,18 +148,30 @@ public class BoardView : MonoBehaviour
         return matchingCells;
     }
 
+    public void OnItemExecuted(ItemTypeEnum itemType)
+    {
+        if (itemType.IsObstacle())
+        {
+            OnObstacleItemExecuted?.Invoke(itemType);
+        }
+    }
+
     private void CheckIfGameEnded()
     {
-        /*
         if (GetCellViews(cellView => cellView.ItemInside.ItemType.IsObstacle()).Count == 0)
         {
             Debug.Log("Game Won!");
-            //_isBussy = true;
+            _isBussy = true;
         }
-        else if (GameplayLogicController.MoveCount == 0)
+        else if (GameplayInputController.MoveCount == 0)
         {
             Debug.Log("Game Lost!");
+            _isBussy = true;
         }
-        */
+    }
+
+    private void OnDestroy()
+    {
+        OnObstacleItemExecuted = null;
     }
 }

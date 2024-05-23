@@ -1172,7 +1172,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boardView: {fileID: 1560161099175985686}
   gameplayTopPanel: {fileID: 428187944189116722}
-  logicController: {fileID: 7386019501400357864}
+  inputController: {fileID: 7386019501400357864}
   itemFactory: {fileID: 5663662957792814983}
   arenaBackgroundImage: {fileID: 122901866977176979}
 --- !u!1 &9141566291261146820
@@ -1186,7 +1186,7 @@ GameObject:
   - component: {fileID: 5296730450050014272}
   - component: {fileID: 7386019501400357864}
   m_Layer: 0
-  m_Name: LogicController
+  m_Name: InputController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

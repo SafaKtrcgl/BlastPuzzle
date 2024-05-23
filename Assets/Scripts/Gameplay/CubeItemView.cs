@@ -21,12 +21,14 @@ public class CubeItemView : ItemView
         DestroyItem();
     }
 
-    public override void Interact(CellView currentCellView)
+    public override bool TryInteract(CellView currentCellView)
     {
         var cellsToExecute = MatchFinder.FindMatchCluster(currentCellView);
+        if (cellsToExecute.Count <= 1) return false;
 
         var executionType = cellsToExecute.Count >= 5 ? ExecuteTypeEnum.Merge : ExecuteTypeEnum.Blast;
-
         _boardView.ExecuteCellViews(currentCellView, cellsToExecute, executionType);
+
+        return true;
     }
 }
