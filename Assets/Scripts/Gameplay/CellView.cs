@@ -9,7 +9,9 @@ namespace Gameplay
     public class CellView : MonoBehaviour, IPointerDownHandler
     {
         public Action<int, int> OnClickAction;
-        public Action<ExecuteTypeEnum> OnExecuteAction;
+
+        public Action<ExecuteTypeEnum> OnCellExecuteAction;
+        public Action<ItemTypeEnum> OnItemExecutedAction;
 
         public const int CellSize = 70;
 
@@ -38,13 +40,13 @@ namespace Gameplay
         public void InsertItem(ItemView item)
         {
             _itemInside = item;
-            _itemInside.OnItemExecute += OnItemExecute;
+            _itemInside.OnItemExecute += OnItemExecuted;
         }
 
         public ItemView ExtractItem()
         {
             var itemView = _itemInside;
-            _itemInside.OnItemExecute -= OnItemExecute;
+            _itemInside.OnItemExecute -= OnItemExecuted;
             _itemInside = null;
             return itemView;
         }
@@ -52,7 +54,7 @@ namespace Gameplay
         public void Execute(ExecuteTypeEnum executeType)
         {
             _itemInside?.Execute(executeType);
-            OnExecuteAction?.Invoke(executeType);
+            OnCellExecuteAction?.Invoke(executeType);
         }
 
         public void OnNeighbourExecute(ExecuteTypeEnum executeType)
@@ -68,11 +70,12 @@ namespace Gameplay
         public void AssignNeighbourCell(DirectionEnum neighbourCellDirection, CellView cellView)
         {
             _neighbours.Add(neighbourCellDirection, cellView);
-            cellView.OnExecuteAction += OnNeighbourExecute;
+            cellView.OnCellExecuteAction += OnNeighbourExecute;
         }
 
-        public void OnItemExecute()
+        public void OnItemExecuted(ItemTypeEnum itemType)
         {
+            OnItemExecutedAction?.Invoke(itemType);
             _itemInside = null;
         }
     }

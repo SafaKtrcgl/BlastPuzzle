@@ -8,7 +8,6 @@ using UnityEngine.UI;
 
 public class CubeItemView : ItemView
 {
-    [SerializeField] Image cubeImage;
     public override void Init(MatchTypeEnum matchType)
     {
         IsMatchable = true;
@@ -16,12 +15,12 @@ public class CubeItemView : ItemView
         ItemType = ItemTypeEnum.CubeItem;
         MatchType = matchType;
 
-        cubeImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(Array.IndexOf(ItemDataParser.cubeItemTypes, MatchType));
+        mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(Array.IndexOf(ItemDataParser.cubeItemTypes, MatchType));
     }
 
     public override void Execute(ExecuteTypeEnum executeType)
     {
-        OnItemExecute?.Invoke();
+        OnItemExecute?.Invoke(ItemType);
         Destroy(gameObject);
     }
 

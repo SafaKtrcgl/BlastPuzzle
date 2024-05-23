@@ -1,13 +1,20 @@
 using DG.Tweening;
+using Enums;
+using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class GameplayTopPanel : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI moveCountText;
+    [SerializeField] private TextMeshProUGUI moveCountText;
+    [SerializeField] private MissionView missionViewPrefab;
+    [SerializeField] private Transform missionViewHolder;
 
     private BoardView _boardView;
     private int _moveCount;
+
+    private Dictionary<ItemTypeEnum, MissionView> itemTypeMissionDictionary = new();
 
     public void Init(BoardView boardView, int moveCount)
     {
@@ -24,8 +31,27 @@ public class GameplayTopPanel : MonoBehaviour
         moveCountText.text = moveCount.ToString();
     }
 
-    public void OnObstacleRemoved()
+    public void OnObstacleCreated(ItemTypeEnum itemType)
     {
+        if (itemTypeMissionDictionary.ContainsKey(itemType))
+        {
+            itemTypeMissionDictionary[itemType].UpdateCount(1);
+        }
+        else
+        {
+            var missionView = Instantiate(missionViewPrefab, missionViewHolder);
+            missionView.Init(itemType);
+            itemTypeMissionDictionary.Add(itemType, missionView);
+        }
+    }
 
+    public void OnObstacleExecuted(ItemTypeEnum itemType)
+    {
+        itemTypeMissionDictionary[itemType].UpdateCount(-1);
+
+        if (itemTypeMissionDictionary[itemType].IsComplete)
+        {
+            itemTypeMissionDictionary.Remove(itemType);
+        }
     }
 }

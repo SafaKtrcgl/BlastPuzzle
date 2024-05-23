@@ -6,22 +6,22 @@ public class VaseItemView : ObstacleItemView
     {
         IsFallable = true;
         ItemType = ItemTypeEnum.VaseItem;
-        MatchType = matchType;
+        base.Init(matchType);
     }
     public override void Execute(ExecuteTypeEnum executeType)
     {
         if (executeType == ExecuteTypeEnum.Special)
         {
-            OnItemExecute?.Invoke();
+            OnItemExecute?.Invoke(ItemType);
             Destroy(gameObject);
         }
     }
 
     public override void OnNeighbourExecute(ExecuteTypeEnum executeType)
     {
-        if (executeType == ExecuteTypeEnum.Special)
+        if (executeType == ExecuteTypeEnum.Blast || executeType == ExecuteTypeEnum.Merge)
         {
-            OnItemExecute?.Invoke();
+            OnItemExecute?.Invoke(ItemType);
             Destroy(gameObject);
         }
     }

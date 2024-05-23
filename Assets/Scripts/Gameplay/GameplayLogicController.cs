@@ -8,7 +8,9 @@ public class GameplayLogicController : MonoBehaviour
     public Action<int> OnTapPerform;
 
     private BoardView _boardView;
-    private int _moveCount;
+    
+    private static int _moveCount;
+    public static int MoveCount { get => _moveCount; }
 
     private readonly int blastMinimumRequiredMatch = 2;
     private readonly int tntMinimumRequiredMatch = 5;
@@ -22,6 +24,7 @@ public class GameplayLogicController : MonoBehaviour
     public void OnCellTap(int x, int y)
     {
         if (_boardView.IsBussy) return;
+        if (_moveCount < 1) return;
 
         var tappedCell = _boardView.GetCellView(x, y);
         var tappedCellItem = tappedCell.ItemInside;

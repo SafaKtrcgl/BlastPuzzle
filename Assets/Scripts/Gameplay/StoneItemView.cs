@@ -5,14 +5,14 @@ public class StoneItemView : ObstacleItemView
     public override void Init(MatchTypeEnum matchType)
     {
         ItemType = ItemTypeEnum.StoneItem;
-        MatchType = matchType;
+        base.Init(matchType);
     }
 
     public override void Execute(ExecuteTypeEnum executeType)
     {
         if (executeType == ExecuteTypeEnum.Special)
         {
-            OnItemExecute?.Invoke();
+            OnItemExecute?.Invoke(ItemType);
             Destroy(gameObject);
         }
     }

@@ -7,23 +7,23 @@ namespace Gameplay
         public override void Init(MatchTypeEnum matchType)
         {
             ItemType = ItemTypeEnum.BoxItem;
-            MatchType = matchType;
+            base.Init(matchType);
         }
 
         public override void Execute(ExecuteTypeEnum executeType)
         {
             if (executeType == ExecuteTypeEnum.Special)
             {
-                OnItemExecute?.Invoke();
+                OnItemExecute?.Invoke(ItemType);
                 Destroy(gameObject);
             }
         }
 
         public override void OnNeighbourExecute(ExecuteTypeEnum executeType)
         {
-            if (executeType == ExecuteTypeEnum.Blast)
+            if (executeType == ExecuteTypeEnum.Blast || executeType == ExecuteTypeEnum.Merge)
             {
-                OnItemExecute?.Invoke();
+                OnItemExecute?.Invoke(ItemType);
                 Destroy(gameObject);
             }
         }

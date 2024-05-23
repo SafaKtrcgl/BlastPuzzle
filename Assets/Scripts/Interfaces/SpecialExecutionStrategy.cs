@@ -28,6 +28,8 @@ public class SpecialExecutionStrategy : IExecutionStrategy
             {
                 cellView?.Execute(ExecuteTypeEnum.Special);
             }
+
+            tappedCell?.Execute(ExecuteTypeEnum.Special);
         }
         yield break;
     }

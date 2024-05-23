@@ -34,10 +34,11 @@ public class FillManager : MonoBehaviour
 
                 if (cellView.ItemInside == null)
                 {
-                    var fillItem = _itemFactory.CreateItem(ItemTypeEnum.CubeItem);
+                    var fillItem = _itemFactory.CreateItem(ItemTypeEnum.CubeItem, (MatchTypeEnum)Random.Range(0, ItemDataParser.cubeItemTypes.Length));
+
                     var initialPositionoffSet = Vector2.up * ((InitialPositionCellPadding + fillItems.Count) * CellView.CellSize);
                     ((RectTransform)fillItem.transform).anchoredPosition = topCellPosition + initialPositionoffSet;
-                    fillItem.Init((MatchTypeEnum)Random.Range(0, ItemDataParser.cubeItemTypes.Length));
+
                     fillItems.Add(fillItem);
                 }
                 else if (!cellView.ItemInside.IsFallable)

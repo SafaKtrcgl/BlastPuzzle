@@ -8,19 +8,21 @@ using UnityEngine;
 
 public class BoardView : MonoBehaviour
 {
-    [SerializeField] private ItemFactory itemFactory;
     [SerializeField] private FillManager fillManager;
     [SerializeField] private FallManager fallManager;
     [SerializeField] private CellView cellViewPrefab;
     [SerializeField] private RectTransform boardBackgroundRecttransform;
 
     public Action<int, int> OnCellTapped;
+    public Action<ItemTypeEnum> OnObstacleItemExecuted;
 
     private int _width;
     public int Width => _width;
 
     private int _height;
     public int Height => _height;
+
+    private ItemFactory _itemFactory;
 
     private readonly float BackgroundWidthPadding = 35f;
     private readonly float BackgroundHeightPadding = 50f;
@@ -31,15 +33,17 @@ public class BoardView : MonoBehaviour
     private bool _isBussy = true;
     public bool IsBussy => _isBussy;
 
-    public void Init(int width, int height, string[] content)
+    public void Init(ItemFactory itemFactory, int width, int height, string[] content)
     {
         _width = width;
         _height = height;
 
         _cellViews = new CellView[_width, _height];
 
+        _itemFactory = itemFactory;
+
         fallManager.Init(this);
-        fillManager.Init(this, itemFactory, fallManager);
+        fillManager.Init(this, _itemFactory, fallManager);
 
         ConstructBoard(content);
 
@@ -55,14 +59,15 @@ public class BoardView : MonoBehaviour
                 var cellView = Instantiate(cellViewPrefab, transform);
                 cellView.Init(this, x, y);
 
+                cellView.OnItemExecutedAction += OnItemExecuted;
+
                 cellView.OnClickAction += OnCellTap;
                 _cellViews[x, y] = cellView;
                 
                 var index = y * Width + x;
 
-                var itemView = itemFactory.CreateItem(ItemDataParser.GetItemType(content[index]));
+                var itemView = _itemFactory.CreateItem(ItemDataParser.GetItemType(content[index]), ItemDataParser.GetMatchType(content[index]));
                 ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)cellView.transform).anchoredPosition;
-                itemView.Init(ItemDataParser.GetMatchType(content[index]));
 
                 cellView.InsertItem(itemView);
             }
@@ -108,7 +113,7 @@ public class BoardView : MonoBehaviour
         IExecutionStrategy executionStrategy = executeType switch
         {
             ExecuteTypeEnum.Blast => new BlastExecutionStrategy(),
-            ExecuteTypeEnum.Merge => new MergeExecutionStrategy(itemFactory),
+            ExecuteTypeEnum.Merge => new MergeExecutionStrategy(_itemFactory),
             ExecuteTypeEnum.Special => new SpecialExecutionStrategy(this),
             _ => throw new NotImplementedException()
         };
@@ -119,32 +124,17 @@ public class BoardView : MonoBehaviour
 
         fallManager.HandleBoardItems();
         fillManager.FillBoard();
+
+        CheckIfGameEnded();
     }
 
-    /*
-    public List<CellView> GetCellsInPerimeter(CellView centerCell, int perimeterRadius)
+    public void OnItemExecuted(ItemTypeEnum itemType)
     {
-        List<CellView> effectedCells = new();
-
-        for (int y = -perimeterRadius; y <= perimeterRadius; y++)
+        if (itemType.IsObstacle())
         {
-            var _y = centerCell.Y + y;
-            if (_y < 0) continue;
-            else if (_y > Height - 1) break;
-
-            for (int x = -perimeterRadius; x <= perimeterRadius; x++)
-            {
-                var _x = centerCell.X + x;
-                if (_x < 0) continue;
-                else if (_x > Width - 1) break;
-
-                effectedCells.Add(GetCellView(_x, _y));
-            }
+            OnObstacleItemExecuted?.Invoke(itemType);
         }
-
-        return effectedCells;
     }
-    */
 
     public List<CellView> GetCellViews(Func<CellView, bool> condition)
     {
@@ -163,5 +153,18 @@ public class BoardView : MonoBehaviour
         }
 
         return matchingCells;
+    }
+
+    private void CheckIfGameEnded()
+    {
+        if (GetCellViews(cellView => cellView.ItemInside.ItemType.IsObstacle()).Count == 0)
+        {
+            Debug.Log("Game Won!");
+            _isBussy = true;
+        }
+        else if (GameplayLogicController.MoveCount == 0)
+        {
+            Debug.Log("Game Lost!");
+        }
     }
 }

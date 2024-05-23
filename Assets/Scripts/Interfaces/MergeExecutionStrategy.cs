@@ -25,9 +25,8 @@ public class MergeExecutionStrategy : IExecutionStrategy
                 cellView?.Execute(ExecuteTypeEnum.Merge);
             }
 
-            var itemView = itemFactory.CreateItem(itemType);
+            var itemView = itemFactory.CreateItem(itemType, MatchTypeEnum.Combo);
             ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)tappedCell.transform).anchoredPosition;
-            itemView.Init(MatchTypeEnum.Combo);
 
             tappedCell.InsertItem(itemView);
         });
