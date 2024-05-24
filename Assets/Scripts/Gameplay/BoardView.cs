@@ -6,6 +6,7 @@ using Singleton;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Utility;
 
@@ -15,8 +16,10 @@ public class BoardView : MonoBehaviour
     [SerializeField] private FallManager fallManager;
     [SerializeField] private CellView cellViewPrefab;
     [SerializeField] private RectTransform boardBackgroundRecttransform;
+    //[SerializeField] private CoroutineQueue coroutineQueue;
 
     public Action<ItemTypeEnum> OnObstacleItemExecuted;
+    public Action OnCellViewExecutionEnd;
 
     private int _width;
     public int Width => _width;
@@ -35,6 +38,9 @@ public class BoardView : MonoBehaviour
     private bool _isBussy = true;
     public bool IsBussy => _isBussy;
 
+    private IEnumerator _ongoingCoroutine;
+    private Queue<IEnumerator> _executionQueue = new();
+
     public void Init(ItemFactory itemFactory, int width, int height, string[] content)
     {
         _width = width;
@@ -43,9 +49,6 @@ public class BoardView : MonoBehaviour
         _cellViews = new CellView[_width, _height];
 
         _itemFactory = itemFactory;
-
-        fallManager.Init(this);
-        fillManager.Init(this, _itemFactory, fallManager);
 
         ConstructBoard(content);
 
@@ -106,10 +109,19 @@ public class BoardView : MonoBehaviour
 
     public void ExecuteCellViews(CellView originCellView, HashSet<CellView> cellViewsToExecute, ExecuteTypeEnum executeType)
     {
-        StartCoroutine(ExecuteCellViewsCoroutine(originCellView, cellViewsToExecute, executeType));
+        if (_executionQueue.Count == 0)
+        {
+            ConstructExecutionQueue(originCellView, cellViewsToExecute, executeType);
+
+            StartCoroutine(ExecuteExecutionQueue());
+        }
+        else
+        {
+            ConstructExecutionQueue(originCellView, cellViewsToExecute, executeType);
+        }
     }
 
-    private IEnumerator ExecuteCellViewsCoroutine(CellView originCellView, HashSet<CellView> cellViewsToExecute, ExecuteTypeEnum executeType)
+    private void ConstructExecutionQueue(CellView originCellView, HashSet<CellView> cellViewsToExecute, ExecuteTypeEnum executeType)
     {
         _isBussy = true;
 
@@ -122,14 +134,35 @@ public class BoardView : MonoBehaviour
             _ => throw new NotImplementedException()
         };
 
-        yield return StartCoroutine(executionStrategy.Execute(originCellView, cellViewsToExecute));
+        _executionQueue.Enqueue(executionStrategy.Execute(originCellView, cellViewsToExecute));
+
+        if (executeType == ExecuteTypeEnum.Special)
+        {
+            foreach (var cellViewToExecute in cellViewsToExecute)
+            {
+                if (!cellViewToExecute.ItemInside) continue;
+                if (!cellViewToExecute.ItemInside.ItemType.IsSpecial()) continue;
+
+                cellViewToExecute.Execute(executeType);
+            }
+        }
+    }
+
+    private IEnumerator ExecuteExecutionQueue()
+    {
+        while (_executionQueue.Count > 0)
+        {
+            Debug.Log("Execution queue iteration");
+            _ongoingCoroutine = _executionQueue.Dequeue();
+            StartCoroutine(_ongoingCoroutine);
+            //yield return _ongoingCoroutine;
+            yield return new WaitForSeconds(2);
+        }
+
+        yield return new WaitForSeconds(3);
 
         _isBussy = false;
-
-        fallManager.HandleBoardItems();
-        fillManager.FillBoard();
-
-        CheckIfGameEnded();
+        OnCellViewExecutionEnd?.Invoke();
     }
 
     public HashSet<CellView> GetCellViews(Func<CellView, bool> condition)
@@ -157,6 +190,11 @@ public class BoardView : MonoBehaviour
         {
             OnObstacleItemExecuted?.Invoke(itemType);
         }
+    }
+
+    public void OnBoardFilled()
+    {
+        _isBussy = false;
     }
 
     private void CheckIfGameEnded()

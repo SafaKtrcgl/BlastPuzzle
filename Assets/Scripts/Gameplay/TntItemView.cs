@@ -1,7 +1,6 @@
 using Enums;
 using Gameplay;
 using System;
-using UnityEngine;
 
 public class TntItemView : ItemView
 {
@@ -13,6 +12,9 @@ public class TntItemView : ItemView
 
     public override void Execute(CellView currentCellView, ExecuteTypeEnum executeType)
     {
+        if (IsDestinedToDie) return;
+        IsDestinedToDie = true;
+
         var cellsToExecute = _boardView.GetCellViews(cellView =>
         {
             int deltaX = Math.Abs(cellView.X - currentCellView.X);
@@ -20,11 +22,7 @@ public class TntItemView : ItemView
             return deltaX <= 2 && deltaY <= 2 && !(deltaX == 0 && deltaY == 0);
         });
 
-        IsDestinedToDie = true;
-
         _boardView.ExecuteCellViews(currentCellView, cellsToExecute, executeType);
-
-        DestroyItem();
     }
 
     public override bool TryInteract(CellView currentCellView)

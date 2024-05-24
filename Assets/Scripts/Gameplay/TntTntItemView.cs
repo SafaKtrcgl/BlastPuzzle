@@ -17,14 +17,15 @@ public class TntTntItemView : ComboItemView
 
     public override void Execute(CellView currentCellView, ExecuteTypeEnum executeType)
     {
+        if (IsDestinedToDie) return;
+        IsDestinedToDie = true;
+
         var cellsToExecute = _boardView.GetCellViews(cellView =>
         {
             int deltaX = Math.Abs(cellView.X - currentCellView.X);
             int deltaY = Math.Abs(cellView.Y - currentCellView.Y);
             return deltaX <= 3 && deltaY <= 3 && !(deltaX == 0 && deltaY == 0);
         });
-
-        IsDestinedToDie = true;
 
         _boardView.ExecuteCellViews(currentCellView, cellsToExecute, executeType);
 

@@ -52,7 +52,7 @@ namespace Gameplay
 
         public void Execute(ExecuteTypeEnum executeType)
         {
-            if (ItemInside != null && !ItemInside.IsDestinedToDie)
+            if (ItemInside != null)
             {
                 OnCellExecuteAction?.Invoke(executeType);
                 ItemInside?.Execute(this, executeType);
@@ -77,6 +77,7 @@ namespace Gameplay
 
         public void OnItemExecuted(ItemTypeEnum itemType)
         {
+            Debug.Log("Item inside destroyed :> " + X + " : " + Y);
             OnItemExecutedAction?.Invoke(itemType);
             _itemInside = null;
         }

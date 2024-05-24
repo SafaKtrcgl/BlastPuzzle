@@ -1176,6 +1176,8 @@ MonoBehaviour:
   gameplayTopPanel: {fileID: 428187944189116722}
   inputController: {fileID: 7386019501400357864}
   itemFactory: {fileID: 5663662957792814983}
+  fallManager: {fileID: 5366414906988184631}
+  fillManager: {fileID: 2226917561875900781}
   arenaBackgroundImage: {fileID: 122901866977176979}
 --- !u!1 &9141566291261146820
 GameObject:

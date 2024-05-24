@@ -12,8 +12,7 @@ public class VaseItemView : ItemView
     {
         if (executeType == ExecuteTypeEnum.Special)
         {
-            OnItemExecute?.Invoke(ItemType);
-            Destroy(gameObject);
+            DestroyItem();
         }
     }
 
@@ -21,8 +20,7 @@ public class VaseItemView : ItemView
     {
         if (executeType == ExecuteTypeEnum.Blast || executeType == ExecuteTypeEnum.Merge)
         {
-            OnItemExecute?.Invoke(ItemType);
-            Destroy(gameObject);
+            DestroyItem();
         }
     }
 }

@@ -1,10 +1,15 @@
+using DG.Tweening;
 using Enums;
 using Gameplay;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class FillManager : MonoBehaviour
 {
+    public Action OnBoardFilled;
+
     private BoardView _boardView;
     private ItemFactory _itemFactory;
     private FallManager _fallManager;
@@ -23,6 +28,8 @@ public class FillManager : MonoBehaviour
         List<ItemView> fillItems = new();
         Vector2 topCellPosition;
 
+        Sequence fillBoardSequence = DOTween.Sequence();
+
         for (int x = 0; x < _boardView.Width; x++)
         {
             fillItems.Clear();
@@ -34,7 +41,7 @@ public class FillManager : MonoBehaviour
 
                 if (cellView.ItemInside == null)
                 {
-                    var fillItem = _itemFactory.CreateItem(ItemTypeEnum.CubeItem, (MatchTypeEnum)Random.Range(0, ItemDataParser.cubeItemTypes.Length));
+                    var fillItem = _itemFactory.CreateItem(ItemTypeEnum.CubeItem, (MatchTypeEnum) Random.Range(0, ItemDataParser.cubeItemTypes.Length));
 
                     var initialPositionoffSet = Vector2.up * ((InitialPositionCellPadding + fillItems.Count) * CellView.CellSize);
                     ((RectTransform)fillItem.transform).anchoredPosition = topCellPosition + initialPositionoffSet;
@@ -50,8 +57,10 @@ public class FillManager : MonoBehaviour
             if (fillItems.Count > 0)
             {
                 fillItems.Reverse();
-                _fallManager.HandleFillItems(fillItems, x);
+                fillBoardSequence.Join(_fallManager.HandleFillItemFall(fillItems, x));
             }
         }
+
+        fillBoardSequence.OnComplete(() => OnBoardFilled?.Invoke());
     }
 }

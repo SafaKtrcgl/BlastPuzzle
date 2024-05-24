@@ -13,8 +13,7 @@ public class StoneItemView : ItemView
     {
         if (executeType == ExecuteTypeEnum.Special)
         {
-            OnItemExecute?.Invoke(ItemType);
-            Destroy(gameObject);
+            DestroyItem();
         }
     }
 }
