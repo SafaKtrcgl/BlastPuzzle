@@ -1,4 +1,3 @@
-using Helper;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +12,10 @@ namespace UI
 
         public void Init()
         {
-            levelButtonText.text = $"Level {PlayerPrefsUtility.GetCurrentLevel()}";
+            var areLevelFinished = PlayerPrefsUtility.GetCurrentLevel() > Config.LevelCount;
+
+            levelButton.interactable = !areLevelFinished;
+            levelButtonText.text = areLevelFinished ? "Finished" : $"Level {PlayerPrefsUtility.GetCurrentLevel()}";
         }
     }
 }

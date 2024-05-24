@@ -1,5 +1,6 @@
 using Helper;
 using Singleton;
+using System.IO;
 
 namespace Context
 {
@@ -7,7 +8,8 @@ namespace Context
     {
         private void Start()
         {
-            //TODO: Check game information
+            Config.LevelCount = Directory.GetFiles(Config.LevelDataPath, Config.LevelDataPattern).Length;
+
             var contextHelper = HelperResources.Instance.GetHelper<ContextHelper>(HelperEnum.ContextHelper);
             contextHelper.LoadMainScene();
         }

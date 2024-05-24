@@ -14,7 +14,7 @@ namespace Utility
 
         public static LevelDataParser GetLevelData(int level)
         {
-            string levelFilePath = $"{Application.dataPath}/CaseStudyAssetsNoArea/Levels/level_{level:D2}.json";
+            string levelFilePath = $"{Config.LevelDataPath}level_{level:D2}.json";
 
             if (!File.Exists(levelFilePath))
             {

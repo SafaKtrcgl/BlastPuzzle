@@ -31,7 +31,7 @@ public class TntItemView : ItemView
     {
         var cellsToExecute = MatchFinder.FindMatchCluster(currentCellView);
 
-        if (cellsToExecute.Count >= 2)
+        if (cellsToExecute.Count >= Config.TntTnTMinimumRequiredMatch)
         {
             _boardView.ExecuteCellViews(currentCellView, cellsToExecute, ExecuteTypeEnum.Combo);
         }

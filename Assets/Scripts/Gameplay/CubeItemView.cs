@@ -24,9 +24,9 @@ public class CubeItemView : ItemView
     public override bool TryInteract(CellView currentCellView)
     {
         var cellsToExecute = MatchFinder.FindMatchCluster(currentCellView);
-        if (cellsToExecute.Count <= 1) return false;
+        if (cellsToExecute.Count < Config.BlastMinimumRequiredMatch) return false;
 
-        var executionType = cellsToExecute.Count >= 5 ? ExecuteTypeEnum.Merge : ExecuteTypeEnum.Blast;
+        var executionType = cellsToExecute.Count >= Config.TntMinimumRequiredMatch ? ExecuteTypeEnum.Merge : ExecuteTypeEnum.Blast;
         _boardView.ExecuteCellViews(currentCellView, cellsToExecute, executionType);
 
         return true;
