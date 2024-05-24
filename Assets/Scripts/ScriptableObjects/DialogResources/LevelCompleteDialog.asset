@@ -1,0 +1,16 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3714ac03f7727f48b3a4f080cdf4c04, type: 3}
+  m_Name: LevelCompleteDialog
+  m_EditorClassIdentifier: 
+  dialogType: 0
+  dialogPrefab: {fileID: 8170970188138915850, guid: 072e5a3afa2746e40922caa5b144c366, type: 3}

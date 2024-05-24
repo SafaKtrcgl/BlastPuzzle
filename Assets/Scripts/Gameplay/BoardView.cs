@@ -1,10 +1,13 @@
 using DG.Tweening;
 using Enums;
 using Gameplay;
+using Helper;
+using Singleton;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Utility;
 
 public class BoardView : MonoBehaviour
 {
@@ -158,13 +161,21 @@ public class BoardView : MonoBehaviour
 
     private void CheckIfGameEnded()
     {
-        if (GetCellViews(cellView => cellView.ItemInside.ItemType.IsObstacle()).Count == 0)
+        if (GetCellViews(cellView => cellView.ItemInside && cellView.ItemInside.ItemType.IsObstacle()).Count == 0)
         {
             _isBussy = true;
+            PlayerPrefsUtility.SetCurrentLevel(PlayerPrefsUtility.GetCurrentLevel() + 1);
+            var dialogHelper = HelperResources.Instance.GetHelper<DialogHelper>(HelperEnum.DialogHelper);
+            dialogHelper.ShowDialog<LevelCompleteDialog>(DialogTypeEnum.LevelCompleteDialog).Init();
         }
         else if (GameplayInputController.MoveCount == 0)
         {
             _isBussy = true;
+            var contextHelper = HelperResources.Instance.GetHelper<ContextHelper>(HelperEnum.ContextHelper);
+            var dialogHelper = HelperResources.Instance.GetHelper<DialogHelper>(HelperEnum.DialogHelper);
+            dialogHelper.ShowGenericPopupDialog("Level Failed!", "Try Again",
+                () => { contextHelper.LoadGameplayScene(); }, 
+                () => { contextHelper.LoadMainScene(); });
         }
     }
 

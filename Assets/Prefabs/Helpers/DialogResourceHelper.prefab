@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2617523430231945436}
-  - component: {fileID: 2597316039262391970}
+  - component: {fileID: -8127347118268998804}
   m_Layer: 0
-  m_Name: ItemResourceHelper
+  m_Name: DialogResourceHelper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36,7 +36,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &2597316039262391970
+--- !u!114 &-8127347118268998804
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,13 +45,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6196974758248589364}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e19fa77b44edbe248aba82662f96c444, type: 3}
+  m_Script: {fileID: 11500000, guid: f4f08a27c00557048b3bfd62f5e8d750, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  itemResources:
-  - {fileID: 11400000, guid: b662bb17763669849814fa597000c174, type: 2}
-  - {fileID: 11400000, guid: 154d942592f861648bf27074dd3e9502, type: 2}
-  - {fileID: 11400000, guid: ca94071c7152a9a468a8d0cf4b92573f, type: 2}
-  - {fileID: 11400000, guid: a7fcfecd833c0ac4cb9d916bb9c149c9, type: 2}
-  - {fileID: 11400000, guid: c557969f706b6ab43819c30f4a48ec28, type: 2}
-  - {fileID: 11400000, guid: 6ed9e6a1b3d412b4a9620c34e51c9d06, type: 2}
+  popupDialogPrefab: {fileID: 7226825683224735138, guid: fe1f0b56eb18e0244b34aaab887103ce, type: 3}
+  dialogResources:
+  - {fileID: 11400000, guid: 20aec303993b2c446b59a4ca6f09b35e, type: 2}

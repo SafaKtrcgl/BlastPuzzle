@@ -2,5 +2,6 @@ public enum HelperEnum
 {
     ContextHelper,
     ArenaResourceHelper,
-    ItemResourceHelper
+    ItemResourceHelper,
+    DialogHelper
 }

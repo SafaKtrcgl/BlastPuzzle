@@ -23,6 +23,8 @@ public class ItemDataParser
                 return ItemTypeEnum.TntItem;
             case "s":
                 return ItemTypeEnum.StoneItem;
+            case "v":
+                return ItemTypeEnum.VaseItem;
             default:
                 return ItemTypeEnum.None;
         }
