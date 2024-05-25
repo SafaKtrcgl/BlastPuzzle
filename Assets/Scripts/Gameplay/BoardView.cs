@@ -19,7 +19,6 @@ public class BoardView : MonoBehaviour
     //[SerializeField] private CoroutineQueue coroutineQueue;
 
     public Action<ItemTypeEnum> OnObstacleItemExecuted;
-    public Action OnCellViewExecutionEnd;
 
     private int _width;
     public int Width => _width;
@@ -36,10 +35,7 @@ public class BoardView : MonoBehaviour
     public CellView GetCellView(int x, int y) => _cellViews[x, y];
 
     private bool _isBussy = true;
-    public bool IsBussy => _isBussy;
-
-    private IEnumerator _ongoingCoroutine;
-    private Queue<IEnumerator> _executionQueue = new();
+    public bool IsBussy { get => _isBussy; set => _isBussy = value; }
 
     public void Init(ItemFactory itemFactory, int width, int height, string[] content)
     {
@@ -105,62 +101,6 @@ public class BoardView : MonoBehaviour
                 cellView.AssignNeighbourCell(DirectionEnum.Down, _cellViews[cellView.X, cellView.Y - 1]);
             }
         }
-    }
-
-    public void ExecuteCellViews(CellView originCellView, HashSet<CellView> cellViewsToExecute, ExecuteTypeEnum executeType)
-    {
-        if (_executionQueue.Count == 0)
-        {
-            _isBussy = true;
-
-            ConstructExecutionQueue(originCellView, cellViewsToExecute, executeType);
-
-            StartCoroutine(ExecuteExecutionQueue());
-        }
-        else
-        {
-            ConstructExecutionQueue(originCellView, cellViewsToExecute, executeType);
-        }
-    }
-
-    private void ConstructExecutionQueue(CellView originCellView, HashSet<CellView> cellViewsToExecute, ExecuteTypeEnum executeType)
-    {
-        Debug.Log("Selamlar :> " + executeType);
-
-        IExecutionStrategy executionStrategy = executeType switch
-        {
-            ExecuteTypeEnum.Blast => new BlastExecutionStrategy(),
-            ExecuteTypeEnum.Merge => new MergeExecutionStrategy(_itemFactory),
-            ExecuteTypeEnum.Special => new SpecialExecutionStrategy(),
-            ExecuteTypeEnum.Combo => new ComboExecutionStrategy(_itemFactory),
-            _ => throw new NotImplementedException()
-        };
-
-        _executionQueue.Enqueue(executionStrategy.Execute(originCellView, cellViewsToExecute));
-
-        if (executeType == ExecuteTypeEnum.Special)
-        {
-            foreach (var cellViewToExecute in cellViewsToExecute)
-            {
-                if (!cellViewToExecute.ItemInside) continue;
-                if (!cellViewToExecute.ItemInside.ItemType.IsSpecial()) continue;
-
-                cellViewToExecute.Execute(executeType);
-            }
-        }
-    }
-
-    private IEnumerator ExecuteExecutionQueue()
-    {
-        while (_executionQueue.Count > 0)
-        {
-            yield return _executionQueue.Dequeue();
-        }
-
-        yield return new WaitForEndOfFrame();
-
-        _isBussy = false;
-        OnCellViewExecutionEnd?.Invoke();
     }
 
     public HashSet<CellView> GetCellViews(Func<CellView, bool> condition)

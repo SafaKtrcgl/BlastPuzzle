@@ -3,15 +3,13 @@ using Gameplay;
 using Helper;
 using Singleton;
 using System;
-using UnityEngine;
 
 public class CubeItemView : ItemView
 {
-    public override void Init(BoardView boardView, MatchTypeEnum matchType)
+    public override void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
     {
-        _boardView = boardView;
         ItemType = ItemTypeEnum.CubeItem;
-        MatchType = matchType;
+        base.Init(boardView, executionManager, matchType);
 
         mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(Array.IndexOf(ItemDataParser.cubeItemTypes, MatchType));
     }
@@ -27,7 +25,7 @@ public class CubeItemView : ItemView
         if (cellsToExecute.Count < Config.BlastMinimumRequiredMatch) return false;
 
         var executionType = cellsToExecute.Count >= Config.TntMinimumRequiredMatch ? ExecuteTypeEnum.Merge : ExecuteTypeEnum.Blast;
-        _boardView.ExecuteCellViews(currentCellView, cellsToExecute, executionType);
+        _executionManager.ExecuteCellViews(currentCellView, cellsToExecute, executionType);
 
         return true;
     }

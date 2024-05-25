@@ -6,10 +6,10 @@ public class TntItemView : ItemView
 {
     private int _perimeter = 2;
 
-    public override void Init(BoardView boardView, MatchTypeEnum matchType)
+    public override void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
     {
         ItemType = ItemTypeEnum.TntItem;
-        base.Init(boardView, matchType);
+        base.Init(boardView, executionManager, matchType);
     }
 
     public override void Execute(CellView currentCellView, ExecuteTypeEnum executeType)
@@ -24,7 +24,7 @@ public class TntItemView : ItemView
             return deltaX <= _perimeter && deltaY <= _perimeter && !(deltaX == 0 && deltaY == 0);
         });
 
-        _boardView.ExecuteCellViews(currentCellView, cellsToExecute, executeType);
+        _executionManager.ExecuteCellViews(currentCellView, cellsToExecute, executeType);
     }
 
     public override bool TryInteract(CellView currentCellView)
@@ -33,7 +33,7 @@ public class TntItemView : ItemView
 
         if (cellsToExecute.Count >= Config.TntTnTMinimumRequiredMatch)
         {
-            _boardView.ExecuteCellViews(currentCellView, cellsToExecute, ExecuteTypeEnum.Combo);
+            _executionManager.ExecuteCellViews(currentCellView, cellsToExecute, ExecuteTypeEnum.Combo);
         }
         else
         {

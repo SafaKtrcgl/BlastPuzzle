@@ -4,10 +4,10 @@ namespace Gameplay
 {
     public class BoxItemView : ItemView
     {
-        public override void Init(BoardView boardView, MatchTypeEnum matchType)
+        public override void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
         {
             ItemType = ItemTypeEnum.BoxItem;
-            base.Init(boardView, matchType);
+            base.Init(boardView, executionManager, matchType);
         }
 
         public override void Execute(CellView currentCellView, ExecuteTypeEnum executeType)

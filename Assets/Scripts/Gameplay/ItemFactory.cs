@@ -12,10 +12,12 @@ public class ItemFactory : MonoBehaviour
     public Action<ItemTypeEnum> OnObstacleItemCreated;
 
     private BoardView _boardView;
+    private ExecutionManager _executionManager;
 
-    public void Init(BoardView boardView)
+    public void Init(BoardView boardView, ExecutionManager executionManager)
     {
         _boardView = boardView;
+        _executionManager = executionManager;
     }
 
     public ItemView CreateItem(ItemTypeEnum itemType, MatchTypeEnum matchType)
@@ -23,7 +25,7 @@ public class ItemFactory : MonoBehaviour
         var itemResource = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(itemType);
 
         var itemView = Instantiate(itemResource.ItemPrefab, itemHolderTransform);
-        itemView.Init(_boardView, matchType);
+        itemView.Init(_boardView, _executionManager, matchType);
 
         if (itemType.IsObstacle()) OnObstacleItemCreated?.Invoke(itemType);
         

@@ -3,10 +3,10 @@ using Gameplay;
 
 public class VaseItemView : ItemView
 {
-    public override void Init(BoardView boardView, MatchTypeEnum matchType)
+    public override void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
     {
         ItemType = ItemTypeEnum.VaseItem;
-        base.Init(boardView, matchType);
+        base.Init(boardView, executionManager, matchType);
     }
     public override void Execute(CellView currentCellView, ExecuteTypeEnum executeType)
     {

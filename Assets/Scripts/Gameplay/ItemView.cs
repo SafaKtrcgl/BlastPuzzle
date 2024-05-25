@@ -12,6 +12,7 @@ namespace Gameplay
         [SerializeField] protected Image mainImage;
 
         protected BoardView _boardView;
+        protected ExecutionManager _executionManager;
 
         public bool IsDestinedToDie { protected set; get; }
 
@@ -31,9 +32,10 @@ namespace Gameplay
             return false;
         }
 
-        public virtual void Init(BoardView boardView, MatchTypeEnum matchType)
+        public virtual void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
         {
             _boardView = boardView;
+            _executionManager = executionManager;
             MatchType = matchType;
             mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(0);
         }
