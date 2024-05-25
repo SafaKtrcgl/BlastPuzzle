@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class TntTntItemView : ComboItemView
 {
+    private int _perimeter = 3;
     public override void Init(BoardView boardView, MatchTypeEnum matchType)
     {
         ItemType = ItemTypeEnum.TntTntItem;
@@ -24,11 +25,9 @@ public class TntTntItemView : ComboItemView
         {
             int deltaX = Math.Abs(cellView.X - currentCellView.X);
             int deltaY = Math.Abs(cellView.Y - currentCellView.Y);
-            return deltaX <= 3 && deltaY <= 3 && !(deltaX == 0 && deltaY == 0);
+            return deltaX <= _perimeter && deltaY <= _perimeter && !(deltaX == 0 && deltaY == 0);
         });
 
         _boardView.ExecuteCellViews(currentCellView, cellsToExecute, executeType);
-
-        DestroyItem();
     }
 }

@@ -9,7 +9,7 @@ public class ComboExecutionStrategy : IExecutionStrategy
 {
     private readonly ItemFactory _itemFactory;
 
-    private bool _animationPlaying = true;
+    private bool _isRunning = true;
 
     public ComboExecutionStrategy(ItemFactory itemFactory)
     {
@@ -45,15 +45,10 @@ public class ComboExecutionStrategy : IExecutionStrategy
 
         executeSequence.OnComplete(() =>
         {
-            tappedCell.ItemInside.transform.DOScale(Vector3.one * 1.25f, .25f).OnComplete(() =>
-            {
-                tappedCell.ItemInside.Execute(tappedCell, ExecuteTypeEnum.Special);
-                _animationPlaying = false;
-            });
+            tappedCell.ItemInside.Execute(tappedCell, ExecuteTypeEnum.Special);
+            _isRunning = false;
         });
 
-        yield return new WaitWhile(() => _animationPlaying);
-
-        yield break;
+        yield return new WaitWhile(() => _isRunning);
     }
 }

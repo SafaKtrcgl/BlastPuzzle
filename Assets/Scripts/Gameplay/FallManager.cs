@@ -21,7 +21,6 @@ public class FallManager : MonoBehaviour
 
     public void HandleBoardItems()
     {
-        Debug.Log("Fall manager here!");
         Sequence boardItemFallSequence = DOTween.Sequence();
 
         int fallDistance;
@@ -31,8 +30,6 @@ public class FallManager : MonoBehaviour
             for (int y = 0; y < _boardView.Height; y++)
             {
                 var cellView = _boardView.GetCellView(x, y);
-
-                Debug.Log("cell " + x + " : " + y + " -> " + cellView.ItemInside);
 
                 if (cellView.ItemInside == null)
                 {

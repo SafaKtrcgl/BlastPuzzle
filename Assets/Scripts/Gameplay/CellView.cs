@@ -77,7 +77,6 @@ namespace Gameplay
 
         public void OnItemExecuted(ItemTypeEnum itemType)
         {
-            Debug.Log("Item inside destroyed :> " + X + " : " + Y);
             OnItemExecutedAction?.Invoke(itemType);
             _itemInside = null;
         }

@@ -8,6 +8,7 @@ using UnityEngine;
 public class MergeExecutionStrategy : IExecutionStrategy
 {
     private readonly ItemFactory _itemFactory;
+    private bool _isRunning = true;
 
     public MergeExecutionStrategy(ItemFactory itemFactory)
     {
@@ -30,6 +31,7 @@ public class MergeExecutionStrategy : IExecutionStrategy
 
         executeSequence.OnComplete(() =>
         {
+            _isRunning = false;
             foreach (var cellView in cellsToExecute)
             {
                 cellView?.Execute(ExecuteTypeEnum.Merge);
@@ -41,6 +43,6 @@ public class MergeExecutionStrategy : IExecutionStrategy
             tappedCell.InsertItem(itemView);
         });
 
-        yield return new WaitWhile(() => executeSequence.IsPlaying());
+        yield return new WaitWhile(() => _isRunning);
     }
 }

@@ -12,14 +12,13 @@ public class SpecialExecutionStrategy : IExecutionStrategy
     {
         var itemView = tappedCell.ItemInside;
 
-        itemView.transform.DOScale(Vector3.one * 1.2f, 5f).OnComplete(() =>
+        itemView.transform.DOScale(Vector3.one * 1.2f, .25f).OnComplete(() =>
         {
             foreach (var cellView in cellsToExecute)
             {
                 cellView?.Execute(ExecuteTypeEnum.Special);
             }
 
-            Debug.Log("Destroyed");
             itemView.DestroyItem();
 
             _isRunning = false;

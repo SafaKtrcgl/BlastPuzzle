@@ -111,6 +111,8 @@ public class BoardView : MonoBehaviour
     {
         if (_executionQueue.Count == 0)
         {
+            _isBussy = true;
+
             ConstructExecutionQueue(originCellView, cellViewsToExecute, executeType);
 
             StartCoroutine(ExecuteExecutionQueue());
@@ -123,7 +125,7 @@ public class BoardView : MonoBehaviour
 
     private void ConstructExecutionQueue(CellView originCellView, HashSet<CellView> cellViewsToExecute, ExecuteTypeEnum executeType)
     {
-        _isBussy = true;
+        Debug.Log("Selamlar :> " + executeType);
 
         IExecutionStrategy executionStrategy = executeType switch
         {
@@ -152,14 +154,10 @@ public class BoardView : MonoBehaviour
     {
         while (_executionQueue.Count > 0)
         {
-            Debug.Log("Execution queue iteration");
-            _ongoingCoroutine = _executionQueue.Dequeue();
-            StartCoroutine(_ongoingCoroutine);
-            //yield return _ongoingCoroutine;
-            yield return new WaitForSeconds(2);
+            yield return _executionQueue.Dequeue();
         }
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForEndOfFrame();
 
         _isBussy = false;
         OnCellViewExecutionEnd?.Invoke();

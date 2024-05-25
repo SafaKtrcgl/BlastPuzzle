@@ -4,6 +4,8 @@ using System;
 
 public class TntItemView : ItemView
 {
+    private int _perimeter = 2;
+
     public override void Init(BoardView boardView, MatchTypeEnum matchType)
     {
         ItemType = ItemTypeEnum.TntItem;
@@ -19,7 +21,7 @@ public class TntItemView : ItemView
         {
             int deltaX = Math.Abs(cellView.X - currentCellView.X);
             int deltaY = Math.Abs(cellView.Y - currentCellView.Y);
-            return deltaX <= 2 && deltaY <= 2 && !(deltaX == 0 && deltaY == 0);
+            return deltaX <= _perimeter && deltaY <= _perimeter && !(deltaX == 0 && deltaY == 0);
         });
 
         _boardView.ExecuteCellViews(currentCellView, cellsToExecute, executeType);
