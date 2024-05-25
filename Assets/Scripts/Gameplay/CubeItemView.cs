@@ -3,6 +3,7 @@ using Gameplay;
 using Helper;
 using Singleton;
 using System;
+using UnityEngine;
 
 public class CubeItemView : ItemView
 {
@@ -10,11 +11,16 @@ public class CubeItemView : ItemView
     {
         ItemType = ItemTypeEnum.CubeItem;
         base.Init(boardView, executionManager, matchType);
+    }
+
+    public override void SetMatchableType(MatchTypeEnum matchType)
+    {
+        base.SetMatchableType(matchType);
 
         mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(Array.IndexOf(ItemDataParser.cubeItemTypes, MatchType));
     }
 
-    public override void Execute(CellView currentCellView, ExecuteTypeEnum executeType)
+    public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
     {
         DestroyItem();
     }
@@ -28,5 +34,15 @@ public class CubeItemView : ItemView
         _executionManager.ExecuteCellViews(currentCellView, cellsToExecute, executionType);
 
         return true;
+    }
+
+    public override void Highight()
+    {
+        mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(Array.IndexOf(ItemDataParser.cubeItemTypes, MatchType) + Config.CubeTypeCount);
+    }
+
+    public override void Unhighight()
+    {
+        mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(Array.IndexOf(ItemDataParser.cubeItemTypes, MatchType));
     }
 }

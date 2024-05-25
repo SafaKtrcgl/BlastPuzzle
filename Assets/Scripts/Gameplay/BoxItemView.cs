@@ -10,7 +10,7 @@ namespace Gameplay
             base.Init(boardView, executionManager, matchType);
         }
 
-        public override void Execute(CellView currentCellView, ExecuteTypeEnum executeType)
+        public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
         {
             if (executeType == ExecuteTypeEnum.Special)
             {
@@ -18,7 +18,7 @@ namespace Gameplay
             }
         }
 
-        public override void OnNeighbourExecute(ExecuteTypeEnum executeType)
+        public override void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType)
         {
             if (executeType == ExecuteTypeEnum.Blast || executeType == ExecuteTypeEnum.Merge)
             {

@@ -20,9 +20,9 @@ namespace Gameplay
         public ItemTypeEnum ItemType { get; protected set; }
         public MatchTypeEnum MatchType { get; protected set; }
         
-        public abstract void Execute(CellView currentCellView, ExecuteTypeEnum executeType);
+        public abstract void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType);
 
-        public virtual void OnNeighbourExecute(ExecuteTypeEnum executeType)
+        public virtual void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType)
         {
 
         }
@@ -36,8 +36,8 @@ namespace Gameplay
         {
             _boardView = boardView;
             _executionManager = executionManager;
-            MatchType = matchType;
             mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(0);
+            SetMatchableType(matchType);
         }
 
         public virtual void DestroyItem()
@@ -49,6 +49,21 @@ namespace Gameplay
         private void OnDestroy()
         {
             OnItemExecute = null;
+        }
+
+        public virtual void Highight()
+        {
+
+        }
+
+        public virtual void Unhighight()
+        {
+
+        }
+
+        public virtual void SetMatchableType(MatchTypeEnum matchType)
+        {
+            MatchType = matchType;
         }
     }
 }

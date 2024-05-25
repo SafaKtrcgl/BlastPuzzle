@@ -45,7 +45,7 @@ public class ComboExecutionStrategy : IExecutionStrategy
 
         executeSequence.OnComplete(() =>
         {
-            tappedCell.ItemInside.Execute(tappedCell, ExecuteTypeEnum.Special);
+            tappedCell.ItemInside.Execute(GameplayInputController.MoveCount, tappedCell, ExecuteTypeEnum.Special);
             _isRunning = false;
         });
 

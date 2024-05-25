@@ -9,7 +9,7 @@ public class StoneItemView : ItemView
         base.Init(boardView, executionManager, matchType);
     }
 
-    public override void Execute(CellView currentCellView, ExecuteTypeEnum executeType)
+    public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
     {
         if (executeType == ExecuteTypeEnum.Special)
         {

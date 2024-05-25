@@ -12,7 +12,7 @@ public class TntItemView : ItemView
         base.Init(boardView, executionManager, matchType);
     }
 
-    public override void Execute(CellView currentCellView, ExecuteTypeEnum executeType)
+    public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
     {
         if (IsDestinedToDie) return;
         IsDestinedToDie = true;
@@ -37,7 +37,7 @@ public class TntItemView : ItemView
         }
         else
         {
-            Execute(currentCellView, ExecuteTypeEnum.Special);
+            Execute(GameplayInputController.MoveCount, currentCellView, ExecuteTypeEnum.Special);
         }
 
         return true;
