@@ -73,6 +73,8 @@ public class BoardView : MonoBehaviour
         AssignCellNeighbours();
 
         boardBackgroundRecttransform.sizeDelta = new Vector2(Width * CellView.CellSize + BackgroundWidthPadding, Height * CellView.CellSize + BackgroundHeightPadding);
+
+        HighlightMatches();
     }
 
     private void AssignCellNeighbours()
@@ -115,5 +117,73 @@ public class BoardView : MonoBehaviour
         }
 
         return matchingCells;
+    }
+
+    public void Validate()
+    {
+        HighlightMatches();
+        IsBussy = false;
+    }
+    /*
+    private void TryShuffleBoard()
+    {
+        if (GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType.IsSpecial()).Count > 0) return;
+
+        var cubeItemCells = GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType == ItemTypeEnum.CubeItem);
+        HashSet<CellView> visitedCells = new ();
+
+        foreach (var cubeItemCell in cubeItemCells)
+        {
+            if (visitedCells.Contains(cubeItemCell)) continue;
+            var matchCluster = MatchFinder.FindMatchCluster(cubeItemCell);
+            if (matchCluster.Count > Config.BlastMinimumRequiredMatch) return;
+
+            foreach (var clusterCell in MatchFinder.FindMatchCluster(cubeItemCell))
+            {
+                visitedCells.Add(clusterCell);
+            }
+        }
+
+        ShuffleBoard(cubeItemCells);
+    }
+
+    private void ShuffleBoard(HashSet<CellView> shuffleCells)
+    {
+        Sequence shuffleSequence = DOTween.Sequence();
+
+
+    }
+    */
+
+    private void HighlightMatches()
+    {
+        var cubeItemCells = GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType == ItemTypeEnum.CubeItem);
+        Debug.Log("Selamlar :> " + cubeItemCells.Count);
+
+        HashSet<CellView> visitedCells = new();
+
+        foreach (var cubeItemCell in cubeItemCells)
+        {
+            if (visitedCells.Contains(cubeItemCell)) continue;
+
+            var matchCluster = MatchFinder.FindMatchCluster(cubeItemCell);
+            var isPotentialSpecialMatch = matchCluster.Count >= Config.TntMinimumRequiredMatch;
+
+            foreach (var matchCell in matchCluster)
+            {
+                visitedCells.Add(matchCell);
+
+                if (isPotentialSpecialMatch)
+                {
+                    Debug.Log("Potential Match found");
+                    matchCell.ItemInside.Highight();
+                }
+                else
+                {
+                    Debug.Log("No Potential Match found");
+                    matchCell.ItemInside.Unhighight();
+                }
+            }
+        }
     }
 }

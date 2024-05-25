@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            _boardView.IsBussy = false;
+            _boardView.Validate();
         }
     }
 }
