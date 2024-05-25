@@ -1,5 +1,3 @@
-using DG.Tweening;
-using Gameplay;
 using Helper;
 using Singleton;
 using UnityEngine;
@@ -17,6 +15,7 @@ namespace Context
         [SerializeField] private FallManager fallManager;
         [SerializeField] private FillManager fillManager;
         [SerializeField] private ExecutionManager executionManager;
+        [SerializeField] private GameManager gameManager;
 
         [SerializeField] private Image arenaBackgroundImage;
 
@@ -32,16 +31,17 @@ namespace Context
 
             inputController.OnTapPerform += gameplayTopPanel.OnMovePerformed;
 
-            executionManager.OnCellViewExecutionEnd += fallManager.HandleBoardItems;
+            executionManager.OnExecutionQueueEnd += fallManager.HandleBoardItems;
             fallManager.OnBoardItemFallEnd += fillManager.FillBoard;
-            fillManager.OnBoardFilled += boardView.OnBoardFilled;
+            fillManager.OnBoardFilled += gameManager.CheckGameState;
 
             itemFactory.OnObstacleItemCreated += gameplayTopPanel.OnObstacleCreated;
-            boardView.OnObstacleItemExecuted += gameplayTopPanel.OnObstacleExecuted;
+            executionManager.OnObstacleItemExecuted += gameplayTopPanel.OnObstacleExecuted;
 
+            gameManager.Init(boardView);
             executionManager.Init(boardView, itemFactory);
             itemFactory.Init(boardView, executionManager);
-            boardView.Init(itemFactory, levelData.grid_width, levelData.grid_height, levelData.grid);
+            boardView.Init(itemFactory, executionManager, levelData.grid_width, levelData.grid_height, levelData.grid);
             fallManager.Init(boardView);
             fillManager.Init(boardView, itemFactory, fallManager);
 

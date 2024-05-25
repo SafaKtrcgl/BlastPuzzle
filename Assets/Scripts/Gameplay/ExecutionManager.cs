@@ -8,7 +8,8 @@ using UnityEngine;
 
 public class ExecutionManager : MonoBehaviour
 {
-    public Action OnCellViewExecutionEnd;
+    public Action OnExecutionQueueEnd;
+    public Action<ItemTypeEnum> OnObstacleItemExecuted;
 
     private BoardView _boardView;
     private ItemFactory _itemFactory;
@@ -71,7 +72,20 @@ public class ExecutionManager : MonoBehaviour
 
         yield return new WaitForEndOfFrame();
 
-        _boardView.IsBussy = false;   //TEMp
-        OnCellViewExecutionEnd?.Invoke();
+        OnExecutionQueueEnd?.Invoke();
+    }
+
+    public void OnItemExecuted(ItemTypeEnum itemType)
+    {
+        if (itemType.IsObstacle())
+        {
+            OnObstacleItemExecuted?.Invoke(itemType);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        OnObstacleItemExecuted = null;
+        OnExecutionQueueEnd = null;
     }
 }

@@ -198,6 +198,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 711116789241402770}
+  - component: {fileID: 4352700497774844600}
   m_Layer: 0
   m_Name: Content
   m_TagString: Untagged
@@ -222,6 +223,18 @@ Transform:
   - {fileID: 8351125738902493479}
   m_Father: {fileID: 472443237615504130}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &4352700497774844600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1827080884614747088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64c6d2b47f2f07c43bca00aafca03b08, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2003831654993404735
 GameObject:
   m_ObjectHideFlags: 0
@@ -1273,6 +1286,7 @@ MonoBehaviour:
   fallManager: {fileID: 5366414906988184631}
   fillManager: {fileID: 2226917561875900781}
   executionManager: {fileID: 3361122985809773261}
+  gameManager: {fileID: 4352700497774844600}
   arenaBackgroundImage: {fileID: 122901866977176979}
 --- !u!1 &7208696727116602697
 GameObject:

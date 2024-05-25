@@ -1,14 +1,9 @@
 using DG.Tweening;
 using Enums;
 using Gameplay;
-using Helper;
-using Singleton;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
-using Utility;
 
 public class BoardView : MonoBehaviour
 {
@@ -16,9 +11,6 @@ public class BoardView : MonoBehaviour
     [SerializeField] private FallManager fallManager;
     [SerializeField] private CellView cellViewPrefab;
     [SerializeField] private RectTransform boardBackgroundRecttransform;
-    //[SerializeField] private CoroutineQueue coroutineQueue;
-
-    public Action<ItemTypeEnum> OnObstacleItemExecuted;
 
     private int _width;
     public int Width => _width;
@@ -27,6 +19,8 @@ public class BoardView : MonoBehaviour
     public int Height => _height;
 
     private ItemFactory _itemFactory;
+    private ExecutionManager _executionManager;
+
 
     private readonly float BackgroundWidthPadding = 35f;
     private readonly float BackgroundHeightPadding = 50f;
@@ -37,7 +31,7 @@ public class BoardView : MonoBehaviour
     private bool _isBussy = true;
     public bool IsBussy { get => _isBussy; set => _isBussy = value; }
 
-    public void Init(ItemFactory itemFactory, int width, int height, string[] content)
+    public void Init(ItemFactory itemFactory, ExecutionManager executionManager, int width, int height, string[] content)
     {
         _width = width;
         _height = height;
@@ -45,10 +39,11 @@ public class BoardView : MonoBehaviour
         _cellViews = new CellView[_width, _height];
 
         _itemFactory = itemFactory;
+        _executionManager = executionManager;
 
         ConstructBoard(content);
 
-        ((RectTransform)transform).DOAnchorPosX(0, .5f).SetEase(Ease.OutBack).OnComplete(() => _isBussy = false);
+        ((RectTransform)transform).DOAnchorPosX(0, .5f).SetEase(Ease.OutBack).OnComplete(() => IsBussy = false);
     }
 
     private void ConstructBoard(string[] content)
@@ -61,7 +56,7 @@ public class BoardView : MonoBehaviour
                 cellView.Init(this, x, y);
                 _cellViews[x, y] = cellView;
 
-                cellView.OnItemExecutedAction += OnItemExecuted;
+                cellView.OnItemExecutedAction += _executionManager.OnItemExecuted;
 
                 var index = y * Width + x;
 
@@ -120,43 +115,5 @@ public class BoardView : MonoBehaviour
         }
 
         return matchingCells;
-    }
-
-    public void OnItemExecuted(ItemTypeEnum itemType)
-    {
-        if (itemType.IsObstacle())
-        {
-            OnObstacleItemExecuted?.Invoke(itemType);
-        }
-    }
-
-    public void OnBoardFilled()
-    {
-        _isBussy = false;
-    }
-
-    private void CheckIfGameEnded()
-    {
-        if (GetCellViews(cellView => cellView.ItemInside && cellView.ItemInside.ItemType.IsObstacle()).Count == 0)
-        {
-            _isBussy = true;
-            PlayerPrefsUtility.SetCurrentLevel(PlayerPrefsUtility.GetCurrentLevel() + 1);
-            var dialogHelper = HelperResources.Instance.GetHelper<DialogHelper>(HelperEnum.DialogHelper);
-            dialogHelper.ShowDialog<LevelCompleteDialog>(DialogTypeEnum.LevelCompleteDialog).Init();
-        }
-        else if (GameplayInputController.MoveCount == 0)
-        {
-            _isBussy = true;
-            var contextHelper = HelperResources.Instance.GetHelper<ContextHelper>(HelperEnum.ContextHelper);
-            var dialogHelper = HelperResources.Instance.GetHelper<DialogHelper>(HelperEnum.DialogHelper);
-            dialogHelper.ShowGenericPopupDialog("Level Failed!", "Try Again",
-                () => { contextHelper.LoadGameplayScene(); }, 
-                () => { contextHelper.LoadMainScene(); });
-        }
-    }
-
-    private void OnDestroy()
-    {
-        OnObstacleItemExecuted = null;
     }
 }
