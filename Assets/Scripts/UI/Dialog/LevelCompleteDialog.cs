@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class LevelCompleteDialog : DialogView
 {
     [SerializeField] private Transform[] transformsToAnimate;
+    [SerializeField] private Transform particleSystemTransform;
     [SerializeField] private Button continueButton;
 
     public void Init()
@@ -16,7 +17,17 @@ public class LevelCompleteDialog : DialogView
         {
             var transformToAnimate = transformsToAnimate[i];
             transformToAnimate.localScale = Vector3.zero;
-            transformToAnimate.DOScale(Vector3.one, .25f).SetDelay(i * 1f).SetEase(Ease.OutBack);
+            if (i == 1)
+            {
+                transformToAnimate.DOScale(Vector3.one, .25f).SetDelay(i * 1f).SetEase(Ease.OutBack).OnComplete(() =>
+                {
+                    particleSystemTransform.gameObject.SetActive(true);
+                });
+            }
+            else
+            {
+                transformToAnimate.DOScale(Vector3.one, .25f).SetDelay(i * 1f).SetEase(Ease.OutBack);
+            }
         }
     }
 
