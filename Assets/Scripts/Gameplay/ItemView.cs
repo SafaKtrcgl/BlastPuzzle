@@ -10,6 +10,7 @@ namespace Gameplay
     public abstract class ItemView : MonoBehaviour
     {
         [SerializeField] protected Image mainImage;
+        [SerializeField] protected ParticleSystem destroyParticleSystem;
 
         protected BoardView _boardView;
         protected ExecutionManager _executionManager;
@@ -39,6 +40,8 @@ namespace Gameplay
             _boardView = boardView;
             _executionManager = executionManager;
             mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(0);
+            mainImage.SetNativeSize();
+            ((RectTransform)mainImage.transform).sizeDelta /= 2f;
             SetMatchableType(matchType);
         }
 
