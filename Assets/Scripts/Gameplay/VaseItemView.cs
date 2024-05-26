@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class VaseItemView : ItemView
 {
     private float _currentHp = 2;
-    HashSet<int> _affectedExecutionIds = new HashSet<int>();
+    int _lastAffectedExecutionId = -1;
 
     public override void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
     {
@@ -26,8 +26,8 @@ public class VaseItemView : ItemView
     {
         if (executeType == ExecuteTypeEnum.Blast || executeType == ExecuteTypeEnum.Merge)
         {
-            if (_affectedExecutionIds.Contains(executionId)) return;
-            _affectedExecutionIds.Add(executionId);
+            if (_lastAffectedExecutionId == executionId) return;
+            _lastAffectedExecutionId = executionId;
 
             TakeHit(executionId);
         }
