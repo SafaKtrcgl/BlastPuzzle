@@ -24,6 +24,7 @@ public class ItemDataParser
             case "s":
                 return ItemTypeEnum.StoneItem;
             case "v":
+            case "v1":
                 return ItemTypeEnum.VaseItem;
             default:
                 return ItemTypeEnum.None;
@@ -51,34 +52,47 @@ public class ItemDataParser
         }
     }
 
-    public static String GetItemKey(ItemTypeEnum itemType, MatchTypeEnum matchType)
+    public static String GetItemKey(ItemTypeEnum itemType, MatchTypeEnum matchType, string state)
     {
+        string itemKey = "";
         switch (itemType)
         {
             case ItemTypeEnum.CubeItem:
                 switch (matchType)
                 {
                     case MatchTypeEnum.Red:
-                        return "r";
+                        itemKey = "r";
+                        break;
                     case MatchTypeEnum.Green:
-                        return "g";
+                        itemKey = "g";
+                        break;
                     case MatchTypeEnum.Blue:
-                        return "b";
+                        itemKey = "b";
+                        break;
                     case MatchTypeEnum.Yellow:
-                        return "y";
-                    default:
-                        return "";
+                        itemKey = "y";
+                        break;
                 }
+                break;
             case ItemTypeEnum.BoxItem:
-                return "bo";
+                itemKey = "bo";
+                break;
             case ItemTypeEnum.TntItem:
-                return "t";
+                itemKey = "t";
+                break;
             case ItemTypeEnum.StoneItem:
-                return "s";
+                itemKey = "s";
+                break;
             case ItemTypeEnum.VaseItem:
-                return "v";
-            default:
-                return "";
+                itemKey = "v";
+                break;
         }
+
+        if (!string.IsNullOrEmpty(itemKey) && state != "0")
+        {
+            itemKey += state;
+        }
+
+        return itemKey;
     }
 }

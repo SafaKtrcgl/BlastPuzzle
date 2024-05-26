@@ -14,6 +14,8 @@ namespace Gameplay
         protected BoardView _boardView;
         protected ExecutionManager _executionManager;
 
+        public string State { get; protected set; } = "0";
+
         public bool IsDestinedToDie { protected set; get; }
 
         public Action<ItemTypeEnum> OnItemExecute;
@@ -64,6 +66,11 @@ namespace Gameplay
         public virtual void SetMatchableType(MatchTypeEnum matchType)
         {
             MatchType = matchType;
+        }
+
+        public virtual void SetState(string currentState)
+        {
+            State = currentState;
         }
     }
 }

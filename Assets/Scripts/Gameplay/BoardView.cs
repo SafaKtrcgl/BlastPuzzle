@@ -3,6 +3,7 @@ using Enums;
 using Gameplay;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Utility;
 
@@ -68,6 +69,11 @@ public class BoardView : MonoBehaviour
                 
                 var itemView = _itemFactory.CreateItem(itemType, matchType);
                 ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)cellView.transform).anchoredPosition;
+
+                if (content[index].Any(char.IsDigit))
+                {
+                    itemView.SetState(content[index][^1].ToString());
+                }
 
                 cellView.InsertItem(itemView);
             }
@@ -138,15 +144,14 @@ public class BoardView : MonoBehaviour
             var item = cellView.ItemInside;
             if (item == null)
             {
-                currentGridData[Width * cellView.Y + cellView.X] = ItemDataParser.GetItemKey(ItemTypeEnum.None, MatchTypeEnum.None);
+                currentGridData[Width * cellView.Y + cellView.X] = ItemDataParser.GetItemKey(ItemTypeEnum.None, MatchTypeEnum.None, "0");
             }
             else
             {
-                currentGridData[Width * cellView.Y + cellView.X] = ItemDataParser.GetItemKey(item.ItemType, item.MatchType);
+                currentGridData[Width * cellView.Y + cellView.X] = ItemDataParser.GetItemKey(item.ItemType, item.MatchType, item.State);
             }
         }
         
-        Debug.Log(LevelDataParser.GetLevelJson(Width, Height, GameplayInputController.MoveCount, currentGridData));
         PlayerPrefsUtility.SetOnGoingLevelData(LevelDataParser.GetLevelJson(Width, Height, GameplayInputController.MoveCount, currentGridData));
     }
 
