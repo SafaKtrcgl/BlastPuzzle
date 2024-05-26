@@ -67,7 +67,8 @@ public class ExecutionManager : MonoBehaviour
     {
         while (_executionQueue.Count > 0)
         {
-            yield return _executionQueue.Dequeue();
+            yield return _executionQueue.Peek();
+            _executionQueue.Dequeue();
         }
 
         yield return new WaitForEndOfFrame();
