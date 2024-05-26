@@ -24,5 +24,22 @@ namespace Utility
 
             return JsonUtility.FromJson<LevelDataParser>(File.ReadAllText(levelFilePath));
         }
+
+        public static LevelDataParser GetLevelData(string levelData)
+        {
+            return JsonUtility.FromJson<LevelDataParser>(levelData);
+        }
+
+        public static string GetLevelJson(int width, int height, int moveCount, string[] grid)
+        {
+            var levelData = new LevelDataParser();
+            levelData.level_number = PlayerPrefsUtility.GetCurrentLevel();
+            levelData.grid_width = width;
+            levelData.grid_height = height;
+            levelData.move_count = moveCount;
+            levelData.grid = grid;
+
+            return JsonUtility.ToJson(levelData);
+        }
     }
 }

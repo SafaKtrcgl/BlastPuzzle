@@ -50,4 +50,35 @@ public class ItemDataParser
                 return MatchTypeEnum.None;
         }
     }
+
+    public static String GetItemKey(ItemTypeEnum itemType, MatchTypeEnum matchType)
+    {
+        switch (itemType)
+        {
+            case ItemTypeEnum.CubeItem:
+                switch (matchType)
+                {
+                    case MatchTypeEnum.Red:
+                        return "r";
+                    case MatchTypeEnum.Green:
+                        return "g";
+                    case MatchTypeEnum.Blue:
+                        return "b";
+                    case MatchTypeEnum.Yellow:
+                        return "y";
+                    default:
+                        return "";
+                }
+            case ItemTypeEnum.BoxItem:
+                return "bo";
+            case ItemTypeEnum.TntItem:
+                return "t";
+            case ItemTypeEnum.StoneItem:
+                return "s";
+            case ItemTypeEnum.VaseItem:
+                return "v";
+            default:
+                return "";
+        }
+    }
 }

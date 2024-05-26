@@ -27,7 +27,16 @@ namespace Context
                 arenaBackgroundImage.sprite = arenaResource.ArenaBackgroundSprite;
             }
 
-            var levelData = LevelDataParser.GetLevelData(PlayerPrefsUtility.GetCurrentLevel());
+            LevelDataParser levelData;
+
+            if (string.IsNullOrEmpty(PlayerPrefsUtility.GetOnGoingLevelData()))
+            {
+                levelData = LevelDataParser.GetLevelData(PlayerPrefsUtility.GetCurrentLevel());
+            }
+            else
+            {
+                levelData = LevelDataParser.GetLevelData(PlayerPrefsUtility.GetOnGoingLevelData());
+            }
 
             inputController.OnTapPerform += gameplayTopPanel.OnMovePerformed;
 

@@ -4,6 +4,7 @@ using Gameplay;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Utility;
 
 public class BoardView : MonoBehaviour
 {
@@ -61,6 +62,8 @@ public class BoardView : MonoBehaviour
                 var index = y * Width + x;
 
                 var itemType = ItemDataParser.GetItemType(content[index]);
+                if (itemType == ItemTypeEnum.None) continue;
+                
                 var matchType = ItemDataParser.GetMatchType(content[index]);
                 
                 var itemView = _itemFactory.CreateItem(itemType, matchType);
@@ -122,8 +125,31 @@ public class BoardView : MonoBehaviour
     public void Validate()
     {
         HighlightMatches();
+        SaveCurrentProgress();
         IsBussy = false;
     }
+
+    private void SaveCurrentProgress()
+    {
+        string[] currentGridData = new string[Width * Height];
+        
+        foreach (var cellView in GetCellViews(cellView => true))
+        {
+            var item = cellView.ItemInside;
+            if (item == null)
+            {
+                currentGridData[Width * cellView.Y + cellView.X] = ItemDataParser.GetItemKey(ItemTypeEnum.None, MatchTypeEnum.None);
+            }
+            else
+            {
+                currentGridData[Width * cellView.Y + cellView.X] = ItemDataParser.GetItemKey(item.ItemType, item.MatchType);
+            }
+        }
+        
+        Debug.Log(LevelDataParser.GetLevelJson(Width, Height, GameplayInputController.MoveCount, currentGridData));
+        PlayerPrefsUtility.SetOnGoingLevelData(LevelDataParser.GetLevelJson(Width, Height, GameplayInputController.MoveCount, currentGridData));
+    }
+
     /*
     private void TryShuffleBoard()
     {
@@ -158,7 +184,6 @@ public class BoardView : MonoBehaviour
     private void HighlightMatches()
     {
         var cubeItemCells = GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType == ItemTypeEnum.CubeItem);
-        Debug.Log("Selamlar :> " + cubeItemCells.Count);
 
         HashSet<CellView> visitedCells = new();
 
@@ -175,12 +200,10 @@ public class BoardView : MonoBehaviour
 
                 if (isPotentialSpecialMatch)
                 {
-                    Debug.Log("Potential Match found");
                     matchCell.ItemInside.Highight();
                 }
                 else
                 {
-                    Debug.Log("No Potential Match found");
                     matchCell.ItemInside.Unhighight();
                 }
             }
