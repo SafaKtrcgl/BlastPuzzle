@@ -15,7 +15,7 @@ public class BlastExecutionStrategy : IExecutionStrategy
 
         foreach (var cellView in cellsToExecute)
         {
-            blastItemSquishSequence.Join(cellView.ItemInside.transform.DOScale(Vector3.one * .4f, .25f));
+            blastItemSquishSequence.Join(cellView.ItemInside.transform.DOScale(Vector3.one * .2f, .25f).SetEase(Ease.OutSine));
         }
 
         blastItemSquishSequence.OnComplete(() =>

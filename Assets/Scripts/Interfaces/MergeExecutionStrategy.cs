@@ -23,15 +23,16 @@ public class MergeExecutionStrategy : IExecutionStrategy
 
         foreach (var cellView in cellsToExecute)
         {
-            if (cellView != tappedCell)
-            {
-                executeSequence.Join(((RectTransform)cellView.ItemInside.transform).DOAnchorPos(mergePos, .35f));
-            }
+            var itemInside = cellView.ItemInside;
+            if (itemInside == null) continue;
+
+            itemInside.transform.SetAsLastSibling();
+            executeSequence.Join(((RectTransform)itemInside.transform).DOAnchorPos(mergePos, .35f));
+            executeSequence.Join(itemInside.transform.DOScale(.2f, .35f).SetEase(Ease.InSine));
         }
 
         executeSequence.OnComplete(() =>
         {
-            _isRunning = false;
             foreach (var cellView in cellsToExecute)
             {
                 cellView?.Execute(ExecuteTypeEnum.Merge);
@@ -39,8 +40,11 @@ public class MergeExecutionStrategy : IExecutionStrategy
 
             var itemView = _itemFactory.CreateItem(ItemTypeEnum.TntItem, MatchTypeEnum.Special);
             ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)tappedCell.transform).anchoredPosition;
+            itemView.transform.localScale = Vector3.one * .2f;
 
             tappedCell.InsertItem(itemView);
+
+            itemView.transform.DOScale(Vector3.one, .25f).SetEase(Ease.OutSine).OnComplete(() => _isRunning = false);
         });
 
         yield return new WaitWhile(() => _isRunning);
