@@ -59,7 +59,7 @@ namespace Context
                 cellView.OnCellClicked += inputController.OnCellTap;
             }
             
-            inputController.Init(boardView, levelData.move_count);
+            inputController.Init(boardView, itemFactory, levelData.move_count);
             gameplayTopPanel.Init(boardView, levelData.move_count);
         }
     }
