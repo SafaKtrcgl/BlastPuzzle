@@ -14,7 +14,7 @@ public class TntTntItemView : ComboItemView
         base.Init(boardView, executionManager, matchType);
     }
 
-    public override void Execute(int ExecutionId, CellView currentCellView, ExecuteTypeEnum executeType)
+    public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
     {
         if (IsDestinedToDie) return;
         IsDestinedToDie = true;

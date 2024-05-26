@@ -28,19 +28,7 @@ public static class ItemTypeExtension
     public static bool IsSpecial(this ItemTypeEnum itemType)
     {
         return itemType is
-            ItemTypeEnum.TntItem;
-    }
-
-    public static int GetRequiredAmount(this ItemTypeEnum itemType)
-    {
-        switch (itemType)
-        {
-            case ItemTypeEnum.TntItem:
-                return 5;
-            case ItemTypeEnum.TntTntItem:
-                return 2;
-            default:
-                return 0;
-        }
+            ItemTypeEnum.TntItem or
+            ItemTypeEnum.TntTntItem;
     }
 }
