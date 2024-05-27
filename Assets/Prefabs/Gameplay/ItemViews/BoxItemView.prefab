@@ -54,6 +54,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainImage: {fileID: 777315450095411311}
   destroyParticleSystem: {fileID: 9185971528397553197}
+  destroyParticleCallback: {fileID: 5150311685357121328}
 --- !u!114 &777315450095411311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,6 +124,7 @@ GameObject:
   - component: {fileID: 1753613166027971407}
   - component: {fileID: 9185971528397553197}
   - component: {fileID: 2462646105470055804}
+  - component: {fileID: 5150311685357121328}
   m_Layer: 0
   m_Name: DestroyEffect
   m_TagString: Untagged
@@ -404,7 +406,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 0.25
-      minScalar: 0.25
+      minScalar: 0.2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -4946,3 +4948,15 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &5150311685357121328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2881823732952388366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b947ca0f043cc9498ccf8c06850b1e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

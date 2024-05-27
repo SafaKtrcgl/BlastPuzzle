@@ -54,6 +54,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainImage: {fileID: 777315450095411311}
   destroyParticleSystem: {fileID: 7088069972217412259}
+  destroyParticleCallback: {fileID: 2970547389139955593}
 --- !u!114 &777315450095411311
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -123,6 +124,7 @@ GameObject:
   - component: {fileID: 9192935324434969099}
   - component: {fileID: 7088069972217412259}
   - component: {fileID: 305338650875607812}
+  - component: {fileID: 2970547389139955593}
   m_Layer: 0
   m_Name: DestroyEffect
   m_TagString: Untagged
@@ -159,7 +161,7 @@ ParticleSystem:
   serializedVersion: 8
   lengthInSec: 0.2
   simulationSpeed: 1
-  stopAction: 0
+  stopAction: 3
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
@@ -404,7 +406,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 3
       scalar: 0.25
-      minScalar: 0.25
+      minScalar: 0.15
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -1603,9 +1605,9 @@ ParticleSystem:
     uvChannelMask: -1
     rowMode: 1
     sprites:
-    - sprite: {fileID: 21300000, guid: 38c09198c99c3da4da56f54d7d582c90, type: 3}
-    - sprite: {fileID: 21300000, guid: e2de646fc6b50fc45be19a147c671686, type: 3}
     - sprite: {fileID: 21300000, guid: de31da3c5ef0637478f9a7fea706403d, type: 3}
+    - sprite: {fileID: 21300000, guid: e2de646fc6b50fc45be19a147c671686, type: 3}
+    - sprite: {fileID: 21300000, guid: 38c09198c99c3da4da56f54d7d582c90, type: 3}
     - sprite: {fileID: 21300000, guid: b7e648213d5b36b4485929db153edb45, type: 3}
     flipU: 0
     flipV: 0
@@ -4947,3 +4949,15 @@ ParticleSystemRenderer:
   m_MeshWeighting2: 1
   m_MeshWeighting3: 1
   m_MaskInteraction: 0
+--- !u!114 &2970547389139955593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6242979024340074322}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b947ca0f043cc9498ccf8c06850b1e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
