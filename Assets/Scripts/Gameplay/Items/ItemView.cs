@@ -11,6 +11,7 @@ namespace Gameplay
     {
         [SerializeField] protected Image mainImage;
         [SerializeField] protected ParticleSystem destroyParticleSystem;
+        [SerializeField] protected ParticleStopCallback destroyParticleCallback;
 
         protected BoardView _boardView;
         protected ExecutionManager _executionManager;
@@ -43,15 +44,17 @@ namespace Gameplay
             mainImage.SetNativeSize();
             ((RectTransform)mainImage.transform).sizeDelta /= 2f;
             SetMatchableType(matchType);
+            destroyParticleCallback.OnParticleStopAction += OnDestroyParticleEnd;
         }
 
         public virtual void DestroyItem()
         {
+            PlayDestroyParticles();
             OnItemExecute?.Invoke(ItemType);
-            Destroy(gameObject);
+            mainImage.enabled = false;
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             OnItemExecute = null;
         }
@@ -74,6 +77,16 @@ namespace Gameplay
         public virtual void SetState(string currentState)
         {
             State = currentState;
+        }
+
+        public virtual void PlayDestroyParticles()
+        {
+            destroyParticleSystem.gameObject.SetActive(true);
+        }
+
+        public virtual void OnDestroyParticleEnd()
+        {
+            Destroy(gameObject);
         }
     }
 }

@@ -5,7 +5,7 @@ using Singleton;
 using System;
 using UnityEngine;
 
-public class CubeItemView : ItemView
+public class CubeItemView : ItemView, IRecyclable
 {
     public override void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
     {
@@ -17,7 +17,10 @@ public class CubeItemView : ItemView
     {
         base.SetMatchableType(matchType);
 
-        mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(Array.IndexOf(ItemDataParser.cubeItemTypes, MatchType));
+        var index = Array.IndexOf(ItemDataParser.cubeItemTypes, MatchType);
+        mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(index);
+        var sheetAnimation = destroyParticleSystem.textureSheetAnimation;
+        sheetAnimation.SetSprite(0, sheetAnimation.GetSprite(index));
     }
 
     public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
@@ -44,5 +47,19 @@ public class CubeItemView : ItemView
     public override void Unhighight()
     {
         mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(Array.IndexOf(ItemDataParser.cubeItemTypes, MatchType));
+    }
+
+    public override void OnDestroyParticleEnd()
+    {
+        Recycle();
+    }
+
+    public void Recycle()
+    {
+        transform.localScale = Vector3.one;
+        gameObject.gameObject.SetActive(false);
+        destroyParticleSystem.gameObject.SetActive(false);
+
+
     }
 }
