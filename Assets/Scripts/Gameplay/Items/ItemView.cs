@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace Gameplay
 {
-    public abstract class ItemView : MonoBehaviour
+    public abstract class ItemView : MonoBehaviour, IRecyclable
     {
         [SerializeField] protected Image mainImage;
         [SerializeField] protected ParticleSystem destroyParticleSystem;
@@ -15,6 +15,7 @@ namespace Gameplay
 
         protected BoardView _boardView;
         protected ExecutionManager _executionManager;
+        protected PoolManager _poolManager;
 
         public string State { get; protected set; } = "0";
 
@@ -23,7 +24,7 @@ namespace Gameplay
         public Action<ItemTypeEnum> OnItemExecute;
         public ItemTypeEnum ItemType { get; protected set; }
         public MatchTypeEnum MatchType { get; protected set; }
-        
+        public GameObject RecyclableGameObject { get; set; }
         public abstract void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType);
 
         public virtual void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType)
@@ -36,14 +37,17 @@ namespace Gameplay
             return false;
         }
 
-        public virtual void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
+        public virtual void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
         {
             _boardView = boardView;
             _executionManager = executionManager;
+            _poolManager = poolManager;
             mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(0);
             mainImage.SetNativeSize();
             ((RectTransform)mainImage.transform).sizeDelta /= 2f;
             SetMatchableType(matchType);
+            RecyclableGameObject = gameObject;
+
             destroyParticleCallback.OnParticleStopAction += OnDestroyParticleEnd;
         }
 
@@ -85,6 +89,12 @@ namespace Gameplay
         }
 
         public virtual void OnDestroyParticleEnd()
+        {
+            destroyParticleCallback.OnParticleStopAction -= OnDestroyParticleEnd;
+            Recycle();
+        }
+
+        public virtual void Recycle()
         {
             Destroy(gameObject);
         }

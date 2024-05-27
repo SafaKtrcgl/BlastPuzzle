@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Enums;
 using Gameplay;
 using Helper;
@@ -5,12 +6,12 @@ using Singleton;
 using System;
 using UnityEngine;
 
-public class CubeItemView : ItemView, IRecyclable
+public class CubeItemView : ItemView
 {
-    public override void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
+    public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
     {
         ItemType = ItemTypeEnum.CubeItem;
-        base.Init(boardView, executionManager, matchType);
+        base.Init(boardView, executionManager, poolManager, matchType);
     }
 
     public override void SetMatchableType(MatchTypeEnum matchType)
@@ -18,7 +19,11 @@ public class CubeItemView : ItemView, IRecyclable
         base.SetMatchableType(matchType);
 
         var index = Array.IndexOf(ItemDataParser.cubeItemTypes, MatchType);
+
         mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(index);
+        mainImage.SetNativeSize();
+        ((RectTransform)mainImage.transform).sizeDelta /= 2f;
+
         var sheetAnimation = destroyParticleSystem.textureSheetAnimation;
         sheetAnimation.SetSprite(0, sheetAnimation.GetSprite(index));
     }
@@ -49,17 +54,13 @@ public class CubeItemView : ItemView, IRecyclable
         mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(Array.IndexOf(ItemDataParser.cubeItemTypes, MatchType));
     }
 
-    public override void OnDestroyParticleEnd()
+    public override void Recycle()
     {
-        Recycle();
-    }
-
-    public void Recycle()
-    {
+        gameObject.SetActive(false);
         transform.localScale = Vector3.one;
-        gameObject.gameObject.SetActive(false);
         destroyParticleSystem.gameObject.SetActive(false);
-
-
+        mainImage.enabled = true;
+        
+        _poolManager.SendToPool(this, ItemType);
     }
 }

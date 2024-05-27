@@ -84,6 +84,7 @@ public class BoardView : MonoBehaviour
         boardBackgroundRecttransform.sizeDelta = new Vector2(Width * CellView.CellSize + BackgroundWidthPadding, Height * CellView.CellSize + BackgroundHeightPadding);
 
         HighlightMatches();
+        SaveCurrentProgress();
     }
 
     private void AssignCellNeighbours()

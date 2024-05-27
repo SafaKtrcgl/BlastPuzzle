@@ -9,4 +9,9 @@ public class ParticleStopCallback : MonoBehaviour
     {
         OnParticleStopAction?.Invoke();
     }
+
+    private void OnDisable()
+    {
+        OnParticleStopAction = null;
+    }
 }

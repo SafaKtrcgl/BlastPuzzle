@@ -9,10 +9,10 @@ public class VaseItemView : ItemView
     private float _currentHp = 2;
     int _lastAffectedExecutionId = -1;
 
-    public override void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
+    public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
     {
         ItemType = ItemTypeEnum.VaseItem;
-        base.Init(boardView, executionManager, matchType);
+        base.Init(boardView, executionManager, poolManager, matchType);
     }
 
     public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)

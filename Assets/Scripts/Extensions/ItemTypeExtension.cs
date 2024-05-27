@@ -31,4 +31,10 @@ public static class ItemTypeExtension
             ItemTypeEnum.TntItem or
             ItemTypeEnum.TntTntItem;
     }
+
+    public static bool IsRecyclable(this ItemTypeEnum itemType)
+    {
+        return itemType is
+            ItemTypeEnum.CubeItem;
+    }
 }

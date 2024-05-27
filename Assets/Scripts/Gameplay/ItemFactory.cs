@@ -13,22 +13,45 @@ public class ItemFactory : MonoBehaviour
 
     private BoardView _boardView;
     private ExecutionManager _executionManager;
+    private PoolManager _poolManager;
 
-    public void Init(BoardView boardView, ExecutionManager executionManager)
+    public void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager)
     {
         _boardView = boardView;
         _executionManager = executionManager;
+        _poolManager = poolManager;
     }
 
     public ItemView CreateItem(ItemTypeEnum itemType, MatchTypeEnum matchType)
     {
-        var itemResource = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(itemType);
+        var itemResource = HelperResources.Instance
+            .GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper)
+            .TryGetItemResource(itemType);
 
-        var itemView = Instantiate(itemResource.ItemPrefab, itemHolderTransform);
-        itemView.Init(_boardView, _executionManager, matchType);
+        ItemView itemView = GetOrCreateItemView(itemType, itemResource);
 
-        if (itemType.IsObstacle()) OnObstacleItemCreated?.Invoke(itemType);
-        
+        itemView.Init(_boardView, _executionManager, _poolManager, matchType);
+
+        if (itemType.IsObstacle())
+        {
+            OnObstacleItemCreated?.Invoke(itemType);
+        }
+
         return itemView;
+    }
+
+    private ItemView GetOrCreateItemView(ItemTypeEnum itemType, ItemResource itemResource)
+    {
+        if (itemType.IsRecyclable())
+        {
+            var itemView = _poolManager.GetFromPool<ItemView>(itemType);
+            if (itemView != null)
+            {
+                itemView.transform.SetParent(itemHolderTransform);
+                return itemView;    
+            }
+        }
+
+        return Instantiate(itemResource.ItemPrefab, itemHolderTransform);
     }
 }
