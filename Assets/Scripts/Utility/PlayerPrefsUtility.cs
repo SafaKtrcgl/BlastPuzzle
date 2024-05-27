@@ -9,8 +9,7 @@ namespace Utility
 
         public static int GetCurrentLevel()
         {
-            return 3;
-            //return PlayerPrefs.GetInt(_currentLevelKey, 1);
+            return PlayerPrefs.GetInt(_currentLevelKey, 1);
         }
 
         public static void SetCurrentLevel(int level)
