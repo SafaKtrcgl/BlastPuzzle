@@ -1,3 +1,4 @@
+using DG.Tweening;
 using Enums;
 using Helper;
 using Singleton;
@@ -8,6 +9,7 @@ using UnityEngine.UI;
 public class MissionView : MonoBehaviour
 {
     [SerializeField] private Image itemImage;
+    [SerializeField] private Image checkmarkImage;
     [SerializeField] private TextMeshProUGUI countText;
 
     public bool IsComplete => count == 0;
@@ -25,6 +27,14 @@ public class MissionView : MonoBehaviour
     public void UpdateCount(int difference)
     {
         count += difference;
-        countText.text = count.ToString();
+        if (count == 0)
+        {
+            countText.gameObject.SetActive(false);
+            checkmarkImage.transform.DOScale(Vector3.one, .25f).SetEase(Ease.OutBack);
+        }
+        else
+        {
+            countText.text = count.ToString();
+        }
     }
 }
