@@ -132,6 +132,7 @@ public class BoardView : MonoBehaviour
 
     public void Validate()
     {
+        TryRecoverBoard();
         HighlightMatches();
         SaveCurrentProgress();
         IsBussy = false;
@@ -157,36 +158,64 @@ public class BoardView : MonoBehaviour
         PlayerPrefsUtility.SetOnGoingLevelData(LevelDataParser.GetLevelJson(Width, Height, GameplayInputController.MoveCount, currentGridData));
     }
 
-    /*
-    private void TryShuffleBoard()
+    private void TryRecoverBoard()
     {
-        if (GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType.IsSpecial()).Count > 0) return;
-
-        var cubeItemCells = GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType == ItemTypeEnum.CubeItem);
-        HashSet<CellView> visitedCells = new ();
-
-        foreach (var cubeItemCell in cubeItemCells)
+        void CreateMiddleMatchCluster()
         {
-            if (visitedCells.Contains(cubeItemCell)) continue;
-            var matchCluster = MatchFinder.FindMatchCluster(cubeItemCell);
-            if (matchCluster.Count > Config.BlastMinimumRequiredMatch) return;
+            var middleCellView = GetCellView(Width / 2, Height / 2);
+            ConvertItem(middleCellView, ItemTypeEnum.CubeItem, MatchTypeEnum.Blue);
 
-            foreach (var clusterCell in MatchFinder.FindMatchCluster(cubeItemCell))
+            foreach (var middleCellNeighbour in middleCellView.Neighbours.Values)
             {
-                visitedCells.Add(clusterCell);
+                ConvertItem(middleCellNeighbour, ItemTypeEnum.CubeItem, MatchTypeEnum.Blue);
             }
         }
 
-        ShuffleBoard(cubeItemCells);
+        if (GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType.IsSpecial()).Count > 0) return;
+
+        var cubeItemCells = GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType == ItemTypeEnum.CubeItem);
+
+        if (cubeItemCells.Count < Config.BlastMinimumRequiredMatch)
+        {
+            CreateMiddleMatchCluster();
+        }
+        else
+        {
+            HashSet<CellView> visitedCells = new();
+
+            foreach (var cubeItemCell in cubeItemCells)
+            {
+                if (visitedCells.Contains(cubeItemCell)) continue;
+                var matchCluster = MatchFinder.FindMatchCluster(cubeItemCell);
+                if (matchCluster.Count > Config.BlastMinimumRequiredMatch) return;
+
+                foreach (var clusterCell in MatchFinder.FindMatchCluster(cubeItemCell))
+                {
+                    visitedCells.Add(clusterCell);
+                }
+            }
+        }
+
+        CreateMiddleMatchCluster();
     }
 
-    private void ShuffleBoard(HashSet<CellView> shuffleCells)
+    private void Update()
     {
-        Sequence shuffleSequence = DOTween.Sequence();
-
-
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            TryRecoverBoard();
+        }
     }
-    */
+
+    public void ConvertItem(CellView cellView, ItemTypeEnum itemType, MatchTypeEnum matchType)
+    {
+        cellView.ItemInside?.DestroyItem(ExecuteTypeEnum.Blast);
+
+        var itemView = _itemFactory.CreateItem(itemType, matchType);
+        cellView.InsertItem(itemView);
+
+        ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)cellView.transform).anchoredPosition;
+    }
 
     private void HighlightMatches()
     {
