@@ -4,31 +4,34 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-public class GenericPopupDialogView : DialogView
+namespace UI.Dialog
 {
-    [SerializeField] private TextMeshProUGUI dialogDescriptionText;
-    [SerializeField] private TextMeshProUGUI buttonDescriptionText;
-    [SerializeField] private Button confirmButton;
-    [SerializeField] private Button closeButton;
-
-    private UnityAction _confirmButtonListener;
-    private UnityAction _exitButtonListener;
-
-    public void Init(string dialogText, string buttonText, Action buttonAction, Action exitButtonAction)
+    public class GenericPopupDialogView : DialogView
     {
-        dialogDescriptionText.text = dialogText;
-        buttonDescriptionText.text = buttonText;
+        [SerializeField] private TextMeshProUGUI dialogDescriptionText;
+        [SerializeField] private TextMeshProUGUI buttonDescriptionText;
+        [SerializeField] private Button confirmButton;
+        [SerializeField] private Button closeButton;
 
-        _confirmButtonListener = () => buttonAction?.Invoke();
-        _exitButtonListener = () => exitButtonAction?.Invoke();
+        private UnityAction _confirmButtonListener;
+        private UnityAction _exitButtonListener;
 
-        confirmButton.onClick.AddListener(_confirmButtonListener);
-        closeButton.onClick.AddListener(_exitButtonListener);
-    }
+        public void Init(string dialogText, string buttonText, Action buttonAction, Action exitButtonAction)
+        {
+            dialogDescriptionText.text = dialogText;
+            buttonDescriptionText.text = buttonText;
 
-    private void OnDestroy()
-    {
-        confirmButton.onClick.RemoveListener(_confirmButtonListener);
-        closeButton.onClick.RemoveListener(_exitButtonListener);
+            _confirmButtonListener = () => buttonAction?.Invoke();
+            _exitButtonListener = () => exitButtonAction?.Invoke();
+
+            confirmButton.onClick.AddListener(_confirmButtonListener);
+            closeButton.onClick.AddListener(_exitButtonListener);
+        }
+
+        private void OnDestroy()
+        {
+            confirmButton.onClick.RemoveListener(_confirmButtonListener);
+            closeButton.onClick.RemoveListener(_exitButtonListener);
+        }
     }
 }

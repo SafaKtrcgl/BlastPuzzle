@@ -1,8 +1,8 @@
-using Singleton;
+using ScriptableObjects;
 using System.Linq;
 using UnityEngine;
 
-namespace Helper
+namespace Helpers
 {
     public class ArenaResourceHelper : HelperBase
     {

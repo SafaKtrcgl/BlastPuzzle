@@ -1,9 +1,11 @@
-using Base;
+using Singleton;
+using Enums;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using ScriptableObjects;
 
-namespace Singleton
+namespace Helpers
 {
     public class HelperResources : MonoSingleton<HelperResources>
     {

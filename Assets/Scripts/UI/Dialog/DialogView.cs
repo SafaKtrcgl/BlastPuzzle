@@ -1,6 +1,9 @@
 using UnityEngine;
 
-public abstract class DialogView : MonoBehaviour
+namespace UI.Dialog
 {
-    
+    public abstract class DialogView : MonoBehaviour
+    {
+
+    }
 }

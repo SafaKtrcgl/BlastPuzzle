@@ -1,31 +1,31 @@
 using Enums;
-using Gameplay;
-using Helper;
-using Singleton;
+using Gameplay.Managers;
 using System;
-using UnityEngine;
 
-public class TntTntItemView : ComboItemView
+namespace Gameplay.Items
 {
-    private int _perimeter = 3;
-    public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
+    public class TntTntItemView : ComboItemView
     {
-        ItemType = ItemTypeEnum.TntTntItem;
-        base.Init(boardView, executionManager, poolManager, matchType);
-    }
-
-    public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
-    {
-        if (IsDestinedToDie) return;
-        IsDestinedToDie = true;
-
-        var cellsToExecute = _boardView.GetCellViews(cellView =>
+        private int _perimeter = 3;
+        public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
         {
-            int deltaX = Math.Abs(cellView.X - currentCellView.X);
-            int deltaY = Math.Abs(cellView.Y - currentCellView.Y);
-            return deltaX <= _perimeter && deltaY <= _perimeter && !(deltaX == 0 && deltaY == 0);
-        });
+            ItemType = ItemTypeEnum.TntTntItem;
+            base.Init(boardView, executionManager, poolManager, matchType);
+        }
 
-        _executionManager.ExecuteCellViews(currentCellView, cellsToExecute, executeType);
+        public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
+        {
+            if (IsDestinedToDie) return;
+            IsDestinedToDie = true;
+
+            var cellsToExecute = _boardView.GetCellViews(cellView =>
+            {
+                int deltaX = Math.Abs(cellView.X - currentCellView.X);
+                int deltaY = Math.Abs(cellView.Y - currentCellView.Y);
+                return deltaX <= _perimeter && deltaY <= _perimeter && !(deltaX == 0 && deltaY == 0);
+            });
+
+            _executionManager.ExecuteCellViews(currentCellView, cellsToExecute, executeType);
+        }
     }
 }

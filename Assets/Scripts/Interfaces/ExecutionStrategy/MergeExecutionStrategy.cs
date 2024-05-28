@@ -1,52 +1,56 @@
 using DG.Tweening;
 using Enums;
 using Gameplay;
+using Gameplay.Managers;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MergeExecutionStrategy : IExecutionStrategy
+namespace Interfaces.Strategy
 {
-    private readonly ItemFactory _itemFactory;
-    private bool _isRunning = true;
-
-    public MergeExecutionStrategy(ItemFactory itemFactory)
+    public class MergeExecutionStrategy : IExecutionStrategy
     {
-        _itemFactory = itemFactory;
-    }
+        private readonly ItemFactory _itemFactory;
+        private bool _isRunning = true;
 
-    public IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute)
-    {
-        Sequence executeSequence = DOTween.Sequence();
-
-        var mergePos = ((RectTransform)tappedCell.transform).anchoredPosition;
-
-        foreach (var cellView in cellsToExecute)
+        public MergeExecutionStrategy(ItemFactory itemFactory)
         {
-            var itemInside = cellView.ItemInside;
-            if (itemInside == null) continue;
-
-            itemInside.SetSpriteSortingLayer("SpecialItem");
-            executeSequence.Join(((RectTransform)itemInside.transform).DOAnchorPos(mergePos, .35f));
-            executeSequence.Join(itemInside.transform.DOScale(.2f, .35f).SetEase(Ease.InSine));
+            _itemFactory = itemFactory;
         }
 
-        executeSequence.OnComplete(() =>
+        public IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute)
         {
+            Sequence executeSequence = DOTween.Sequence();
+
+            var mergePos = ((RectTransform)tappedCell.transform).anchoredPosition;
+
             foreach (var cellView in cellsToExecute)
             {
-                cellView?.Execute(ExecuteTypeEnum.Merge);
+                var itemInside = cellView.ItemInside;
+                if (itemInside == null) continue;
+
+                itemInside.SetSpriteSortingLayer("SpecialItem");
+                executeSequence.Join(((RectTransform)itemInside.transform).DOAnchorPos(mergePos, .35f));
+                executeSequence.Join(itemInside.transform.DOScale(.2f, .35f).SetEase(Ease.InSine));
             }
 
-            var itemView = _itemFactory.CreateItem(ItemTypeEnum.TntItem, MatchTypeEnum.Special);
-            ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)tappedCell.transform).anchoredPosition;
-            itemView.transform.localScale = Vector3.one * .2f;
+            executeSequence.OnComplete(() =>
+            {
+                foreach (var cellView in cellsToExecute)
+                {
+                    cellView?.Execute(ExecuteTypeEnum.Merge);
+                }
 
-            tappedCell.InsertItem(itemView);
+                var itemView = _itemFactory.CreateItem(ItemTypeEnum.TntItem, MatchTypeEnum.Special);
+                ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)tappedCell.transform).anchoredPosition;
+                itemView.transform.localScale = Vector3.one * .2f;
 
-            itemView.transform.DOScale(Vector3.one, .25f).SetEase(Ease.OutSine).OnComplete(() => _isRunning = false);
-        });
+                tappedCell.InsertItem(itemView);
 
-        yield return new WaitWhile(() => _isRunning);
+                itemView.transform.DOScale(Vector3.one, .25f).SetEase(Ease.OutSine).OnComplete(() => _isRunning = false);
+            });
+
+            yield return new WaitWhile(() => _isRunning);
+        }
     }
 }

@@ -1,66 +1,67 @@
 using Enums;
-using Gameplay;
-using Helper;
-using Singleton;
-using UnityEngine;
+using Gameplay.Managers;
+using Helpers;
 
-public class VaseItemView : ItemView
+namespace Gameplay.Items
 {
-    private float _currentHp = 2;
-    int _lastAffectedExecutionId = -1;
-
-    public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
+    public class VaseItemView : ItemView
     {
-        ItemType = ItemTypeEnum.VaseItem;
-        base.Init(boardView, executionManager, poolManager, matchType);
-    }
+        private float _currentHp = 2;
+        int _lastAffectedExecutionId = -1;
 
-    public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
-    {
-        if (executeType == ExecuteTypeEnum.Special)
+        public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
         {
-            TakeHit(executionId, executeType);
+            ItemType = ItemTypeEnum.VaseItem;
+            base.Init(boardView, executionManager, poolManager, matchType);
         }
-    }
 
-    public override void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType)
-    {
-        if (executeType == ExecuteTypeEnum.Blast || executeType == ExecuteTypeEnum.Merge)
+        public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
         {
-            if (_lastAffectedExecutionId == executionId) return;
-            _lastAffectedExecutionId = executionId;
-
-            TakeHit(executionId, executeType);
+            if (executeType == ExecuteTypeEnum.Special)
+            {
+                TakeHit(executionId, executeType);
+            }
         }
-    }
 
-    private void TakeHit(int executionId, ExecuteTypeEnum executeType)
-    {
-        switch (_currentHp)
+        public override void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType)
         {
-            case 2:
-                SetState("1");
-                break;
+            if (executeType == ExecuteTypeEnum.Blast || executeType == ExecuteTypeEnum.Merge)
+            {
+                if (_lastAffectedExecutionId == executionId) return;
+                _lastAffectedExecutionId = executionId;
 
-            case 1:
-                DestroyItem(executeType);
-                break;
+                TakeHit(executionId, executeType);
+            }
         }
-    }
 
-    public override void SetState(string currentState)
-    {
-        State = currentState;
-        if (State == "1")
+        private void TakeHit(int executionId, ExecuteTypeEnum executeType)
         {
-            SetStateBroken();
+            switch (_currentHp)
+            {
+                case 2:
+                    SetState("1");
+                    break;
+
+                case 1:
+                    DestroyItem(executeType);
+                    break;
+            }
         }
-    }
 
-    private void SetStateBroken()
-    {
-        mainSprite.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(1);
+        public override void SetState(string currentState)
+        {
+            State = currentState;
+            if (State == "1")
+            {
+                SetStateBroken();
+            }
+        }
 
-        _currentHp = 1;
+        private void SetStateBroken()
+        {
+            mainSprite.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(1);
+
+            _currentHp = 1;
+        }
     }
 }

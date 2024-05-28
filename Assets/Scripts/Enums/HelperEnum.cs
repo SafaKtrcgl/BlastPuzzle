@@ -1,7 +1,10 @@
-public enum HelperEnum
+namespace Enums
 {
-    ContextHelper,
-    ArenaResourceHelper,
-    ItemResourceHelper,
-    DialogHelper
+    public enum HelperEnum
+    {
+        ContextHelper,
+        ArenaResourceHelper,
+        ItemResourceHelper,
+        DialogHelper
+    }
 }

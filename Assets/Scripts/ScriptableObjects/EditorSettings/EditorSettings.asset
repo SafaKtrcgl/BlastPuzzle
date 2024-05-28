@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: EditorSettings
   m_EditorClassIdentifier: 
   adminCreateItemTouch: 0
-  itemType: 2
-  matchType: 5
+  itemType: 1
+  matchType: 0

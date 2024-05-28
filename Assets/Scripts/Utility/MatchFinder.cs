@@ -2,33 +2,36 @@ using Enums;
 using Gameplay;
 using System.Collections.Generic;
 
-public static class MatchFinder
+namespace Utilities
 {
-    public static HashSet<CellView> FindMatchCluster(CellView tappedCell)
+    public static class MatchFinder
     {
-        if (tappedCell.ItemInside == null || tappedCell.ItemInside.MatchType == MatchTypeEnum.None) return null;
-
-        HashSet<CellView> matchingCells = new HashSet<CellView>();
-
-        FindMatchCluster(tappedCell, tappedCell.ItemInside.MatchType, matchingCells);
-
-        return matchingCells;
-    }
-
-    private static void FindMatchCluster(CellView cellView, MatchTypeEnum matchType, HashSet<CellView> matchingCells)
-    {
-        if (matchingCells.Contains(cellView))
+        public static HashSet<CellView> FindMatchCluster(CellView tappedCell)
         {
-            return;
+            if (tappedCell.ItemInside == null || tappedCell.ItemInside.MatchType == MatchTypeEnum.None) return null;
+
+            HashSet<CellView> matchingCells = new HashSet<CellView>();
+
+            FindMatchCluster(tappedCell, tappedCell.ItemInside.MatchType, matchingCells);
+
+            return matchingCells;
         }
 
-        matchingCells.Add(cellView);
-
-        foreach (CellView neighbourCell in cellView.Neighbours.Values)
+        private static void FindMatchCluster(CellView cellView, MatchTypeEnum matchType, HashSet<CellView> matchingCells)
         {
-            if (neighbourCell.ItemInside != null && neighbourCell.ItemInside.MatchType == matchType)
+            if (matchingCells.Contains(cellView))
             {
-                FindMatchCluster(neighbourCell, matchType, matchingCells);
+                return;
+            }
+
+            matchingCells.Add(cellView);
+
+            foreach (CellView neighbourCell in cellView.Neighbours.Values)
+            {
+                if (neighbourCell.ItemInside != null && neighbourCell.ItemInside.MatchType == matchType)
+                {
+                    FindMatchCluster(neighbourCell, matchType, matchingCells);
+                }
             }
         }
     }

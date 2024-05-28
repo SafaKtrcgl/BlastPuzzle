@@ -1,48 +1,50 @@
 using DG.Tweening;
 using Enums;
-using Helper;
-using Singleton;
+using Helpers;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MissionView : MonoBehaviour
+namespace Gameplay.UI
 {
-    [SerializeField] private Image itemImage;
-    [SerializeField] private Image checkmarkImage;
-    [SerializeField] private TextMeshProUGUI countText;
-
-    public bool IsComplete => _count == 0;
-
-    private int _count;
-    private Tweener _progressTweener;
-
-    public void Init(ItemTypeEnum itemType)
+    public class MissionView : MonoBehaviour
     {
-        itemImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(itemType).ItemSprite(0);
-        itemImage.SetNativeSize();
-        ((RectTransform)itemImage.transform).sizeDelta /= 2f;
-        UpdateCount(1);
-    }
+        [SerializeField] private Image itemImage;
+        [SerializeField] private Image checkmarkImage;
+        [SerializeField] private TextMeshProUGUI countText;
 
-    public void UpdateCount(int delta)
-    {
-        _count += delta;
-        if (delta == -1)
+        public bool IsComplete => _count == 0;
+
+        private int _count;
+        private Tweener _progressTweener;
+
+        public void Init(ItemTypeEnum itemType)
         {
-            if (_count == 0)
-            {
-                countText.gameObject.SetActive(false);
-                checkmarkImage.gameObject.SetActive(true);
-                checkmarkImage.transform.DOScale(Vector3.one, .25f).SetEase(Ease.OutBack);
-            }
-            else
-            {
-                _progressTweener?.Kill(true);
-                _progressTweener = itemImage.transform.DOShakeScale(.15f);
-            }
+            itemImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(itemType).ItemSprite(0);
+            itemImage.SetNativeSize();
+            ((RectTransform)itemImage.transform).sizeDelta /= 2f;
+            UpdateCount(1);
         }
 
-        countText.text = _count.ToString();
+        public void UpdateCount(int delta)
+        {
+            _count += delta;
+            if (delta == -1)
+            {
+                if (_count == 0)
+                {
+                    countText.gameObject.SetActive(false);
+                    checkmarkImage.gameObject.SetActive(true);
+                    checkmarkImage.transform.DOScale(Vector3.one, .25f).SetEase(Ease.OutBack);
+                }
+                else
+                {
+                    _progressTweener?.Kill(true);
+                    _progressTweener = itemImage.transform.DOShakeScale(.15f);
+                }
+            }
+
+            countText.text = _count.ToString();
+        }
     }
 }

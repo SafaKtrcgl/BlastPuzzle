@@ -1,8 +1,10 @@
-using Helper;
-using Singleton;
+using Enums;
+using Gameplay.Managers;
+using Gameplay.UI;
+using Helpers;
 using UnityEngine;
 using UnityEngine.UI;
-using Utility;
+using Utilities;
 
 namespace Context
 {

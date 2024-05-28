@@ -786,7 +786,6 @@ GameObject:
   - component: {fileID: 7688425142554852176}
   - component: {fileID: 1293616958299380606}
   - component: {fileID: 8555205959321298050}
-  - component: {fileID: 1398116515273163378}
   m_Layer: 0
   m_Name: BoardBackground
   m_TagString: Untagged
@@ -851,19 +850,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &1398116515273163378
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4341950862259409894}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31a19414c41e5ae4aae2af33fee712f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_ShowMaskGraphic: 1
 --- !u!1 &4855273452475417426
 GameObject:
   m_ObjectHideFlags: 0

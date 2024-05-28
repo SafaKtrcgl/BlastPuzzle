@@ -1,6 +1,7 @@
 using Enums;
+using Gameplay.Managers;
 
-namespace Gameplay
+namespace Gameplay.Items
 {
     public class BoxItemView : ItemView
     {

@@ -1,7 +1,7 @@
 using System.IO;
 using UnityEngine;
 
-namespace Utility
+namespace Utilities
 {
     [System.Serializable]
     public class LevelDataParser

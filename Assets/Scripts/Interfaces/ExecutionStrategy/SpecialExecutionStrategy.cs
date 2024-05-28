@@ -5,32 +5,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpecialExecutionStrategy : IExecutionStrategy
+namespace Interfaces.Strategy
 {
-    private bool _isRunning = true;
-    public IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute)
+    public class SpecialExecutionStrategy : IExecutionStrategy
     {
-        Sequence executionSequence = DOTween.Sequence();
-
-        var itemView = tappedCell.ItemInside;
-
-        itemView.SetSpriteSortingLayer("SpecialItem");
-
-        executionSequence.Append(itemView.transform.DOScale(Vector3.one * 1.2f, .25f).SetEase(Ease.OutBack));
-        executionSequence.Append(itemView.transform.DOPunchRotation(Vector3.forward * 35, .25f).SetEase(Ease.OutSine));
-
-        executionSequence.OnComplete(() =>
+        private bool _isRunning = true;
+        public IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute)
         {
-            foreach (var cellView in cellsToExecute)
+            Sequence executionSequence = DOTween.Sequence();
+
+            var itemView = tappedCell.ItemInside;
+
+            itemView.SetSpriteSortingLayer("SpecialItem");
+
+            executionSequence.Append(itemView.transform.DOScale(Vector3.one * 1.2f, .25f).SetEase(Ease.OutBack));
+            executionSequence.Append(itemView.transform.DOPunchRotation(Vector3.forward * 35, .25f).SetEase(Ease.OutSine));
+
+            executionSequence.OnComplete(() =>
             {
-                cellView?.Execute(ExecuteTypeEnum.Special);
-            }
+                foreach (var cellView in cellsToExecute)
+                {
+                    cellView?.Execute(ExecuteTypeEnum.Special);
+                }
 
-            itemView.DestroyItem(ExecuteTypeEnum.Special);
+                itemView.DestroyItem(ExecuteTypeEnum.Special);
 
-            _isRunning = false;
-        });
+                _isRunning = false;
+            });
 
-        yield return new WaitWhile(() => _isRunning);
+            yield return new WaitWhile(() => _isRunning);
+        }
     }
 }

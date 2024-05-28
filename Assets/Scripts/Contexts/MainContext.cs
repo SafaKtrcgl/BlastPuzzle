@@ -1,5 +1,5 @@
-using Helper;
-using Singleton;
+using Enums;
+using Helpers;
 using UI;
 using UnityEngine;
 using UnityEngine.UI;

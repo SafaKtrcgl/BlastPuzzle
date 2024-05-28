@@ -1,4 +1,7 @@
-public enum DialogTypeEnum
+namespace Enums
 {
-    LevelCompleteDialog
+    public enum DialogTypeEnum
+    {
+        LevelCompleteDialog
+    }
 }

@@ -1,8 +1,6 @@
-using Context;
-using Singleton;
 using UnityEngine.SceneManagement;
 
-namespace Helper
+namespace Helpers
 {
     public class ContextHelper : HelperBase
     {

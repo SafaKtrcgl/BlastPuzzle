@@ -1,14 +1,16 @@
 using Enums;
-using Gameplay;
-using Singleton;
+using UI.Dialog;
 using UnityEngine;
 
-[CreateAssetMenu]
-public class DialogResource : ScriptableObject
+namespace ScriptableObjects
 {
-    [SerializeField] private DialogTypeEnum dialogType;
-    [SerializeField] private DialogView dialogPrefab;
+    [CreateAssetMenu]
+    public class DialogResource : ScriptableObject
+    {
+        [SerializeField] private DialogTypeEnum dialogType;
+        [SerializeField] private DialogView dialogPrefab;
 
-    public DialogTypeEnum DialogType => dialogType;
-    public DialogView DialogPrefab => dialogPrefab;
+        public DialogTypeEnum DialogType => dialogType;
+        public DialogView DialogPrefab => dialogPrefab;
+    }
 }

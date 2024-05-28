@@ -1,36 +1,39 @@
 using Enums;
+using Interfaces.Recycle;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEditor.Progress;
 
-public class PoolManager : MonoBehaviour
+namespace Gameplay.Managers
 {
-    private Dictionary<ItemTypeEnum, Stack<IRecyclable>> _poolDictionary = new();
-
-    public void SendToPool(IRecyclable recyclableObject, ItemTypeEnum itemType)
+    public class PoolManager : MonoBehaviour
     {
-        recyclableObject.RecyclableGameObject.transform.SetParent(transform);
-        recyclableObject.RecyclableGameObject.SetActive(false);
+        private Dictionary<ItemTypeEnum, Stack<IRecyclable>> _poolDictionary = new();
 
-        if (_poolDictionary.ContainsKey(itemType))
+        public void SendToPool(IRecyclable recyclableObject, ItemTypeEnum itemType)
         {
-            _poolDictionary[itemType].Push(recyclableObject);
+            recyclableObject.RecyclableGameObject.transform.SetParent(transform);
+            recyclableObject.RecyclableGameObject.SetActive(false);
+
+            if (_poolDictionary.ContainsKey(itemType))
+            {
+                _poolDictionary[itemType].Push(recyclableObject);
+            }
+            else
+            {
+                _poolDictionary.Add(itemType, new Stack<IRecyclable>());
+                _poolDictionary[itemType].Push(recyclableObject);
+            }
         }
-        else
+
+        public T GetFromPool<T>(ItemTypeEnum itemType) where T : MonoBehaviour
         {
-            _poolDictionary.Add(itemType, new Stack<IRecyclable>());
-            _poolDictionary[itemType].Push(recyclableObject);
+            if (!_poolDictionary.ContainsKey(itemType) || _poolDictionary[itemType].Count == 0) return null;
+
+            var item = _poolDictionary[itemType].Pop();
+
+            item.RecyclableGameObject.SetActive(true);
+
+            return item as T;
         }
-    }
-
-    public T GetFromPool<T>(ItemTypeEnum itemType) where T : MonoBehaviour
-    {
-        if (!_poolDictionary.ContainsKey(itemType) || _poolDictionary[itemType].Count == 0) return null;
-
-        var item = _poolDictionary[itemType].Pop();
-
-        item.RecyclableGameObject.SetActive(true);
-
-        return item as T;
     }
 }

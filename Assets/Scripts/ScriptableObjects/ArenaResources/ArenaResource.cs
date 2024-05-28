@@ -1,11 +1,14 @@
 using UnityEngine;
 
-[CreateAssetMenu]
-public class ArenaResource : ScriptableObject
+namespace ScriptableObjects
 {
-    [SerializeField] private int arenaId;
-    [SerializeField] private Sprite arenaBackgroundSprite;
+    [CreateAssetMenu]
+    public class ArenaResource : ScriptableObject
+    {
+        [SerializeField] private int arenaId;
+        [SerializeField] private Sprite arenaBackgroundSprite;
 
-    public int ArenaId => arenaId;
-    public Sprite ArenaBackgroundSprite => arenaBackgroundSprite;
+        public int ArenaId => arenaId;
+        public Sprite ArenaBackgroundSprite => arenaBackgroundSprite;
+    }
 }

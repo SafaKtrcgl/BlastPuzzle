@@ -1,19 +1,22 @@
 using Enums;
-using Gameplay;
+using Gameplay.Managers;
 
-public class StoneItemView : ItemView
+namespace Gameplay.Items
 {
-    public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
+    public class StoneItemView : ItemView
     {
-        ItemType = ItemTypeEnum.StoneItem;
-        base.Init(boardView, executionManager, poolManager, matchType);
-    }
-
-    public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
-    {
-        if (executeType == ExecuteTypeEnum.Special)
+        public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
         {
-            DestroyItem(executeType);
+            ItemType = ItemTypeEnum.StoneItem;
+            base.Init(boardView, executionManager, poolManager, matchType);
+        }
+
+        public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
+        {
+            if (executeType == ExecuteTypeEnum.Special)
+            {
+                DestroyItem(executeType);
+            }
         }
     }
 }

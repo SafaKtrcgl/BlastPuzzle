@@ -1,38 +1,40 @@
-
 using DG.Tweening;
-using Helper;
-using Singleton;
+using Enums;
+using Helpers;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LevelCompleteDialog : DialogView
+namespace UI.Dialog
 {
-    [SerializeField] private Transform[] transformsToAnimate;
-    [SerializeField] private Transform particleSystemTransform;
-    [SerializeField] private Button continueButton;
-
-    public void Init()
+    public class LevelCompleteDialog : DialogView
     {
-        for (int i = 0; i < transformsToAnimate.Length; i++)
+        [SerializeField] private Transform[] transformsToAnimate;
+        [SerializeField] private Transform particleSystemTransform;
+        [SerializeField] private Button continueButton;
+
+        public void Init()
         {
-            var transformToAnimate = transformsToAnimate[i];
-            transformToAnimate.localScale = Vector3.zero;
-            if (i == 1)
+            for (int i = 0; i < transformsToAnimate.Length; i++)
             {
-                transformToAnimate.DOScale(Vector3.one, .25f).SetDelay(i * 1f).SetEase(Ease.OutBack).OnComplete(() =>
+                var transformToAnimate = transformsToAnimate[i];
+                transformToAnimate.localScale = Vector3.zero;
+                if (i == 1)
                 {
-                    particleSystemTransform.gameObject.SetActive(true);
-                });
-            }
-            else
-            {
-                transformToAnimate.DOScale(Vector3.one, .25f).SetDelay(i * 1f).SetEase(Ease.OutBack);
+                    transformToAnimate.DOScale(Vector3.one, .25f).SetDelay(i * 1f).SetEase(Ease.OutBack).OnComplete(() =>
+                    {
+                        particleSystemTransform.gameObject.SetActive(true);
+                    });
+                }
+                else
+                {
+                    transformToAnimate.DOScale(Vector3.one, .25f).SetDelay(i * 1f).SetEase(Ease.OutBack);
+                }
             }
         }
-    }
 
-    public void OnBackgroundClick()
-    {
-        HelperResources.Instance.GetHelper<ContextHelper>(HelperEnum.ContextHelper).LoadMainScene();
+        public void OnBackgroundClick()
+        {
+            HelperResources.Instance.GetHelper<ContextHelper>(HelperEnum.ContextHelper).LoadMainScene();
+        }
     }
 }

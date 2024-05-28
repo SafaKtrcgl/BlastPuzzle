@@ -1,7 +1,7 @@
-
-using Gameplay;
-
-public abstract class ComboItemView : ItemView
+namespace Gameplay.Items
 {
+    public abstract class ComboItemView : ItemView
+    {
 
+    }
 }

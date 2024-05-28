@@ -1,11 +1,13 @@
 using DG.Tweening;
 using Enums;
+using Extensions;
 using Gameplay;
+using Gameplay.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using Utility;
+using Utilities;
 
 public class BoardView : MonoBehaviour
 {

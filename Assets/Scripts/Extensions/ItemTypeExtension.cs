@@ -1,40 +1,43 @@
 using Enums;
 
-public static class ItemTypeExtension
+namespace Extensions
 {
-    public static bool IsObstacle(this ItemTypeEnum itemType)
+    public static class ItemTypeExtension
     {
-        return itemType is 
-            ItemTypeEnum.BoxItem or 
-            ItemTypeEnum.StoneItem or 
-            ItemTypeEnum.VaseItem;
-    }
+        public static bool IsObstacle(this ItemTypeEnum itemType)
+        {
+            return itemType is
+                ItemTypeEnum.BoxItem or
+                ItemTypeEnum.StoneItem or
+                ItemTypeEnum.VaseItem;
+        }
 
-    public static bool IsMatchable(this ItemTypeEnum itemType)
-    {
-        return itemType is
-            ItemTypeEnum.CubeItem or
-            ItemTypeEnum.TntItem;
-    }
+        public static bool IsMatchable(this ItemTypeEnum itemType)
+        {
+            return itemType is
+                ItemTypeEnum.CubeItem or
+                ItemTypeEnum.TntItem;
+        }
 
-    public static bool IsFallable(this ItemTypeEnum itemType)
-    {
-        return itemType is
-            ItemTypeEnum.CubeItem or
-            ItemTypeEnum.TntItem or
-            ItemTypeEnum.VaseItem;
-    }
+        public static bool IsFallable(this ItemTypeEnum itemType)
+        {
+            return itemType is
+                ItemTypeEnum.CubeItem or
+                ItemTypeEnum.TntItem or
+                ItemTypeEnum.VaseItem;
+        }
 
-    public static bool IsSpecial(this ItemTypeEnum itemType)
-    {
-        return itemType is
-            ItemTypeEnum.TntItem or
-            ItemTypeEnum.TntTntItem;
-    }
+        public static bool IsSpecial(this ItemTypeEnum itemType)
+        {
+            return itemType is
+                ItemTypeEnum.TntItem or
+                ItemTypeEnum.TntTntItem;
+        }
 
-    public static bool IsRecyclable(this ItemTypeEnum itemType)
-    {
-        return itemType is
-            ItemTypeEnum.CubeItem;
+        public static bool IsRecyclable(this ItemTypeEnum itemType)
+        {
+            return itemType is
+                ItemTypeEnum.CubeItem;
+        }
     }
 }

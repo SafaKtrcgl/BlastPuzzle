@@ -5,29 +5,32 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BlastExecutionStrategy : IExecutionStrategy
+namespace Interfaces.Strategy
 {
-    private bool _isRunning = true;
-
-    public IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute)
+    public class BlastExecutionStrategy : IExecutionStrategy
     {
-        Sequence blastItemSquishSequence = DOTween.Sequence();
+        private bool _isRunning = true;
 
-        foreach (var cellView in cellsToExecute)
+        public IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute)
         {
-            var item = cellView.ItemInside;
-            blastItemSquishSequence.Join(item.transform.DOScale(Vector3.one * .2f, .25f).SetEase(Ease.OutSine));
-        }
+            Sequence blastItemSquishSequence = DOTween.Sequence();
 
-        blastItemSquishSequence.OnComplete(() =>
-        {
             foreach (var cellView in cellsToExecute)
             {
-                cellView?.Execute(ExecuteTypeEnum.Blast);
+                var item = cellView.ItemInside;
+                blastItemSquishSequence.Join(item.transform.DOScale(Vector3.one * .2f, .25f).SetEase(Ease.OutSine));
             }
-            _isRunning = false;
-        });
 
-        yield return new WaitWhile(() => _isRunning);
+            blastItemSquishSequence.OnComplete(() =>
+            {
+                foreach (var cellView in cellsToExecute)
+                {
+                    cellView?.Execute(ExecuteTypeEnum.Blast);
+                }
+                _isRunning = false;
+            });
+
+            yield return new WaitWhile(() => _isRunning);
+        }
     }
 }

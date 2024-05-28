@@ -1,11 +1,11 @@
 using Enums;
-using Helper;
-using Singleton;
+using Gameplay.Managers;
+using Helpers;
+using Interfaces.Recycle;
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
-namespace Gameplay
+namespace Gameplay.Items
 {
     public abstract class ItemView : MonoBehaviour, IRecyclable
     {

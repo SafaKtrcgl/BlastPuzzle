@@ -1,57 +1,59 @@
 using DG.Tweening;
 using Enums;
-using System;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class GameplayTopPanel : MonoBehaviour
+namespace Gameplay.UI
 {
-    [SerializeField] private TextMeshProUGUI moveCountText;
-    [SerializeField] private MissionView missionViewPrefab;
-    [SerializeField] private Transform missionViewHolder;
-
-    private BoardView _boardView;
-    private int _moveCount;
-
-    private Dictionary<ItemTypeEnum, MissionView> itemTypeMissionDictionary = new();
-
-    public void Init(BoardView boardView, int moveCount)
+    public class GameplayTopPanel : MonoBehaviour
     {
-        _boardView = boardView;
-        _moveCount = moveCount;
+        [SerializeField] private TextMeshProUGUI moveCountText;
+        [SerializeField] private MissionView missionViewPrefab;
+        [SerializeField] private Transform missionViewHolder;
 
-        ((RectTransform)transform).DOAnchorPosY(50, .5f).SetEase(Ease.OutBack);
+        private BoardView _boardView;
+        private int _moveCount;
 
-        moveCountText.text = moveCount.ToString();
-    }
+        private Dictionary<ItemTypeEnum, MissionView> itemTypeMissionDictionary = new();
 
-    public void OnMovePerformed(int moveCount)
-    {
-        moveCountText.text = moveCount.ToString();
-    }
-
-    public void OnObstacleCreated(ItemTypeEnum itemType)
-    {
-        if (itemTypeMissionDictionary.ContainsKey(itemType))
+        public void Init(BoardView boardView, int moveCount)
         {
-            itemTypeMissionDictionary[itemType].UpdateCount(1);
+            _boardView = boardView;
+            _moveCount = moveCount;
+
+            ((RectTransform)transform).DOAnchorPosY(50, .5f).SetEase(Ease.OutBack);
+
+            moveCountText.text = moveCount.ToString();
         }
-        else
+
+        public void OnMovePerformed(int moveCount)
         {
-            var missionView = Instantiate(missionViewPrefab, missionViewHolder);
-            missionView.Init(itemType);
-            itemTypeMissionDictionary.Add(itemType, missionView);
+            moveCountText.text = moveCount.ToString();
         }
-    }
 
-    public void OnObstacleExecuted(ItemTypeEnum itemType)
-    {
-        itemTypeMissionDictionary[itemType].UpdateCount(-1);
-
-        if (itemTypeMissionDictionary[itemType].IsComplete)
+        public void OnObstacleCreated(ItemTypeEnum itemType)
         {
-            itemTypeMissionDictionary.Remove(itemType);
+            if (itemTypeMissionDictionary.ContainsKey(itemType))
+            {
+                itemTypeMissionDictionary[itemType].UpdateCount(1);
+            }
+            else
+            {
+                var missionView = Instantiate(missionViewPrefab, missionViewHolder);
+                missionView.Init(itemType);
+                itemTypeMissionDictionary.Add(itemType, missionView);
+            }
+        }
+
+        public void OnObstacleExecuted(ItemTypeEnum itemType)
+        {
+            itemTypeMissionDictionary[itemType].UpdateCount(-1);
+
+            if (itemTypeMissionDictionary[itemType].IsComplete)
+            {
+                itemTypeMissionDictionary.Remove(itemType);
+            }
         }
     }
 }

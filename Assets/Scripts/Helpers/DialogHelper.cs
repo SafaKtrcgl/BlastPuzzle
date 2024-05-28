@@ -1,10 +1,11 @@
 using Enums;
-using Singleton;
+using ScriptableObjects;
 using System;
 using System.Linq;
+using UI.Dialog;
 using UnityEngine;
 
-namespace Helper
+namespace Helpers
 {
     public class DialogHelper : HelperBase
     {

@@ -1,7 +1,10 @@
-public enum DirectionEnum
+namespace Enums
 {
-    Left,
-    Right,
-    Up,
-    Down
+    public enum DirectionEnum
+    {
+        Left,
+        Right,
+        Up,
+        Down
+    }
 }

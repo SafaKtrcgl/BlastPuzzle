@@ -1,7 +1,10 @@
 using UnityEngine;
 
-public interface IRecyclable
+namespace Interfaces.Recycle
 {
-    public GameObject RecyclableGameObject { get; set; }
-    public void Recycle();
+    public interface IRecyclable
+    {
+        public GameObject RecyclableGameObject { get; set; }
+        public void Recycle();
+    }
 }

@@ -1,8 +1,7 @@
-using Helper;
-using Singleton;
+using Enums;
+using Helpers;
 using System.IO;
-using UnityEngine;
-using Utility;
+using Utilities;
 
 namespace Context
 {

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Singleton
+namespace Helpers
 {
     public abstract class HelperBase : MonoBehaviour
     {

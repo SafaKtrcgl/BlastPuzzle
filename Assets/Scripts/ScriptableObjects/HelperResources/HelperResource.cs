@@ -1,12 +1,16 @@
-using Singleton;
+using Enums;
+using Helpers;
 using UnityEngine;
 
-[CreateAssetMenu]
-public class HelperResource : ScriptableObject
+namespace ScriptableObjects
 {
-    [SerializeField] private HelperEnum helperEnum;
-    [SerializeField] private HelperBase helperClass;
+    [CreateAssetMenu]
+    public class HelperResource : ScriptableObject
+    {
+        [SerializeField] private HelperEnum helperEnum;
+        [SerializeField] private HelperBase helperClass;
 
-    public HelperEnum HelpersEnum => helperEnum;
-    public HelperBase HelperClass => helperClass;
+        public HelperEnum HelpersEnum => helperEnum;
+        public HelperBase HelperClass => helperClass;
+    }
 }
