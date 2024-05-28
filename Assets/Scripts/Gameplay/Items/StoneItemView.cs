@@ -13,7 +13,7 @@ public class StoneItemView : ItemView
     {
         if (executeType == ExecuteTypeEnum.Special)
         {
-            DestroyItem();
+            DestroyItem(executeType);
         }
     }
 }

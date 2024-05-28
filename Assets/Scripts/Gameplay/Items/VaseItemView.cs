@@ -19,7 +19,7 @@ public class VaseItemView : ItemView
     {
         if (executeType == ExecuteTypeEnum.Special)
         {
-            TakeHit(executionId);
+            TakeHit(executionId, executeType);
         }
     }
 
@@ -30,11 +30,11 @@ public class VaseItemView : ItemView
             if (_lastAffectedExecutionId == executionId) return;
             _lastAffectedExecutionId = executionId;
 
-            TakeHit(executionId);
+            TakeHit(executionId, executeType);
         }
     }
 
-    private void TakeHit(int executionId)
+    private void TakeHit(int executionId, ExecuteTypeEnum executeType)
     {
         switch (_currentHp)
         {
@@ -43,7 +43,7 @@ public class VaseItemView : ItemView
                 break;
 
             case 1:
-                DestroyItem();
+                DestroyItem(executeType);
                 break;
         }
     }

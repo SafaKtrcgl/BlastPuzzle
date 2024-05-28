@@ -30,7 +30,7 @@ public class GameplayInputController : MonoBehaviour
         EditorSettings settings = AssetDatabase.LoadAssetAtPath<EditorSettings>("Assets/Scripts/ScriptableObjects/EditorSettings/EditorSettings.asset");
         if (settings != null && settings.adminCreateItemTouch)
         {
-            clickedCellView.ItemInside?.DestroyItem();
+            clickedCellView.ItemInside?.DestroyItem(Enums.ExecuteTypeEnum.Blast);
 
             var itemView = _itemFactory.CreateItem(settings.itemType, settings.matchType);
             clickedCellView.InsertItem(itemView);

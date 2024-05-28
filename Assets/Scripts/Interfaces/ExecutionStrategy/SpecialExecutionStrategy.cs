@@ -26,7 +26,7 @@ public class SpecialExecutionStrategy : IExecutionStrategy
                 cellView?.Execute(ExecuteTypeEnum.Special);
             }
 
-            itemView.DestroyItem();
+            itemView.DestroyItem(ExecuteTypeEnum.Special);
 
             _isRunning = false;
         });

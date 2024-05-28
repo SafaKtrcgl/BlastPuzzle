@@ -36,7 +36,7 @@ public class ComboExecutionStrategy : IExecutionStrategy
         {
             foreach (var cellView in cellsToExecute)
             {
-                cellView.ItemInside.DestroyItem();
+                cellView.ItemInside.DestroyItem(ExecuteTypeEnum.Combo);
             }
 
             var itemView = _itemFactory.CreateItem(ItemTypeEnum.TntTntItem, MatchTypeEnum.None);

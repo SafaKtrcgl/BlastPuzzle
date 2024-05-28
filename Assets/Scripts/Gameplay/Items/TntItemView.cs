@@ -42,4 +42,11 @@ public class TntItemView : ItemView
 
         return true;
     }
+
+    public override void DestroyItem(ExecuteTypeEnum executeType)
+    {
+        if (executeType != ExecuteTypeEnum.Combo) PlayDestroyParticles();
+        OnItemExecute?.Invoke(ItemType);
+        mainImage.enabled = false;
+    }
 }

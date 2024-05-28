@@ -51,7 +51,7 @@ namespace Gameplay
             destroyParticleCallback.OnParticleStopAction += OnDestroyParticleEnd;
         }
 
-        public virtual void DestroyItem()
+        public virtual void DestroyItem(ExecuteTypeEnum executeType)
         {
             PlayDestroyParticles();
             OnItemExecute?.Invoke(ItemType);

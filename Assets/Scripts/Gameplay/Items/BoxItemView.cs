@@ -14,7 +14,7 @@ namespace Gameplay
         {
             if (executeType == ExecuteTypeEnum.Special)
             {
-                DestroyItem();
+                DestroyItem(executeType);
             }
         }
 
@@ -22,7 +22,7 @@ namespace Gameplay
         {
             if (executeType == ExecuteTypeEnum.Blast || executeType == ExecuteTypeEnum.Merge)
             {
-                DestroyItem();
+                DestroyItem(executeType);
             }
         }
     }

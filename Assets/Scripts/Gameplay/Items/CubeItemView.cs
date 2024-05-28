@@ -30,7 +30,7 @@ public class CubeItemView : ItemView
 
     public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
     {
-        DestroyItem();
+        DestroyItem(executeType);
     }
 
     public override bool TryInteract(CellView currentCellView)
@@ -62,5 +62,12 @@ public class CubeItemView : ItemView
         mainImage.enabled = true;
         
         _poolManager.SendToPool(this, ItemType);
+    }
+
+    public override void DestroyItem(ExecuteTypeEnum executeType)
+    {
+        if (executeType != ExecuteTypeEnum.Merge) PlayDestroyParticles();
+        OnItemExecute?.Invoke(ItemType);
+        mainImage.enabled = false;
     }
 }
