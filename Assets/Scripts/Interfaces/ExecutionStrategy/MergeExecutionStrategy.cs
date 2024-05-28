@@ -26,7 +26,7 @@ public class MergeExecutionStrategy : IExecutionStrategy
             var itemInside = cellView.ItemInside;
             if (itemInside == null) continue;
 
-            itemInside.transform.SetAsLastSibling();
+            itemInside.SetSpriteSortingLayer("SpecialItem");
             executeSequence.Join(((RectTransform)itemInside.transform).DOAnchorPos(mergePos, .35f));
             executeSequence.Join(itemInside.transform.DOScale(.2f, .35f).SetEase(Ease.InSine));
         }

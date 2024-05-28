@@ -13,6 +13,7 @@ public class BoardView : MonoBehaviour
     [SerializeField] private FallManager fallManager;
     [SerializeField] private CellView cellViewPrefab;
     [SerializeField] private RectTransform boardBackgroundRecttransform;
+    [SerializeField] private Transform cellViewHolderTransform;
 
     private int _width;
     public int Width => _width;
@@ -54,7 +55,7 @@ public class BoardView : MonoBehaviour
         {
             for (int x = 0; x < _width; x++)
             {
-                var cellView = Instantiate(cellViewPrefab, transform);
+                var cellView = Instantiate(cellViewPrefab, cellViewHolderTransform);
                 cellView.Init(this, x, y);
                 _cellViews[x, y] = cellView;
 

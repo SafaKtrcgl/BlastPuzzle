@@ -40,6 +40,7 @@ namespace Gameplay
         {
             _itemInside = item;
             _itemInside.OnItemExecute += OnItemExecuted;
+            item.SetSpriteSortingOrder(Y);
         }
 
         public ItemView ExtractItem()

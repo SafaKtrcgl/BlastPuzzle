@@ -41,3 +41,15 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Item
+    uniqueID: 57788407
+    locked: 0
+  - name: SpecialItem
+    uniqueID: 4252318635
+    locked: 0
+  - name: Particle
+    uniqueID: 1906101493
+    locked: 0
+  - name: Dialog
+    uniqueID: 1138182047
+    locked: 0

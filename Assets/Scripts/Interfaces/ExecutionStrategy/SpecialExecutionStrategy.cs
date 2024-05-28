@@ -14,7 +14,7 @@ public class SpecialExecutionStrategy : IExecutionStrategy
 
         var itemView = tappedCell.ItemInside;
 
-        itemView.transform.SetAsLastSibling();
+        itemView.SetSpriteSortingLayer("SpecialItem");
 
         executionSequence.Append(itemView.transform.DOScale(Vector3.one * 1.2f, .25f).SetEase(Ease.OutBack));
         executionSequence.Append(itemView.transform.DOPunchRotation(Vector3.forward * 35, .25f).SetEase(Ease.OutSine));

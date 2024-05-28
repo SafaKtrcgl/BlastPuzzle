@@ -9,7 +9,7 @@ namespace Gameplay
 {
     public abstract class ItemView : MonoBehaviour, IRecyclable
     {
-        [SerializeField] protected Image mainImage;
+        [SerializeField] protected SpriteRenderer mainSprite;
         [SerializeField] protected ParticleSystem destroyParticleSystem;
         [SerializeField] protected ParticleStopCallback destroyParticleCallback;
 
@@ -42,9 +42,9 @@ namespace Gameplay
             _boardView = boardView;
             _executionManager = executionManager;
             _poolManager = poolManager;
-            mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(0);
-            mainImage.SetNativeSize();
-            ((RectTransform)mainImage.transform).sizeDelta /= 2f;
+            mainSprite.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(0);
+
+            ((RectTransform)mainSprite.transform).sizeDelta /= 2f;
             SetMatchableType(matchType);
             RecyclableGameObject = gameObject;
 
@@ -55,7 +55,7 @@ namespace Gameplay
         {
             PlayDestroyParticles();
             OnItemExecute?.Invoke(ItemType);
-            mainImage.enabled = false;
+            mainSprite.enabled = false;
         }
 
         private void OnDisable()
@@ -97,6 +97,16 @@ namespace Gameplay
         public virtual void Recycle()
         {
             Destroy(gameObject);
+        }
+
+        public void SetSpriteSortingLayer(string layer)
+        {
+            mainSprite.sortingLayerName = layer;
+        }
+
+        public void SetSpriteSortingOrder(int order)
+        {
+            mainSprite.sortingOrder = order;
         }
     }
 }

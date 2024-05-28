@@ -45,8 +45,15 @@ public class TntItemView : ItemView
 
     public override void DestroyItem(ExecuteTypeEnum executeType)
     {
-        if (executeType != ExecuteTypeEnum.Combo) PlayDestroyParticles();
         OnItemExecute?.Invoke(ItemType);
-        mainImage.enabled = false;
+        mainSprite.enabled = false;
+        if (executeType == ExecuteTypeEnum.Combo)
+        {
+            OnDestroyParticleEnd();
+        }
+        else
+        {
+            PlayDestroyParticles();
+        }
     }
 }

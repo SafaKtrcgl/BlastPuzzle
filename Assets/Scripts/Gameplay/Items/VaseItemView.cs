@@ -59,7 +59,7 @@ public class VaseItemView : ItemView
 
     private void SetStateBroken()
     {
-        mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(1);
+        mainSprite.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(1);
 
         _currentHp = 1;
     }

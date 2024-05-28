@@ -20,9 +20,9 @@ public class CubeItemView : ItemView
 
         var index = Array.IndexOf(ItemDataParser.cubeItemTypes, MatchType);
 
-        mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(index);
-        mainImage.SetNativeSize();
-        ((RectTransform)mainImage.transform).sizeDelta /= 2f;
+        mainSprite.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(index);
+
+        ((RectTransform)mainSprite.transform).sizeDelta /= 2f;
 
         var sheetAnimation = destroyParticleSystem.textureSheetAnimation;
         sheetAnimation.SetSprite(0, sheetAnimation.GetSprite(index));
@@ -46,12 +46,12 @@ public class CubeItemView : ItemView
 
     public override void Highight()
     {
-        mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(Array.IndexOf(ItemDataParser.cubeItemTypes, MatchType) + Config.CubeTypeCount);
+        mainSprite.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(Array.IndexOf(ItemDataParser.cubeItemTypes, MatchType) + Config.CubeTypeCount);
     }
 
     public override void Unhighight()
     {
-        mainImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(Array.IndexOf(ItemDataParser.cubeItemTypes, MatchType));
+        mainSprite.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(Array.IndexOf(ItemDataParser.cubeItemTypes, MatchType));
     }
 
     public override void Recycle()
@@ -59,15 +59,24 @@ public class CubeItemView : ItemView
         gameObject.SetActive(false);
         transform.localScale = Vector3.one;
         destroyParticleSystem.gameObject.SetActive(false);
-        mainImage.enabled = true;
+        mainSprite.enabled = true;
+        SetSpriteSortingLayer("Item");
         
         _poolManager.SendToPool(this, ItemType);
     }
 
     public override void DestroyItem(ExecuteTypeEnum executeType)
     {
-        if (executeType != ExecuteTypeEnum.Merge) PlayDestroyParticles();
         OnItemExecute?.Invoke(ItemType);
-        mainImage.enabled = false;
+        mainSprite.enabled = false;
+        
+        if (executeType == ExecuteTypeEnum.Merge)
+        {
+            OnDestroyParticleEnd();
+        }
+        else
+        {
+            PlayDestroyParticles();
+        }
     }
 }
