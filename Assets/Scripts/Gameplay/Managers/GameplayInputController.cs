@@ -1,6 +1,7 @@
 using System;
 using UnityEditor;
 using UnityEngine;
+using Utilities;
 
 namespace Gameplay.Managers
 {
@@ -28,10 +29,9 @@ namespace Gameplay.Managers
             if (_moveCount < 1) return;
 
 #if UNITY_EDITOR
-            EditorSettings settings = AssetDatabase.LoadAssetAtPath<EditorSettings>("Assets/Scripts/ScriptableObjects/EditorSettings/EditorSettings.asset");
-            if (settings != null && settings.adminCreateItemTouch)
+            if (BoardAdjusterSettings.adminCreateItemTouch)
             {
-                _boardView.ConvertItem(clickedCellView, settings.itemType, settings.matchType);
+                _boardView.ConvertItem(clickedCellView, BoardAdjusterSettings.itemType, BoardAdjusterSettings.matchType);
 
                 return;
             }

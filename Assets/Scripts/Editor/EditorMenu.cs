@@ -1,47 +1,23 @@
+#if UNITY_EDITOR
+
 using Enums;
 using UnityEditor;
-using UnityEngine;
+using Utilities;
 
-namespace Editor
+public class EditorMenu : EditorWindow
 {
-    public class EditorMenu : EditorWindow
+    [MenuItem("CustomTools/BoardAdjuster")]
+    public static void ShowWindow()
     {
-        private static EditorSettings settings;
+        GetWindow<EditorMenu>("BoardAdjusterSettings");
+    }
 
-        [MenuItem("Board Adjuster/Gameplay Editor Settings")]
-        public static void ShowWindow()
-        {
-            GetWindow<EditorMenu>("Editor Settings");
-            LoadSettings();
-        }
-
-        private void OnGUI()
-        {
-            if (settings == null)
-            {
-                LoadSettings();
-            }
-
-            EditorGUILayout.LabelField("Admin Settings", EditorStyles.boldLabel);
-            settings.adminCreateItemTouch = EditorGUILayout.Toggle("Admin Create Item Touch", settings.adminCreateItemTouch);
-            settings.itemType = (ItemTypeEnum) EditorGUILayout.EnumPopup("Item Type", settings.itemType);
-            settings.matchType = (MatchTypeEnum) EditorGUILayout.EnumPopup("Match Type", settings.matchType);
-
-            if (GUILayout.Button("Save Settings"))
-            {
-                SaveSettings();
-            }
-        }
-
-        private static void LoadSettings()
-        {
-            settings = AssetDatabase.LoadAssetAtPath<EditorSettings>("Assets/Scripts/ScriptableObjects/EditorSettings/EditorSettings.asset");
-        }
-
-        private static void SaveSettings()
-        {
-            EditorUtility.SetDirty(settings);
-            AssetDatabase.SaveAssets();
-        }
+    private void OnGUI()
+    {
+        EditorGUILayout.LabelField("Admin Settings", EditorStyles.boldLabel);
+        BoardAdjusterSettings.adminCreateItemTouch = EditorGUILayout.Toggle("Admin Create Item Touch", BoardAdjusterSettings.adminCreateItemTouch);
+        BoardAdjusterSettings.itemType = (ItemTypeEnum)EditorGUILayout.EnumPopup("Item Type", BoardAdjusterSettings.itemType);
+        BoardAdjusterSettings.matchType = (MatchTypeEnum)EditorGUILayout.EnumPopup("Match Type", BoardAdjusterSettings.matchType);
     }
 }
+#endif
