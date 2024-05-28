@@ -12,29 +12,37 @@ public class MissionView : MonoBehaviour
     [SerializeField] private Image checkmarkImage;
     [SerializeField] private TextMeshProUGUI countText;
 
-    public bool IsComplete => count == 0;
+    public bool IsComplete => _count == 0;
 
-    private int count = -1;
+    private int _count;
+    private Tweener _progressTweener;
 
     public void Init(ItemTypeEnum itemType)
     {
         itemImage.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(itemType).ItemSprite(0);
         itemImage.SetNativeSize();
         ((RectTransform)itemImage.transform).sizeDelta /= 2f;
-        count = 1;
+        UpdateCount(1);
     }
 
-    public void UpdateCount(int difference)
+    public void UpdateCount(int delta)
     {
-        count += difference;
-        if (count == 0)
+        _count += delta;
+        if (delta == -1)
         {
-            countText.gameObject.SetActive(false);
-            checkmarkImage.transform.DOScale(Vector3.one, .25f).SetEase(Ease.OutBack);
+            if (_count == 0)
+            {
+                countText.gameObject.SetActive(false);
+                checkmarkImage.gameObject.SetActive(true);
+                checkmarkImage.transform.DOScale(Vector3.one, .25f).SetEase(Ease.OutBack);
+            }
+            else
+            {
+                _progressTweener?.Kill(true);
+                _progressTweener = itemImage.transform.DOShakeScale(.15f);
+            }
         }
-        else
-        {
-            countText.text = count.ToString();
-        }
+
+        countText.text = _count.ToString();
     }
 }
