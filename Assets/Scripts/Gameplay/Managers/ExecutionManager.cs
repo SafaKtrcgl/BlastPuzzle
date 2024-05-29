@@ -37,7 +37,6 @@ namespace Gameplay.Managers
             }
             else
             {
-                //Debug.Log("Selamlar :> " + executionIndex);
                 FillExecutionQueue(originCellView, cellViewsToExecute, executeType, executionIndex);
             }
         }
@@ -61,14 +60,14 @@ namespace Gameplay.Managers
         {
             while (_executionQueue.Count > 0)
             {
-                var currentExecutionIndex = _executionQueue.Peek().executionIndex;
-                var executionNodesToExecute = _executionQueue.Where(x => x.executionIndex == currentExecutionIndex);
+                var currentExecutionIndex = _executionQueue.Peek().ExecutionIndex;
+                var executionNodesToExecute = _executionQueue.Where(x => x.ExecutionIndex == currentExecutionIndex);
 
                 HashSet<Coroutine> runningCoroutines = new ();
 
                 foreach (var executionNode in executionNodesToExecute)
                 {
-                    Coroutine coroutine = StartCoroutine(executionNode.executionEnumerator);
+                    Coroutine coroutine = StartCoroutine(executionNode.ExecutionEnumerator);
                     runningCoroutines.Add(coroutine);
                 }
 
@@ -77,7 +76,7 @@ namespace Gameplay.Managers
                     yield return coroutine;
                 }
 
-                _executionQueue = new Queue<ExecutionNode>(_executionQueue.Where(x => x.executionIndex != currentExecutionIndex));
+                _executionQueue = new Queue<ExecutionNode>(_executionQueue.Where(x => x.ExecutionIndex != currentExecutionIndex));
             }
 
             yield return new WaitForEndOfFrame();
