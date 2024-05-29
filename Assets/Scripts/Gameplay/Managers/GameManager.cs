@@ -31,7 +31,7 @@ namespace Gameplay.Managers
 
                 var contextHelper = HelperResources.Instance.GetHelper<ContextHelper>(HelperEnum.ContextHelper);
                 var dialogHelper = HelperResources.Instance.GetHelper<DialogHelper>(HelperEnum.DialogHelper);
-                dialogHelper.ShowGenericPopupDialog("Level Failed!", "Try Again",
+                dialogHelper.ShowGenericPopupDialog("Level Failed!\n\nSeems like you are out of moves.", "Try Again",
                     () => { contextHelper.LoadGameplayScene(); },
                     () => { contextHelper.LoadMainScene(); });
             }
