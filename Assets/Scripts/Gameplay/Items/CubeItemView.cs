@@ -29,7 +29,7 @@ namespace Gameplay.Items
             sheetAnimation.SetSprite(0, sheetAnimation.GetSprite(index));
         }
 
-        public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
+        public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType, int executionIndex)
         {
             DestroyItem(executeType);
         }
@@ -40,7 +40,7 @@ namespace Gameplay.Items
             if (cellsToExecute.Count < Config.BlastMinimumRequiredMatch) return false;
 
             var executionType = cellsToExecute.Count >= Config.TntMinimumRequiredMatch ? ExecuteTypeEnum.Merge : ExecuteTypeEnum.Blast;
-            _executionManager.ExecuteCellViews(currentCellView, cellsToExecute, executionType);
+            _executionManager.ExecuteCellViews(currentCellView, cellsToExecute, executionType, 0);
 
             return true;
         }

@@ -25,7 +25,7 @@ namespace Gameplay.Items
         public ItemTypeEnum ItemType { get; protected set; }
         public MatchTypeEnum MatchType { get; protected set; }
         public GameObject RecyclableGameObject { get; set; }
-        public abstract void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType);
+        public abstract void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType, int executionIndex);
 
         public virtual void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType)
         {

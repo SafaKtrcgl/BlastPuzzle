@@ -13,7 +13,7 @@ namespace Gameplay.Items
             base.Init(boardView, executionManager, poolManager, matchType);
         }
 
-        public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
+        public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType, int executionIndex)
         {
             if (IsDestinedToDie) return;
             IsDestinedToDie = true;
@@ -25,7 +25,7 @@ namespace Gameplay.Items
                 return deltaX <= _perimeter && deltaY <= _perimeter && !(deltaX == 0 && deltaY == 0);
             });
 
-            _executionManager.ExecuteCellViews(currentCellView, cellsToExecute, executeType);
+            _executionManager.ExecuteCellViews(currentCellView, cellsToExecute, executeType, executionIndex);
         }
     }
 }

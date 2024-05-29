@@ -53,13 +53,13 @@ namespace Gameplay
             return itemView;
         }
 
-        public void Execute(ExecuteTypeEnum executeType)
+        public void Execute(ExecuteTypeEnum executeType, int executionIndex)
         {
             if (ItemInside != null)
             {
                 var executionId = GameplayInputController.MoveCount;
                 OnCellExecuteAction?.Invoke(executionId, executeType);
-                ItemInside?.Execute(executionId, this, executeType);
+                ItemInside?.Execute(executionId, this, executeType, executionIndex);
             }
         }
 

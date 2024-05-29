@@ -18,7 +18,7 @@ namespace Interfaces.Strategy
             _itemFactory = itemFactory;
         }
 
-        public IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute)
+        public IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute, int executionIndex)
         {
             Sequence executeSequence = DOTween.Sequence();
 
@@ -38,7 +38,7 @@ namespace Interfaces.Strategy
             {
                 foreach (var cellView in cellsToExecute)
                 {
-                    cellView?.Execute(ExecuteTypeEnum.Merge);
+                    cellView?.Execute(ExecuteTypeEnum.Merge, executionIndex);
                 }
 
                 var itemView = _itemFactory.CreateItem(ItemTypeEnum.TntItem, MatchTypeEnum.Special);

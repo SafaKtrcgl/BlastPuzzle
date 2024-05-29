@@ -4,6 +4,7 @@ using Interfaces.Strategy;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Gameplay.Managers
@@ -16,7 +17,7 @@ namespace Gameplay.Managers
         private BoardView _boardView;
         private ItemFactory _itemFactory;
 
-        private Queue<IEnumerator> _executionQueue = new();
+        private Queue<ExecutionNode> _executionQueue = new();
 
         public void Init(BoardView boardView, ItemFactory itemFactory)
         {
@@ -24,23 +25,24 @@ namespace Gameplay.Managers
             _itemFactory = itemFactory;
         }
 
-        public void ExecuteCellViews(CellView originCellView, HashSet<CellView> cellViewsToExecute, ExecuteTypeEnum executeType)
+        public void ExecuteCellViews(CellView originCellView, HashSet<CellView> cellViewsToExecute, ExecuteTypeEnum executeType, int executionIndex)
         {
             if (_executionQueue.Count == 0)
             {
                 _boardView.IsBussy = true;
 
-                ConstructExecutionQueue(originCellView, cellViewsToExecute, executeType);
+                FillExecutionQueue(originCellView, cellViewsToExecute, executeType, 0);
 
                 StartCoroutine(ExecuteExecutionQueue());
             }
             else
             {
-                ConstructExecutionQueue(originCellView, cellViewsToExecute, executeType);
+                //Debug.Log("Selamlar :> " + executionIndex);
+                FillExecutionQueue(originCellView, cellViewsToExecute, executeType, executionIndex);
             }
         }
 
-        private void ConstructExecutionQueue(CellView originCellView, HashSet<CellView> cellViewsToExecute, ExecuteTypeEnum executeType)
+        private void FillExecutionQueue(CellView originCellView, HashSet<CellView> cellViewsToExecute, ExecuteTypeEnum executeType, int executionIndex)
         {
             IExecutionStrategy executionStrategy = executeType switch
             {
@@ -51,26 +53,31 @@ namespace Gameplay.Managers
                 _ => throw new NotImplementedException()
             };
 
-            _executionQueue.Enqueue(executionStrategy.Execute(originCellView, cellViewsToExecute));
-
-            if (executeType == ExecuteTypeEnum.Special)
-            {
-                foreach (var cellViewToExecute in cellViewsToExecute)
-                {
-                    if (!cellViewToExecute.ItemInside) continue;
-                    if (!cellViewToExecute.ItemInside.ItemType.IsSpecial()) continue;
-
-                    cellViewToExecute.Execute(executeType);
-                }
-            }
+            var executionNode = new ExecutionNode(executionStrategy.Execute(originCellView, cellViewsToExecute, executionIndex), executionIndex);
+            _executionQueue.Enqueue(executionNode);
         }
 
         private IEnumerator ExecuteExecutionQueue()
         {
             while (_executionQueue.Count > 0)
             {
-                yield return _executionQueue.Peek();
-                _executionQueue.Dequeue();
+                var currentExecutionIndex = _executionQueue.Peek().executionIndex;
+                var executionNodesToExecute = _executionQueue.Where(x => x.executionIndex == currentExecutionIndex);
+
+                HashSet<Coroutine> runningCoroutines = new ();
+
+                foreach (var executionNode in executionNodesToExecute)
+                {
+                    Coroutine coroutine = StartCoroutine(executionNode.executionEnumerator);
+                    runningCoroutines.Add(coroutine);
+                }
+
+                foreach (var coroutine in runningCoroutines)
+                {
+                    yield return coroutine;
+                }
+
+                _executionQueue = new Queue<ExecutionNode>(_executionQueue.Where(x => x.executionIndex != currentExecutionIndex));
             }
 
             yield return new WaitForEndOfFrame();

@@ -6,6 +6,6 @@ namespace Interfaces.Strategy
 {
     public interface IExecutionStrategy
     {
-        IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute);
+        IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute, int executionIndex);
     }
 }

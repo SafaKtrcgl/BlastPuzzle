@@ -19,7 +19,7 @@ namespace Interfaces.Strategy
             _itemFactory = itemFactory;
         }
 
-        public IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute)
+        public IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute, int executionIndex)
         {
             Sequence executeSequence = DOTween.Sequence();
 
@@ -50,7 +50,7 @@ namespace Interfaces.Strategy
 
                 itemView.transform.DOScale(Vector3.one, .25f).SetEase(Ease.OutSine).OnComplete(() =>
                 {
-                    tappedCell.ItemInside.Execute(GameplayInputController.MoveCount, tappedCell, ExecuteTypeEnum.Special);
+                    tappedCell.ItemInside.Execute(GameplayInputController.MoveCount, tappedCell, ExecuteTypeEnum.Special, executionIndex);
                     _isRunning = false;
                 });
             });

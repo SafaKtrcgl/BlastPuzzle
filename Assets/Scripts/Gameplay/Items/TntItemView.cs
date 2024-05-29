@@ -15,7 +15,7 @@ namespace Gameplay.Items
             base.Init(boardView, executionManager, poolManager, matchType);
         }
 
-        public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
+        public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType, int executionIndex)
         {
             if (IsDestinedToDie) return;
             IsDestinedToDie = true;
@@ -27,7 +27,7 @@ namespace Gameplay.Items
                 return deltaX <= _perimeter && deltaY <= _perimeter && !(deltaX == 0 && deltaY == 0);
             });
 
-            _executionManager.ExecuteCellViews(currentCellView, cellsToExecute, executeType);
+            _executionManager.ExecuteCellViews(currentCellView, cellsToExecute, executeType, executionIndex + 1);
         }
 
         public override bool TryInteract(CellView currentCellView)
@@ -36,11 +36,11 @@ namespace Gameplay.Items
 
             if (cellsToExecute.Count >= Config.TntTnTMinimumRequiredMatch)
             {
-                _executionManager.ExecuteCellViews(currentCellView, cellsToExecute, ExecuteTypeEnum.Combo);
+                _executionManager.ExecuteCellViews(currentCellView, cellsToExecute, ExecuteTypeEnum.Combo, 0);
             }
             else
             {
-                Execute(GameplayInputController.MoveCount, currentCellView, ExecuteTypeEnum.Special);
+                Execute(GameplayInputController.MoveCount, currentCellView, ExecuteTypeEnum.Special, 0);
             }
 
             return true;

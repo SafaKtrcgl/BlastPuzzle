@@ -11,7 +11,7 @@ namespace Interfaces.Strategy
     {
         private bool _isRunning = true;
 
-        public IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute)
+        public IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute, int executionIndex)
         {
             Sequence blastItemSquishSequence = DOTween.Sequence();
 
@@ -25,7 +25,7 @@ namespace Interfaces.Strategy
             {
                 foreach (var cellView in cellsToExecute)
                 {
-                    cellView?.Execute(ExecuteTypeEnum.Blast);
+                    cellView?.Execute(ExecuteTypeEnum.Blast, executionIndex);
                 }
                 _isRunning = false;
             });

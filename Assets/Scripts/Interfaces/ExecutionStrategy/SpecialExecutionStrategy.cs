@@ -10,7 +10,7 @@ namespace Interfaces.Strategy
     public class SpecialExecutionStrategy : IExecutionStrategy
     {
         private bool _isRunning = true;
-        public IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute)
+        public IEnumerator Execute(CellView tappedCell, HashSet<CellView> cellsToExecute, int executionIndex)
         {
             Sequence executionSequence = DOTween.Sequence();
 
@@ -25,7 +25,7 @@ namespace Interfaces.Strategy
             {
                 foreach (var cellView in cellsToExecute)
                 {
-                    cellView?.Execute(ExecuteTypeEnum.Special);
+                    cellView?.Execute(ExecuteTypeEnum.Special, executionIndex);
                 }
 
                 itemView.DestroyItem(ExecuteTypeEnum.Special);

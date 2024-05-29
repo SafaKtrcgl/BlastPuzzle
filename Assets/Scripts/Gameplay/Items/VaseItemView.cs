@@ -15,7 +15,7 @@ namespace Gameplay.Items
             base.Init(boardView, executionManager, poolManager, matchType);
         }
 
-        public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType)
+        public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType, int executionIndex)
         {
             if (executeType == ExecuteTypeEnum.Special)
             {
