@@ -4,7 +4,7 @@ using System;
 
 namespace Gameplay.Items
 {
-    public class TntTntItemView : ComboItemView
+    public class TntTntItemView : ItemView
     {
         private int _perimeter = 3;
         public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
