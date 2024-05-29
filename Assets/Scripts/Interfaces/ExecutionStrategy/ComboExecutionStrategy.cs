@@ -50,7 +50,7 @@ namespace Interfaces.Strategy
 
                 itemView.transform.DOScale(Vector3.one, .25f).SetEase(Ease.OutSine).OnComplete(() =>
                 {
-                    tappedCell.ItemInside.Execute(GameplayInputController.MoveCount, tappedCell, ExecuteTypeEnum.Special, executionIndex);
+                    tappedCell.ItemInside.Execute(GameplayInputController.MoveCount, tappedCell, ExecuteTypeEnum.Special, executionIndex + 1);
                     _isRunning = false;
                 });
             });
