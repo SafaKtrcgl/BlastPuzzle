@@ -213,6 +213,8 @@ public class BoardView : MonoBehaviour
     {
         cellView.ItemInside?.DestroyItem(ExecuteTypeEnum.Blast);
 
+        if (itemType == ItemTypeEnum.None) return;
+
         var itemView = _itemFactory.CreateItem(itemType, matchType);
         cellView.InsertItem(itemView);
 
