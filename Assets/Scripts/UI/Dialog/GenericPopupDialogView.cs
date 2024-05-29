@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using TMPro;
 using UnityEngine;
@@ -26,6 +27,8 @@ namespace UI.Dialog
 
             confirmButton.onClick.AddListener(_confirmButtonListener);
             closeButton.onClick.AddListener(_exitButtonListener);
+            
+            transform.DOPunchScale(Vector3.one, .15f);
         }
 
         private void OnDestroy()

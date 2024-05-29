@@ -4838,7 +4838,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1138182047
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 1
   m_RenderMode: 0
   m_MeshDistribution: 0
@@ -5194,7 +5194,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 35
+  m_fontSize: 32.3
   m_fontSizeBase: 44
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -5422,12 +5422,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f176280dd10cb9946ba99a63d6a3e6c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  transformsToAnimate:
-  - {fileID: 4059645945529390964}
-  - {fileID: 5954559005077886423}
-  - {fileID: 7523668452137220434}
+  levelCompletedTextTransform: {fileID: 4059645945529390964}
+  starImageTransform: {fileID: 5954559005077886423}
+  tapToContinueTransform: {fileID: 7523668452137220434}
   particleSystemTransform: {fileID: 6942730304528155081}
-  continueButton: {fileID: 7197689964433379001}
 --- !u!223 &2241165387515518667
 Canvas:
   m_ObjectHideFlags: 0
