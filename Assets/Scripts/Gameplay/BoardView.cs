@@ -86,8 +86,7 @@ public class BoardView : MonoBehaviour
 
         boardBackgroundRecttransform.sizeDelta = new Vector2(Width * CellView.CellSize + BackgroundWidthPadding, Height * CellView.CellSize + BackgroundHeightPadding);
 
-        HighlightMatches();
-        SaveCurrentProgress();
+        Validate();
     }
 
     private void AssignCellNeighbours()
@@ -157,8 +156,25 @@ public class BoardView : MonoBehaviour
 
     public void Validate()
     {
-        TryRecoverBoard();
-        HighlightMatches();
+        var cubeItemCells = GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType == ItemTypeEnum.CubeItem).ToList();
+
+        List<HashSet<CellView>> matchClusters = new();
+
+        while (cubeItemCells.Count > 0)
+        {
+            var cubeItemCell = cubeItemCells[0];
+            var matchCluster = MatchFinder.FindMatchCluster(cubeItemCell);
+
+            matchClusters.Add(matchCluster);
+
+            foreach (var clusterCell in matchCluster)
+            {
+                cubeItemCells.Remove(clusterCell);
+            }
+        }
+
+        TryRecoverBoard(matchClusters);
+        HighlightMatches(matchClusters);
         SaveCurrentProgress();
         IsBussy = false;
     }
@@ -183,7 +199,7 @@ public class BoardView : MonoBehaviour
         PlayerPrefsUtility.SetOnGoingLevelData(LevelDataParser.GetLevelJson(Width, Height, GameplayInputController.MoveCount, currentGridData));
     }
 
-    private void TryRecoverBoard()
+    private void TryRecoverBoard(List<HashSet<CellView>> matchClusters)
     {
         void CreateMiddleMatchCluster()
         {
@@ -198,38 +214,12 @@ public class BoardView : MonoBehaviour
 
         if (GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType.IsSpecial()).Count > 0) return;
 
-        var cubeItemCells = GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType == ItemTypeEnum.CubeItem);
-
-        if (cubeItemCells.Count < Config.BlastMinimumRequiredMatch)
+        foreach (var matchCluster in matchClusters)
         {
-            CreateMiddleMatchCluster();
-        }
-        else
-        {
-            HashSet<CellView> visitedCells = new();
-
-            foreach (var cubeItemCell in cubeItemCells)
-            {
-                if (visitedCells.Contains(cubeItemCell)) continue;
-                var matchCluster = MatchFinder.FindMatchCluster(cubeItemCell);
-                if (matchCluster.Count > Config.BlastMinimumRequiredMatch) return;
-
-                foreach (var clusterCell in MatchFinder.FindMatchCluster(cubeItemCell))
-                {
-                    visitedCells.Add(clusterCell);
-                }
-            }
+            if (matchCluster.Count > Config.BlastMinimumRequiredMatch) return;
         }
 
         CreateMiddleMatchCluster();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            TryRecoverBoard();
-        }
     }
 
     public void ConvertItem(CellView cellView, ItemTypeEnum itemType, MatchTypeEnum matchType)
@@ -244,23 +234,14 @@ public class BoardView : MonoBehaviour
         ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)cellView.transform).anchoredPosition;
     }
 
-    private void HighlightMatches()
+    private void HighlightMatches(List<HashSet<CellView>> matchClusters)
     {
-        var cubeItemCells = GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType == ItemTypeEnum.CubeItem);
-
-        HashSet<CellView> visitedCells = new();
-
-        foreach (var cubeItemCell in cubeItemCells)
+        foreach (var matchCluster in matchClusters)
         {
-            if (visitedCells.Contains(cubeItemCell)) continue;
-
-            var matchCluster = MatchFinder.FindMatchCluster(cubeItemCell);
             var isPotentialSpecialMatch = matchCluster.Count >= Config.TntMinimumRequiredMatch;
 
             foreach (var matchCell in matchCluster)
             {
-                visitedCells.Add(matchCell);
-
                 if (isPotentialSpecialMatch)
                 {
                     matchCell.ItemInside.Highight();
