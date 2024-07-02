@@ -96,19 +96,19 @@ public class BoardView : MonoBehaviour
         {
             if (cellView.X != Width - 1)
             {
-                cellView.AssignNeighbourCell(DirectionEnum.Right, _cellViews[cellView.X + 1, cellView.Y]);
+                cellView.AssignNeighbourCell(DirectionEnum.Right, GetCellView(cellView.X + 1, cellView.Y));
             }
             if (cellView.X != 0)
             {
-                cellView.AssignNeighbourCell(DirectionEnum.Left, _cellViews[cellView.X - 1, cellView.Y]);
+                cellView.AssignNeighbourCell(DirectionEnum.Left, GetCellView(cellView.X - 1, cellView.Y));
             }
             if (cellView.Y != Height - 1)
             {
-                cellView.AssignNeighbourCell(DirectionEnum.Up, _cellViews[cellView.X, cellView.Y + 1]);
+                cellView.AssignNeighbourCell(DirectionEnum.Up, GetCellView(cellView.X, cellView.Y + 1));
             }
             if (cellView.Y != 0)
             {
-                cellView.AssignNeighbourCell(DirectionEnum.Down, _cellViews[cellView.X, cellView.Y - 1]);
+                cellView.AssignNeighbourCell(DirectionEnum.Down, GetCellView(cellView.X, cellView.Y - 1));
             }
         }
     }
@@ -121,7 +121,7 @@ public class BoardView : MonoBehaviour
         {
             for (int x = 0; x < Width; x++)
             {
-                CellView cellView = _cellViews[x, y];
+                CellView cellView = GetCellView(x, y);
                 if (condition(cellView))
                 {
                     matchingCells.Add(cellView);
@@ -130,6 +130,29 @@ public class BoardView : MonoBehaviour
         }
 
         return matchingCells;
+    }
+
+    public HashSet<CellView> GetCellViewsInPerimeter(CellView centerCell, int perimeter)
+    {
+        HashSet<CellView> surroundingCells = new();
+
+        for (int y = -perimeter; y <= perimeter; y++)
+        {
+            var currentY = centerCell.Y + y;
+            if (currentY < 0) continue;
+            if (currentY >= Height) break;
+
+            for (int x = -perimeter; x <= perimeter; x++)
+            {
+                var currentX = centerCell.X + x;
+                if (currentX < 0) continue;
+                if (currentX >= Width) break;
+
+                surroundingCells.Add(GetCellView(currentX, currentY));
+            }
+        }
+
+        return surroundingCells;
     }
 
     public void Validate()

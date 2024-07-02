@@ -1,6 +1,5 @@
 using Enums;
 using Gameplay.Managers;
-using System;
 using Utilities;
 
 namespace Gameplay.Items
@@ -20,14 +19,7 @@ namespace Gameplay.Items
             if (IsDestinedToDie) return;
             IsDestinedToDie = true;
 
-            var cellsToExecute = _boardView.GetCellViews(cellView =>
-            {
-                int deltaX = Math.Abs(cellView.X - currentCellView.X);
-                int deltaY = Math.Abs(cellView.Y - currentCellView.Y);
-                return deltaX <= _perimeter && deltaY <= _perimeter && !(deltaX == 0 && deltaY == 0);
-            });
-
-            _executionManager.ExecuteCellViews(currentCellView, cellsToExecute, executeType, executionIndex + 1);
+            _executionManager.ExecuteCellViews(currentCellView, _boardView.GetCellViewsInPerimeter(currentCellView, _perimeter), executeType, executionIndex + 1);
         }
 
         public override bool TryInteract(CellView currentCellView)
