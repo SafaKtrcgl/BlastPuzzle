@@ -20,7 +20,7 @@ namespace Gameplay.Items
         {
             if (executeType == ExecuteTypeEnum.Special)
             {
-                TakeHit(executionId, executeType);
+                TakeHit(executeType);
             }
         }
 
@@ -32,11 +32,11 @@ namespace Gameplay.Items
                 _lastAffectedExecutionId = executionId;
                 _lastAffectedExecutionIndex = executionIndex;
 
-                TakeHit(executionId, executeType);
+                TakeHit(executeType);
             }
         }
 
-        private void TakeHit(int executionId, ExecuteTypeEnum executeType)
+        private void TakeHit(ExecuteTypeEnum executeType)
         {
             switch (_currentHp)
             {
