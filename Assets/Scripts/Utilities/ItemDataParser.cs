@@ -1,5 +1,6 @@
 using Enums;
 using System;
+using System.Text.RegularExpressions;
 
 namespace Utilities
 {
@@ -11,7 +12,7 @@ namespace Utilities
 
         public static ItemTypeEnum GetItemType(string key)
         {
-            switch (key)
+            switch (Regex.Replace(key, @"[\d-]", string.Empty))
             {
                 case "r":
                 case "g":
@@ -26,7 +27,6 @@ namespace Utilities
                 case "s":
                     return ItemTypeEnum.StoneItem;
                 case "v":
-                case "v1":
                     return ItemTypeEnum.VaseItem;
                 default:
                     return ItemTypeEnum.None;
@@ -35,7 +35,7 @@ namespace Utilities
 
         public static MatchTypeEnum GetMatchType(string key)
         {
-            switch (key)
+            switch (Regex.Replace(key, @"[\d-]", string.Empty))
             {
                 case "r":
                     return MatchTypeEnum.Red;
@@ -54,48 +54,34 @@ namespace Utilities
             }
         }
 
-        public static String GetItemKey(ItemTypeEnum itemType, MatchTypeEnum matchType, string state)
+        public static String GetItemKey(ItemTypeEnum itemType, MatchTypeEnum matchType)
         {
-            string itemKey = "";
             switch (itemType)
             {
                 case ItemTypeEnum.CubeItem:
                     switch (matchType)
                     {
                         case MatchTypeEnum.Red:
-                            itemKey = "r";
-                            break;
+                            return "r";
                         case MatchTypeEnum.Green:
-                            itemKey = "g";
-                            break;
+                            return "g";
                         case MatchTypeEnum.Blue:
-                            itemKey = "b";
-                            break;
+                            return "b";
                         case MatchTypeEnum.Yellow:
-                            itemKey = "y";
-                            break;
+                            return "y";
                     }
                     break;
                 case ItemTypeEnum.BoxItem:
-                    itemKey = "bo";
-                    break;
+                    return "bo";
                 case ItemTypeEnum.TntItem:
-                    itemKey = "t";
-                    break;
+                    return "t";
                 case ItemTypeEnum.StoneItem:
-                    itemKey = "s";
-                    break;
+                    return "s";
                 case ItemTypeEnum.VaseItem:
-                    itemKey = "v";
-                    break;
+                    return "v";
             }
 
-            if (!string.IsNullOrEmpty(itemKey) && state != "0")
-            {
-                itemKey += state;
-            }
-
-            return itemKey;
+            return "";
         }
     }
 }

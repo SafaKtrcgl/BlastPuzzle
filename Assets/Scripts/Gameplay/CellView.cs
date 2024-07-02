@@ -10,7 +10,7 @@ namespace Gameplay
 {
     public class CellView : MonoBehaviour, IPointerDownHandler
     {
-        public Action<int, ExecuteTypeEnum> OnCellExecuteAction;
+        public Action<int, ExecuteTypeEnum, int> OnCellExecuteAction;
         public Action<ItemTypeEnum> OnItemExecutedAction;
         public Action<CellView> OnCellClicked;
 
@@ -58,14 +58,14 @@ namespace Gameplay
             if (ItemInside != null)
             {
                 var executionId = GameplayInputController.MoveCount;
-                OnCellExecuteAction?.Invoke(executionId, executeType);
+                OnCellExecuteAction?.Invoke(executionId, executeType, executionIndex);
                 ItemInside?.Execute(executionId, this, executeType, executionIndex);
             }
         }
 
-        public void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType)
+        public void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType, int executionIndex)
         {
-            _itemInside?.OnNeighbourExecute(executionId, executeType);
+            _itemInside?.OnNeighbourExecute(executionId, executeType, executionIndex);
         }
 
         public void OnPointerDown(PointerEventData eventData)

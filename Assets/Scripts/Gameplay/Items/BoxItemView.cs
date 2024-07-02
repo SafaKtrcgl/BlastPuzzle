@@ -19,7 +19,7 @@ namespace Gameplay.Items
             }
         }
 
-        public override void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType)
+        public override void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType, int executionIndex)
         {
             if (executeType == ExecuteTypeEnum.Blast || executeType == ExecuteTypeEnum.Merge)
             {

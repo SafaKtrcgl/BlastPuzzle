@@ -6,6 +6,7 @@ using Gameplay.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using UnityEngine;
 using Utilities;
 
@@ -73,9 +74,9 @@ public class BoardView : MonoBehaviour
                 var itemView = _itemFactory.CreateItem(itemType, matchType);
                 ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)cellView.transform).anchoredPosition;
 
-                if (content[index].Any(char.IsDigit))
+                if (int.TryParse(Regex.Match(content[index], @"\d+$", RegexOptions.RightToLeft).Value, out var state))
                 {
-                    itemView.SetState(content[index][^1].ToString());
+                    itemView.SetState(state);
                 }
 
                 cellView.InsertItem(itemView);
@@ -188,11 +189,11 @@ public class BoardView : MonoBehaviour
             var item = cellView.ItemInside;
             if (item == null)
             {
-                currentGridData[Width * cellView.Y + cellView.X] = ItemDataParser.GetItemKey(ItemTypeEnum.None, MatchTypeEnum.None, "0");
+                currentGridData[Width * cellView.Y + cellView.X] = "";
             }
             else
             {
-                currentGridData[Width * cellView.Y + cellView.X] = ItemDataParser.GetItemKey(item.ItemType, item.MatchType, item.State);
+                currentGridData[Width * cellView.Y + cellView.X] = item.ToString();
             }
         }
         

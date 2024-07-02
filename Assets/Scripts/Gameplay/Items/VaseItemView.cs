@@ -6,8 +6,9 @@ namespace Gameplay.Items
 {
     public class VaseItemView : ItemView
     {
-        private float _currentHp = 2;
-        int _lastAffectedExecutionId = -1;
+        private int _currentHp = 2;
+        private int _lastAffectedExecutionId = -1;
+        private int _lastAffectedExecutionIndex = -1;
 
         public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
         {
@@ -23,12 +24,13 @@ namespace Gameplay.Items
             }
         }
 
-        public override void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType)
+        public override void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType, int executionIndex)
         {
             if (executeType == ExecuteTypeEnum.Blast || executeType == ExecuteTypeEnum.Merge)
             {
-                if (_lastAffectedExecutionId == executionId) return;
+                if (_lastAffectedExecutionId == executionId && _lastAffectedExecutionIndex == executionIndex) return;
                 _lastAffectedExecutionId = executionId;
+                _lastAffectedExecutionIndex = executionIndex;
 
                 TakeHit(executionId, executeType);
             }
@@ -39,7 +41,7 @@ namespace Gameplay.Items
             switch (_currentHp)
             {
                 case 2:
-                    SetState("1");
+                    SetState(1);
                     break;
 
                 case 1:
@@ -48,10 +50,10 @@ namespace Gameplay.Items
             }
         }
 
-        public override void SetState(string currentState)
+        public override void SetState(int state)
         {
-            State = currentState;
-            if (State == "1")
+            State = state;
+            if (State == 1)
             {
                 SetStateBroken();
             }

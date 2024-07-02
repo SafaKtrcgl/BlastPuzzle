@@ -4,6 +4,7 @@ using Helpers;
 using Interfaces.Recycle;
 using System;
 using UnityEngine;
+using Utilities;
 
 namespace Gameplay.Items
 {
@@ -17,7 +18,7 @@ namespace Gameplay.Items
         protected ExecutionManager _executionManager;
         protected PoolManager _poolManager;
 
-        public string State { get; protected set; } = "0";
+        public int State { get; protected set; } = 0;
 
         public bool IsDestinedToDie { protected set; get; }
 
@@ -27,7 +28,12 @@ namespace Gameplay.Items
         public GameObject RecyclableGameObject { get; set; }
         public abstract void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType, int executionIndex);
 
-        public virtual void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType)
+        public override string ToString()
+        {
+            return ItemDataParser.GetItemKey(ItemType, MatchType) + State;
+        }
+
+        public virtual void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType, int executionIndex)
         {
 
         }
@@ -78,7 +84,7 @@ namespace Gameplay.Items
             MatchType = matchType;
         }
 
-        public virtual void SetState(string currentState)
+        public virtual void SetState(int currentState)
         {
             State = currentState;
         }
