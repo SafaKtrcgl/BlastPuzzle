@@ -8,7 +8,6 @@ namespace Gameplay.Items
     {
         private int _currentHp = 2;
         private int _lastAffectedExecutionId = -1;
-        private int _lastAffectedExecutionIndex = -1;
 
         public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
         {
@@ -24,13 +23,12 @@ namespace Gameplay.Items
             }
         }
 
-        public override void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType, int executionIndex)
+        public override void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType)
         {
             if (executeType == ExecuteTypeEnum.Blast || executeType == ExecuteTypeEnum.Merge)
             {
-                if (_lastAffectedExecutionId == executionId && _lastAffectedExecutionIndex == executionIndex) return;
+                if (_lastAffectedExecutionId == executionId) return;
                 _lastAffectedExecutionId = executionId;
-                _lastAffectedExecutionIndex = executionIndex;
 
                 TakeHit(executeType);
             }

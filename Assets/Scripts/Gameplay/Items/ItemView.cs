@@ -33,7 +33,7 @@ namespace Gameplay.Items
             return ItemDataParser.GetItemKey(ItemType, MatchType) + State;
         }
 
-        public virtual void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType, int executionIndex)
+        public virtual void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType)
         {
 
         }
