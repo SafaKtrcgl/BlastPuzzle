@@ -1,6 +1,6 @@
 using Enums;
 using System;
-using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace Utilities
 {
@@ -12,7 +12,7 @@ namespace Utilities
 
         public static ItemTypeEnum GetItemType(string key)
         {
-            switch (Regex.Replace(key, @"[\d-]", string.Empty))
+            switch (new string(key.Where(char.IsLetter).ToArray()))
             {
                 case "r":
                 case "g":
@@ -35,7 +35,7 @@ namespace Utilities
 
         public static MatchTypeEnum GetMatchType(string key)
         {
-            switch (Regex.Replace(key, @"[\d-]", string.Empty))
+            switch (new string(key.Where(char.IsLetter).ToArray()))
             {
                 case "r":
                     return MatchTypeEnum.Red;

@@ -6,7 +6,6 @@ using Gameplay.Managers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using Utilities;
 
@@ -74,7 +73,7 @@ public class BoardView : MonoBehaviour
                 var itemView = _itemFactory.CreateItem(itemType, matchType);
                 ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)cellView.transform).anchoredPosition;
 
-                if (int.TryParse(Regex.Match(content[index], @"\d+$", RegexOptions.RightToLeft).Value, out var state))
+                if (int.TryParse(new string(content[index].Where(char.IsDigit).ToArray()), out var state))
                 {
                     itemView.SetState(state);
                 }
