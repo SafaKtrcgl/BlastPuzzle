@@ -6,11 +6,11 @@ namespace Gameplay.Items
 {
     public class VaseItemView : ItemView
     {
-        private int _currentHp = 2;
         private int _lastAffectedExecutionId = -1;
 
         public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
         {
+            State = 2;
             IsFallable = true;
             ItemType = ItemTypeEnum.VaseItem;
             base.Init(boardView, executionManager, poolManager, matchType);
@@ -37,10 +37,10 @@ namespace Gameplay.Items
 
         private void TakeHit(ExecuteTypeEnum executeType)
         {
-            switch (_currentHp)
+            switch (State)
             {
                 case 2:
-                    SetState(1);
+                    SetState(State - 1);
                     break;
 
                 case 1:
@@ -61,8 +61,6 @@ namespace Gameplay.Items
         private void SetStateBroken()
         {
             mainSprite.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(1);
-
-            _currentHp = 1;
         }
     }
 }
