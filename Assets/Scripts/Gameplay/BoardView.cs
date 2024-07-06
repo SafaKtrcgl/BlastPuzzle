@@ -28,6 +28,7 @@ public class BoardView : MonoBehaviour
     private ItemFactory _itemFactory;
     private ExecutionManager _executionManager;
 
+    private List<HashSet<CellView>> _currentMatchClusters = new List<HashSet<CellView>>();
 
     private readonly float BackgroundWidthPadding = 35f;
     private readonly float BackgroundHeightPadding = 50f;
@@ -172,14 +173,14 @@ public class BoardView : MonoBehaviour
     {
         var cubeItemCells = GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType == ItemTypeEnum.CubeItem).ToList();
 
-        List<HashSet<CellView>> matchClusters = new();
+        _currentMatchClusters.Clear();
 
         while (cubeItemCells.Count > 0)
         {
             var cubeItemCell = cubeItemCells[0];
             var matchCluster = MatchFinder.FindMatchCluster(cubeItemCell);
 
-            matchClusters.Add(matchCluster);
+            _currentMatchClusters.Add(matchCluster);
 
             foreach (var clusterCell in matchCluster)
             {
@@ -187,8 +188,8 @@ public class BoardView : MonoBehaviour
             }
         }
 
-        TryRecoverBoard(matchClusters);
-        HighlightMatches(matchClusters);
+        TryRecoverBoard();
+        HighlightMatches();
         SaveCurrentProgress();
         IsBussy = false;
     }
@@ -213,7 +214,7 @@ public class BoardView : MonoBehaviour
         PlayerPrefsUtility.SetOnGoingLevelData(LevelDataParser.GetLevelJson(Width, Height, GameplayInputController.MoveCount, currentGridData));
     }
 
-    private void TryRecoverBoard(List<HashSet<CellView>> matchClusters)
+    private void TryRecoverBoard()
     {
         void CreateMiddleMatchCluster()
         {
@@ -228,7 +229,7 @@ public class BoardView : MonoBehaviour
 
         if (GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType.IsSpecial()).Count > 0) return;
 
-        foreach (var matchCluster in matchClusters)
+        foreach (var matchCluster in _currentMatchClusters)
         {
             if (matchCluster.Count > Config.BlastMinimumRequiredMatch) return;
         }
@@ -248,9 +249,9 @@ public class BoardView : MonoBehaviour
         ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)cellView.transform).anchoredPosition;
     }
 
-    private void HighlightMatches(List<HashSet<CellView>> matchClusters)
+    private void HighlightMatches()
     {
-        foreach (var matchCluster in matchClusters)
+        foreach (var matchCluster in _currentMatchClusters)
         {
             var isPotentialSpecialMatch = matchCluster.Count >= Config.TntMinimumRequiredMatch;
 
@@ -266,6 +267,16 @@ public class BoardView : MonoBehaviour
                 }
             }
         }
+    }
+
+    public HashSet<CellView> GetMatchClusterFromCellView(CellView cellView)
+    {
+        foreach (var matchCluster in _currentMatchClusters)
+        {
+            if (matchCluster.Contains(cellView)) return matchCluster;
+        }
+
+        return new HashSet<CellView> { cellView };
     }
 
     public void OnGameEnded()

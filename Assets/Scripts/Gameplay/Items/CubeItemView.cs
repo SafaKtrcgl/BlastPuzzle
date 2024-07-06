@@ -40,7 +40,7 @@ namespace Gameplay.Items
 
         public override bool TryInteract(CellView currentCellView)
         {
-            var cellsToExecute = MatchFinder.FindMatchCluster(currentCellView);
+            var cellsToExecute = _boardView.GetMatchClusterFromCellView(currentCellView);
             if (cellsToExecute.Count < Config.BlastMinimumRequiredMatch) return false;
 
             var executionType = cellsToExecute.Count >= Config.TntMinimumRequiredMatch ? ExecuteTypeEnum.Merge : ExecuteTypeEnum.Blast;
