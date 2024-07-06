@@ -16,13 +16,11 @@ namespace Gameplay.Managers
 
         private BoardView _boardView;
         private ExecutionManager _executionManager;
-        private PoolManager _poolManager;
 
-        public void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager)
+        public void Init(BoardView boardView, ExecutionManager executionManager)
         {
             _boardView = boardView;
             _executionManager = executionManager;
-            _poolManager = poolManager;
         }
 
         public ItemView CreateItem(ItemTypeEnum itemType, MatchTypeEnum matchType)
@@ -33,7 +31,7 @@ namespace Gameplay.Managers
 
             ItemView itemView = GetOrCreateItemView(itemType, itemResource);
 
-            itemView.Init(_boardView, _executionManager, _poolManager, matchType);
+            itemView.Init(_boardView, _executionManager, matchType);
 
             if (itemType.IsObstacle())
             {
@@ -45,9 +43,10 @@ namespace Gameplay.Managers
 
         private ItemView GetOrCreateItemView(ItemTypeEnum itemType, ItemResource itemResource)
         {
-            if (itemType.IsRecyclable())
+            var recyclableType = itemType.GetRecyclableType();
+            if (recyclableType != RecyclableTypeEnum.None)
             {
-                var itemView = _poolManager.GetFromPool<ItemView>(itemType);
+                var itemView = PoolManager.Instance.GetFromPool<ItemView>(recyclableType);
                 if (itemView != null)
                 {
                     itemView.transform.SetParent(itemHolderTransform);

@@ -1,6 +1,7 @@
 using Enums;
 using Gameplay.Items;
 using Gameplay.Managers;
+using Interfaces.Recycle;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityEngine.EventSystems;
 
 namespace Gameplay
 {
-    public class CellView : MonoBehaviour, IPointerDownHandler
+    public class CellView : MonoBehaviour, IPointerDownHandler, IRecyclable
     {
         public Action<int, ExecuteTypeEnum> OnCellExecuteAction;
         public Action<ItemTypeEnum> OnItemExecutedAction;
@@ -29,11 +30,18 @@ namespace Gameplay
         private ItemView _itemInside;
         public ItemView ItemInside { get => _itemInside; }
 
+        public GameObject RecyclableGameObject { get; set; }
+
+        public RecyclableTypeEnum RecyclableType { get; set; }
+
         public void Init(BoardView boardView, int x, int y)
         {
             _x = x;
             _y = y;
             _boardView = boardView;
+
+            RecyclableGameObject = gameObject;
+            RecyclableType = RecyclableTypeEnum.Cell;
 
             ((RectTransform)transform).anchoredPosition = new Vector2((x - ((_boardView.Width - 1) / 2f)) * CellSize, (y - ((_boardView.Height - 1) / 2f)) * CellSize);
         }
@@ -87,6 +95,15 @@ namespace Gameplay
 
         private void OnDestroy()
         {
+            OnCellExecuteAction = null;
+            OnItemExecutedAction = null;
+            OnCellClicked = null;
+        }
+
+        public void Recycle()
+        {
+            _neighbours.Clear();
+            _itemInside = null;
             OnCellExecuteAction = null;
             OnItemExecutedAction = null;
             OnCellClicked = null;

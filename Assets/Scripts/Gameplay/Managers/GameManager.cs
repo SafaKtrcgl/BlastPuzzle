@@ -1,6 +1,7 @@
 using Enums;
 using Extensions;
 using Helpers;
+using System;
 using UI.Dialog;
 using UnityEngine;
 using Utilities;
@@ -9,6 +10,7 @@ namespace Gameplay.Managers
 {
     public class GameManager : MonoBehaviour
     {
+        public Action OnGameEnded;
         private BoardView _boardView;
         public void Init(BoardView boardView)
         {
@@ -19,6 +21,7 @@ namespace Gameplay.Managers
         {
             if (_boardView.GetCellViews(cellView => cellView.ItemInside && cellView.ItemInside.ItemType.IsObstacle()).Count == 0)
             {
+                OnGameEnded?.Invoke();
                 PlayerPrefsUtility.SetCurrentLevel(PlayerPrefsUtility.GetCurrentLevel() + 1);
                 PlayerPrefsUtility.SetOnGoingLevelData(null);
 
@@ -27,6 +30,7 @@ namespace Gameplay.Managers
             }
             else if (GameplayInputController.MoveCount == 0)
             {
+                OnGameEnded?.Invoke();
                 PlayerPrefsUtility.SetOnGoingLevelData(null);
 
                 var contextHelper = HelperResources.Instance.GetHelper<ContextHelper>(HelperEnum.ContextHelper);

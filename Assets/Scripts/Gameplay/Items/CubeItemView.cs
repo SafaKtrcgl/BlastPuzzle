@@ -9,11 +9,14 @@ namespace Gameplay.Items
 {
     public class CubeItemView : ItemView
     {
-        public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
+        public override void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
         {
             IsFallable = true;
+
+            RecyclableType = RecyclableTypeEnum.CubeItem;
             ItemType = ItemTypeEnum.CubeItem;
-            base.Init(boardView, executionManager, poolManager, matchType);
+
+            base.Init(boardView, executionManager, matchType);
         }
 
         public override void SetMatchableType(MatchTypeEnum matchType)
@@ -63,8 +66,6 @@ namespace Gameplay.Items
             destroyParticleSystem.gameObject.SetActive(false);
             mainSprite.enabled = true;
             SetSpriteSortingLayer("Item");
-        
-            _poolManager.SendToPool(this, ItemType);
         }
 
         public override void DestroyItem(ExecuteTypeEnum executeType)

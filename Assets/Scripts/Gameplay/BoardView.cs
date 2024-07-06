@@ -2,7 +2,9 @@ using DG.Tweening;
 using Enums;
 using Extensions;
 using Gameplay;
+using Gameplay.Items;
 using Gameplay.Managers;
+using ScriptableObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -57,7 +59,7 @@ public class BoardView : MonoBehaviour
         {
             for (int x = 0; x < _width; x++)
             {
-                var cellView = Instantiate(cellViewPrefab, cellViewHolderTransform);
+                var cellView = GetOrCreateCellView();
                 cellView.Init(this, x, y);
                 _cellViews[x, y] = cellView;
 
@@ -87,6 +89,18 @@ public class BoardView : MonoBehaviour
         boardBackgroundRecttransform.sizeDelta = new Vector2(Width * CellView.CellSize + BackgroundWidthPadding, Height * CellView.CellSize + BackgroundHeightPadding);
 
         Validate();
+    }
+
+    private CellView GetOrCreateCellView()
+    {
+        var cellView = PoolManager.Instance.GetFromPool<CellView>(RecyclableTypeEnum.Cell);
+        if (cellView != null)
+        {
+            cellView.transform.SetParent(cellViewHolderTransform);
+            return cellView;
+        }
+
+        return Instantiate(cellViewPrefab, cellViewHolderTransform);
     }
 
     private void AssignCellNeighbours()
@@ -251,6 +265,14 @@ public class BoardView : MonoBehaviour
                     matchCell.ItemInside.Unhighight();
                 }
             }
+        }
+    }
+
+    public void OnGameEnded()
+    {
+        foreach (var cellView in GetCellViews(cellView => true))
+        {
+            PoolManager.Instance.SendToPool(cellView, RecyclableTypeEnum.Cell);
         }
     }
 }

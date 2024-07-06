@@ -49,9 +49,11 @@ namespace Context
             itemFactory.OnObstacleItemCreated += gameplayTopPanel.OnObstacleCreated;
             executionManager.OnObstacleItemExecuted += gameplayTopPanel.OnObstacleExecuted;
 
+            gameManager.OnGameEnded += boardView.OnGameEnded;
+
             gameManager.Init(boardView);
             executionManager.Init(boardView, itemFactory);
-            itemFactory.Init(boardView, executionManager, PoolManager.Instance);
+            itemFactory.Init(boardView, executionManager);
             inputController.Init(boardView, itemFactory, levelData.move_count);
             boardView.Init(itemFactory, executionManager, levelData.grid_width, levelData.grid_height, levelData.grid);
             fallManager.Init(boardView);

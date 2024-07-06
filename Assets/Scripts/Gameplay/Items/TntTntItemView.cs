@@ -6,10 +6,10 @@ namespace Gameplay.Items
     public class TntTntItemView : ItemView
     {
         private int _perimeter = 3;
-        public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
+        public override void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
         {
             ItemType = ItemTypeEnum.TntTntItem;
-            base.Init(boardView, executionManager, poolManager, matchType);
+            base.Init(boardView, executionManager, matchType);
         }
 
         public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType, int executionIndex)

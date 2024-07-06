@@ -16,7 +16,6 @@ namespace Gameplay.Items
 
         protected BoardView _boardView;
         protected ExecutionManager _executionManager;
-        protected PoolManager _poolManager;
 
         public int State { get; protected set; } = 0;
 
@@ -27,6 +26,8 @@ namespace Gameplay.Items
         public ItemTypeEnum ItemType { get; protected set; }
         public MatchTypeEnum MatchType { get; protected set; }
         public GameObject RecyclableGameObject { get; set; }
+        public RecyclableTypeEnum RecyclableType { get; set; }
+
         public abstract void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType, int executionIndex);
 
         public override string ToString()
@@ -44,11 +45,10 @@ namespace Gameplay.Items
             return false;
         }
 
-        public virtual void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
+        public virtual void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
         {
             _boardView = boardView;
             _executionManager = executionManager;
-            _poolManager = poolManager;
             mainSprite.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(0);
 
             ((RectTransform)mainSprite.transform).sizeDelta /= 2f;
@@ -98,7 +98,7 @@ namespace Gameplay.Items
         public virtual void OnDestroyParticleEnd()
         {
             destroyParticleCallback.OnParticleStopAction -= OnDestroyParticleEnd;
-            Recycle();
+            PoolManager.Instance.SendToPool(this, RecyclableType);
         }
 
         public virtual void Recycle()
