@@ -1,13 +1,20 @@
 using Enums;
 using Interfaces.Recycle;
+using Singleton;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay.Managers
 {
-    public class PoolManager : MonoBehaviour
+    public class PoolManager : MonoSingleton<PoolManager>
     {
         private Dictionary<ItemTypeEnum, Stack<IRecyclable>> _poolDictionary = new();
+
+        public override void Awake()
+        {
+            base.Awake();
+            DontDestroyOnLoad(this);
+        }
 
         public void SendToPool(IRecyclable recyclableObject, ItemTypeEnum itemType)
         {

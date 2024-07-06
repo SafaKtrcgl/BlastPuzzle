@@ -18,7 +18,6 @@ namespace Context
         [SerializeField] private FillManager fillManager;
         [SerializeField] private ExecutionManager executionManager;
         [SerializeField] private GameManager gameManager;
-        [SerializeField] private PoolManager poolManager;
 
         [SerializeField] private Image arenaBackgroundImage;
 
@@ -52,7 +51,7 @@ namespace Context
 
             gameManager.Init(boardView);
             executionManager.Init(boardView, itemFactory);
-            itemFactory.Init(boardView, executionManager, poolManager);
+            itemFactory.Init(boardView, executionManager, PoolManager.Instance);
             inputController.Init(boardView, itemFactory, levelData.move_count);
             boardView.Init(itemFactory, executionManager, levelData.grid_width, levelData.grid_height, levelData.grid);
             fallManager.Init(boardView);
