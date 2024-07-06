@@ -30,7 +30,7 @@ namespace Context
                 arenaBackgroundImage.sprite = arenaResource.ArenaBackgroundSprite;
             }
 
-            LevelDataParser levelData;
+            LevelData levelData;
 
             if (string.IsNullOrEmpty(PlayerPrefsUtility.GetOnGoingLevelData()))
             {
