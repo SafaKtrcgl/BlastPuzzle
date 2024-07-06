@@ -19,14 +19,6 @@ namespace Extensions
                 ItemTypeEnum.TntItem;
         }
 
-        public static bool IsFallable(this ItemTypeEnum itemType)
-        {
-            return itemType is
-                ItemTypeEnum.CubeItem or
-                ItemTypeEnum.TntItem or
-                ItemTypeEnum.VaseItem;
-        }
-
         public static bool IsSpecial(this ItemTypeEnum itemType)
         {
             return itemType is

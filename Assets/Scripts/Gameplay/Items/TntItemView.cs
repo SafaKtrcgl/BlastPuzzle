@@ -10,6 +10,7 @@ namespace Gameplay.Items
 
         public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
         {
+            IsFallable = true;
             ItemType = ItemTypeEnum.TntItem;
             base.Init(boardView, executionManager, poolManager, matchType);
         }

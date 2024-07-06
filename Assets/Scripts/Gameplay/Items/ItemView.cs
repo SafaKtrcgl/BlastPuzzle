@@ -21,6 +21,7 @@ namespace Gameplay.Items
         public int State { get; protected set; } = 0;
 
         public bool IsDestinedToDie { protected set; get; }
+        public bool IsFallable { protected set; get; }
 
         public Action<ItemTypeEnum> OnItemExecute;
         public ItemTypeEnum ItemType { get; protected set; }
