@@ -25,7 +25,7 @@ namespace Gameplay.Items
 
         public override bool TryInteract(CellView currentCellView)
         {
-            var cellsToExecute = MatchFinder.FindMatchCluster(currentCellView);
+            var cellsToExecute = _boardView.GetMatchClusterFromCellView(currentCellView);
 
             if (cellsToExecute.Count >= Config.TntTnTMinimumRequiredMatch)
             {

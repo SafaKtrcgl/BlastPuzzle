@@ -171,20 +171,20 @@ public class BoardView : MonoBehaviour
 
     public void Validate()
     {
-        var cubeItemCells = GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType == ItemTypeEnum.CubeItem).ToList();
+        var matchingItemCells = GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.MatchType != MatchTypeEnum.None).ToList();
 
         _currentMatchClusters.Clear();
 
-        while (cubeItemCells.Count > 0)
+        while (matchingItemCells.Count > 0)
         {
-            var cubeItemCell = cubeItemCells[0];
+            var cubeItemCell = matchingItemCells[0];
             var matchCluster = MatchFinder.FindMatchCluster(cubeItemCell);
 
             _currentMatchClusters.Add(matchCluster);
 
             foreach (var clusterCell in matchCluster)
             {
-                cubeItemCells.Remove(clusterCell);
+                matchingItemCells.Remove(clusterCell);
             }
         }
 
@@ -257,6 +257,8 @@ public class BoardView : MonoBehaviour
 
             foreach (var matchCell in matchCluster)
             {
+                if (matchCell.ItemInside.ItemType != ItemTypeEnum.CubeItem) break;
+
                 if (isPotentialSpecialMatch)
                 {
                     matchCell.ItemInside.Highight();

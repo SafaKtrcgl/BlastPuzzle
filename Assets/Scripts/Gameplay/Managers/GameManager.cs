@@ -21,23 +21,29 @@ namespace Gameplay.Managers
         {
             if (_boardView.GetCellViews(cellView => cellView.ItemInside && cellView.ItemInside.ItemType.IsObstacle()).Count == 0)
             {
-                OnGameEnded?.Invoke();
                 PlayerPrefsUtility.SetCurrentLevel(PlayerPrefsUtility.GetCurrentLevel() + 1);
                 PlayerPrefsUtility.SetOnGoingLevelData(null);
 
                 var dialogHelper = HelperResources.Instance.GetHelper<DialogHelper>(HelperEnum.DialogHelper);
-                dialogHelper.ShowDialog<LevelCompleteDialog>(DialogTypeEnum.LevelCompleteDialog).Init();
+                dialogHelper.ShowDialog<LevelCompleteDialog>(DialogTypeEnum.LevelCompleteDialog).Init(() => OnGameEnded?.Invoke());
             }
             else if (GameplayInputController.MoveCount == 0)
             {
-                OnGameEnded?.Invoke();
                 PlayerPrefsUtility.SetOnGoingLevelData(null);
 
                 var contextHelper = HelperResources.Instance.GetHelper<ContextHelper>(HelperEnum.ContextHelper);
                 var dialogHelper = HelperResources.Instance.GetHelper<DialogHelper>(HelperEnum.DialogHelper);
                 dialogHelper.ShowGenericPopupDialog("Level Failed!\n\nSeems like you are out of moves.", "Try Again",
-                    () => { contextHelper.LoadGameplayScene(); },
-                    () => { contextHelper.LoadMainScene(); });
+                    () => 
+                    { 
+                        contextHelper.LoadGameplayScene();
+                        OnGameEnded?.Invoke();
+                    },
+                    () =>
+                    { 
+                        contextHelper.LoadMainScene();
+                        OnGameEnded?.Invoke();
+                    });
             }
             else
             {
