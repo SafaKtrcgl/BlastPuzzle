@@ -103,7 +103,7 @@ namespace Gameplay
         public void Recycle()
         {
             _neighbours.Clear();
-            _itemInside = null;
+            ExtractItem();
             OnCellExecuteAction = null;
             OnItemExecutedAction = null;
             OnCellClicked = null;

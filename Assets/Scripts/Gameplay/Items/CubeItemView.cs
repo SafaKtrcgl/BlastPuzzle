@@ -61,10 +61,10 @@ namespace Gameplay.Items
 
         public override void Recycle()
         {
-            gameObject.SetActive(false);
             transform.localScale = Vector3.one;
             destroyParticleSystem.gameObject.SetActive(false);
             mainSprite.enabled = true;
+            OnItemExecute = null;
             SetSpriteSortingLayer("Item");
         }
 

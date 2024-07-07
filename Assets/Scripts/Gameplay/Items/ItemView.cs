@@ -65,11 +65,6 @@ namespace Gameplay.Items
             mainSprite.enabled = false;
         }
 
-        private void OnDisable()
-        {
-            OnItemExecute = null;
-        }
-
         public virtual void Highight()
         {
 
@@ -103,6 +98,7 @@ namespace Gameplay.Items
 
         public virtual void Recycle()
         {
+            OnItemExecute = null;
             Destroy(gameObject);
         }
 
