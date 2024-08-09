@@ -9,10 +9,14 @@ namespace Gameplay.Items
 {
     public class CubeItemView : ItemView
     {
-        public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
+        public override void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
         {
+            IsFallable = true;
+
+            RecyclableType = RecyclableTypeEnum.CubeItem;
             ItemType = ItemTypeEnum.CubeItem;
-            base.Init(boardView, executionManager, poolManager, matchType);
+
+            base.Init(boardView, executionManager, matchType);
         }
 
         public override void SetMatchableType(MatchTypeEnum matchType)
@@ -36,7 +40,7 @@ namespace Gameplay.Items
 
         public override bool TryInteract(CellView currentCellView)
         {
-            var cellsToExecute = MatchFinder.FindMatchCluster(currentCellView);
+            var cellsToExecute = _boardView.GetMatchClusterFromCellView(currentCellView);
             if (cellsToExecute.Count < Config.BlastMinimumRequiredMatch) return false;
 
             var executionType = cellsToExecute.Count >= Config.TntMinimumRequiredMatch ? ExecuteTypeEnum.Merge : ExecuteTypeEnum.Blast;
@@ -57,13 +61,11 @@ namespace Gameplay.Items
 
         public override void Recycle()
         {
-            gameObject.SetActive(false);
             transform.localScale = Vector3.one;
             destroyParticleSystem.gameObject.SetActive(false);
             mainSprite.enabled = true;
+            OnItemExecute = null;
             SetSpriteSortingLayer("Item");
-        
-            _poolManager.SendToPool(this, ItemType);
         }
 
         public override void DestroyItem(ExecuteTypeEnum executeType)

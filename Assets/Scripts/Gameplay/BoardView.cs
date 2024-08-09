@@ -2,7 +2,9 @@ using DG.Tweening;
 using Enums;
 using Extensions;
 using Gameplay;
+using Gameplay.Items;
 using Gameplay.Managers;
+using ScriptableObjects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +28,7 @@ public class BoardView : MonoBehaviour
     private ItemFactory _itemFactory;
     private ExecutionManager _executionManager;
 
+    private List<HashSet<CellView>> _currentMatchClusters = new List<HashSet<CellView>>();
 
     private readonly float BackgroundWidthPadding = 35f;
     private readonly float BackgroundHeightPadding = 50f;
@@ -57,7 +60,7 @@ public class BoardView : MonoBehaviour
         {
             for (int x = 0; x < _width; x++)
             {
-                var cellView = Instantiate(cellViewPrefab, cellViewHolderTransform);
+                var cellView = GetOrCreateCellView();
                 cellView.Init(this, x, y);
                 _cellViews[x, y] = cellView;
 
@@ -73,9 +76,9 @@ public class BoardView : MonoBehaviour
                 var itemView = _itemFactory.CreateItem(itemType, matchType);
                 ((RectTransform)itemView.transform).anchoredPosition = ((RectTransform)cellView.transform).anchoredPosition;
 
-                if (content[index].Any(char.IsDigit))
+                if (int.TryParse(new string(content[index].Where(char.IsDigit).ToArray()), out var state))
                 {
-                    itemView.SetState(content[index][^1].ToString());
+                    itemView.SetState(state);
                 }
 
                 cellView.InsertItem(itemView);
@@ -86,8 +89,19 @@ public class BoardView : MonoBehaviour
 
         boardBackgroundRecttransform.sizeDelta = new Vector2(Width * CellView.CellSize + BackgroundWidthPadding, Height * CellView.CellSize + BackgroundHeightPadding);
 
-        HighlightMatches();
-        SaveCurrentProgress();
+        Validate();
+    }
+
+    private CellView GetOrCreateCellView()
+    {
+        var cellView = PoolManager.Instance.GetFromPool<CellView>(RecyclableTypeEnum.Cell);
+        if (cellView != null)
+        {
+            cellView.transform.SetParent(cellViewHolderTransform);
+            return cellView;
+        }
+
+        return Instantiate(cellViewPrefab, cellViewHolderTransform);
     }
 
     private void AssignCellNeighbours()
@@ -96,19 +110,19 @@ public class BoardView : MonoBehaviour
         {
             if (cellView.X != Width - 1)
             {
-                cellView.AssignNeighbourCell(DirectionEnum.Right, _cellViews[cellView.X + 1, cellView.Y]);
+                cellView.AssignNeighbourCell(DirectionEnum.Right, GetCellView(cellView.X + 1, cellView.Y));
             }
             if (cellView.X != 0)
             {
-                cellView.AssignNeighbourCell(DirectionEnum.Left, _cellViews[cellView.X - 1, cellView.Y]);
+                cellView.AssignNeighbourCell(DirectionEnum.Left, GetCellView(cellView.X - 1, cellView.Y));
             }
             if (cellView.Y != Height - 1)
             {
-                cellView.AssignNeighbourCell(DirectionEnum.Up, _cellViews[cellView.X, cellView.Y + 1]);
+                cellView.AssignNeighbourCell(DirectionEnum.Up, GetCellView(cellView.X, cellView.Y + 1));
             }
             if (cellView.Y != 0)
             {
-                cellView.AssignNeighbourCell(DirectionEnum.Down, _cellViews[cellView.X, cellView.Y - 1]);
+                cellView.AssignNeighbourCell(DirectionEnum.Down, GetCellView(cellView.X, cellView.Y - 1));
             }
         }
     }
@@ -121,7 +135,7 @@ public class BoardView : MonoBehaviour
         {
             for (int x = 0; x < Width; x++)
             {
-                CellView cellView = _cellViews[x, y];
+                CellView cellView = GetCellView(x, y);
                 if (condition(cellView))
                 {
                     matchingCells.Add(cellView);
@@ -132,8 +146,48 @@ public class BoardView : MonoBehaviour
         return matchingCells;
     }
 
+    public HashSet<CellView> GetCellViewsInPerimeter(CellView centerCell, int perimeter)
+    {
+        HashSet<CellView> surroundingCells = new();
+
+        for (int y = -perimeter; y <= perimeter; y++)
+        {
+            var currentY = centerCell.Y + y;
+            if (currentY < 0) continue;
+            if (currentY >= Height) break;
+
+            for (int x = -perimeter; x <= perimeter; x++)
+            {
+                var currentX = centerCell.X + x;
+                if (currentX < 0) continue;
+                if (currentX >= Width) break;
+
+                surroundingCells.Add(GetCellView(currentX, currentY));
+            }
+        }
+
+        return surroundingCells;
+    }
+
     public void Validate()
     {
+        var matchingItemCells = GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.MatchType != MatchTypeEnum.None).ToList();
+
+        _currentMatchClusters.Clear();
+
+        while (matchingItemCells.Count > 0)
+        {
+            var cubeItemCell = matchingItemCells[0];
+            var matchCluster = MatchFinder.FindMatchCluster(cubeItemCell);
+
+            _currentMatchClusters.Add(matchCluster);
+
+            foreach (var clusterCell in matchCluster)
+            {
+                matchingItemCells.Remove(clusterCell);
+            }
+        }
+
         TryRecoverBoard();
         HighlightMatches();
         SaveCurrentProgress();
@@ -149,11 +203,11 @@ public class BoardView : MonoBehaviour
             var item = cellView.ItemInside;
             if (item == null)
             {
-                currentGridData[Width * cellView.Y + cellView.X] = ItemDataParser.GetItemKey(ItemTypeEnum.None, MatchTypeEnum.None, "0");
+                currentGridData[Width * cellView.Y + cellView.X] = "";
             }
             else
             {
-                currentGridData[Width * cellView.Y + cellView.X] = ItemDataParser.GetItemKey(item.ItemType, item.MatchType, item.State);
+                currentGridData[Width * cellView.Y + cellView.X] = item.ToString();
             }
         }
         
@@ -175,38 +229,12 @@ public class BoardView : MonoBehaviour
 
         if (GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType.IsSpecial()).Count > 0) return;
 
-        var cubeItemCells = GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType == ItemTypeEnum.CubeItem);
-
-        if (cubeItemCells.Count < Config.BlastMinimumRequiredMatch)
+        foreach (var matchCluster in _currentMatchClusters)
         {
-            CreateMiddleMatchCluster();
-        }
-        else
-        {
-            HashSet<CellView> visitedCells = new();
-
-            foreach (var cubeItemCell in cubeItemCells)
-            {
-                if (visitedCells.Contains(cubeItemCell)) continue;
-                var matchCluster = MatchFinder.FindMatchCluster(cubeItemCell);
-                if (matchCluster.Count > Config.BlastMinimumRequiredMatch) return;
-
-                foreach (var clusterCell in MatchFinder.FindMatchCluster(cubeItemCell))
-                {
-                    visitedCells.Add(clusterCell);
-                }
-            }
+            if (matchCluster.Count > Config.BlastMinimumRequiredMatch) return;
         }
 
         CreateMiddleMatchCluster();
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            TryRecoverBoard();
-        }
     }
 
     public void ConvertItem(CellView cellView, ItemTypeEnum itemType, MatchTypeEnum matchType)
@@ -223,20 +251,13 @@ public class BoardView : MonoBehaviour
 
     private void HighlightMatches()
     {
-        var cubeItemCells = GetCellViews(cellView => cellView.ItemInside != null && cellView.ItemInside.ItemType == ItemTypeEnum.CubeItem);
-
-        HashSet<CellView> visitedCells = new();
-
-        foreach (var cubeItemCell in cubeItemCells)
+        foreach (var matchCluster in _currentMatchClusters)
         {
-            if (visitedCells.Contains(cubeItemCell)) continue;
-
-            var matchCluster = MatchFinder.FindMatchCluster(cubeItemCell);
             var isPotentialSpecialMatch = matchCluster.Count >= Config.TntMinimumRequiredMatch;
 
             foreach (var matchCell in matchCluster)
             {
-                visitedCells.Add(matchCell);
+                if (matchCell.ItemInside.ItemType != ItemTypeEnum.CubeItem) break;
 
                 if (isPotentialSpecialMatch)
                 {
@@ -247,6 +268,24 @@ public class BoardView : MonoBehaviour
                     matchCell.ItemInside.Unhighight();
                 }
             }
+        }
+    }
+
+    public HashSet<CellView> GetMatchClusterFromCellView(CellView cellView)
+    {
+        foreach (var matchCluster in _currentMatchClusters)
+        {
+            if (matchCluster.Contains(cellView)) return matchCluster;
+        }
+
+        return new HashSet<CellView> { cellView };
+    }
+
+    public void OnGameEnded()
+    {
+        foreach (var cellView in GetCellViews(cellView => true))
+        {
+            PoolManager.Instance.SendToPool(cellView, RecyclableTypeEnum.Cell);
         }
     }
 }

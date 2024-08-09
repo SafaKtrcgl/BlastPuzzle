@@ -4,6 +4,7 @@ using Helpers;
 using Interfaces.Recycle;
 using System;
 using UnityEngine;
+using Utilities;
 
 namespace Gameplay.Items
 {
@@ -15,17 +16,24 @@ namespace Gameplay.Items
 
         protected BoardView _boardView;
         protected ExecutionManager _executionManager;
-        protected PoolManager _poolManager;
 
-        public string State { get; protected set; } = "0";
+        public int State { get; protected set; } = 0;
 
         public bool IsDestinedToDie { protected set; get; }
+        public bool IsFallable { protected set; get; }
 
         public Action<ItemTypeEnum> OnItemExecute;
         public ItemTypeEnum ItemType { get; protected set; }
         public MatchTypeEnum MatchType { get; protected set; }
         public GameObject RecyclableGameObject { get; set; }
+        public RecyclableTypeEnum RecyclableType { get; set; }
+
         public abstract void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType, int executionIndex);
+
+        public override string ToString()
+        {
+            return ItemDataParser.GetItemKey(ItemType, MatchType) + State;
+        }
 
         public virtual void OnNeighbourExecute(int executionId, ExecuteTypeEnum executeType)
         {
@@ -37,11 +45,10 @@ namespace Gameplay.Items
             return false;
         }
 
-        public virtual void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
+        public virtual void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
         {
             _boardView = boardView;
             _executionManager = executionManager;
-            _poolManager = poolManager;
             mainSprite.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(0);
 
             ((RectTransform)mainSprite.transform).sizeDelta /= 2f;
@@ -56,11 +63,6 @@ namespace Gameplay.Items
             PlayDestroyParticles();
             OnItemExecute?.Invoke(ItemType);
             mainSprite.enabled = false;
-        }
-
-        private void OnDisable()
-        {
-            OnItemExecute = null;
         }
 
         public virtual void Highight()
@@ -78,7 +80,7 @@ namespace Gameplay.Items
             MatchType = matchType;
         }
 
-        public virtual void SetState(string currentState)
+        public virtual void SetState(int currentState)
         {
             State = currentState;
         }
@@ -91,11 +93,12 @@ namespace Gameplay.Items
         public virtual void OnDestroyParticleEnd()
         {
             destroyParticleCallback.OnParticleStopAction -= OnDestroyParticleEnd;
-            Recycle();
+            PoolManager.Instance.SendToPool(this, RecyclableType);
         }
 
         public virtual void Recycle()
         {
+            OnItemExecute = null;
             Destroy(gameObject);
         }
 

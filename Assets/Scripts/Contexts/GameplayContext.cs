@@ -18,7 +18,6 @@ namespace Context
         [SerializeField] private FillManager fillManager;
         [SerializeField] private ExecutionManager executionManager;
         [SerializeField] private GameManager gameManager;
-        [SerializeField] private PoolManager poolManager;
 
         [SerializeField] private Image arenaBackgroundImage;
 
@@ -30,7 +29,7 @@ namespace Context
                 arenaBackgroundImage.sprite = arenaResource.ArenaBackgroundSprite;
             }
 
-            LevelDataParser levelData;
+            LevelData levelData;
 
             if (string.IsNullOrEmpty(PlayerPrefsUtility.GetOnGoingLevelData()))
             {
@@ -50,9 +49,11 @@ namespace Context
             itemFactory.OnObstacleItemCreated += gameplayTopPanel.OnObstacleCreated;
             executionManager.OnObstacleItemExecuted += gameplayTopPanel.OnObstacleExecuted;
 
+            gameManager.OnGameEnded += boardView.OnGameEnded;
+
             gameManager.Init(boardView);
             executionManager.Init(boardView, itemFactory);
-            itemFactory.Init(boardView, executionManager, poolManager);
+            itemFactory.Init(boardView, executionManager);
             inputController.Init(boardView, itemFactory, levelData.move_count);
             boardView.Init(itemFactory, executionManager, levelData.grid_width, levelData.grid_height, levelData.grid);
             fallManager.Init(boardView);

@@ -1,31 +1,42 @@
 using Enums;
 using Interfaces.Recycle;
+using Singleton;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace Gameplay.Managers
 {
-    public class PoolManager : MonoBehaviour
+    public class PoolManager : MonoSingleton<PoolManager>
     {
-        private Dictionary<ItemTypeEnum, Stack<IRecyclable>> _poolDictionary = new();
+        private Dictionary<RecyclableTypeEnum, Stack<IRecyclable>> _poolDictionary = new();
 
-        public void SendToPool(IRecyclable recyclableObject, ItemTypeEnum itemType)
+        public override void Awake()
         {
+            base.Awake();
+            DontDestroyOnLoad(this);
+        }
+
+        public void SendToPool(IRecyclable recyclableObject, RecyclableTypeEnum recyclableType)
+        {
+            recyclableObject.Recycle();
+
+            if (recyclableType == RecyclableTypeEnum.None) return;
+
             recyclableObject.RecyclableGameObject.transform.SetParent(transform);
             recyclableObject.RecyclableGameObject.SetActive(false);
 
-            if (_poolDictionary.ContainsKey(itemType))
+            if (_poolDictionary.ContainsKey(recyclableType))
             {
-                _poolDictionary[itemType].Push(recyclableObject);
+                _poolDictionary[recyclableType].Push(recyclableObject);
             }
             else
             {
-                _poolDictionary.Add(itemType, new Stack<IRecyclable>());
-                _poolDictionary[itemType].Push(recyclableObject);
+                _poolDictionary.Add(recyclableType, new Stack<IRecyclable>());
+                _poolDictionary[recyclableType].Push(recyclableObject);
             }
         }
 
-        public T GetFromPool<T>(ItemTypeEnum itemType) where T : MonoBehaviour
+        public T GetFromPool<T>(RecyclableTypeEnum itemType) where T : MonoBehaviour
         {
             if (!_poolDictionary.ContainsKey(itemType) || _poolDictionary[itemType].Count == 0) return null;
 

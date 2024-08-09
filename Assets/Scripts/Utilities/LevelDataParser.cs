@@ -6,13 +6,7 @@ namespace Utilities
     [System.Serializable]
     public class LevelDataParser
     {
-        public int level_number;
-        public int grid_width;
-        public int grid_height;
-        public int move_count;
-        public string[] grid;
-
-        public static LevelDataParser GetLevelData(int level)
+        public static LevelData GetLevelData(int level)
         {
             string levelFilePath = $"{Config.LevelDataPath}level_{level:D2}.json";
 
@@ -22,17 +16,17 @@ namespace Utilities
                 return null;
             }
 
-            return JsonUtility.FromJson<LevelDataParser>(File.ReadAllText(levelFilePath));
+            return GetLevelData(File.ReadAllText(levelFilePath));
         }
 
-        public static LevelDataParser GetLevelData(string levelData)
+        public static LevelData GetLevelData(string levelData)
         {
-            return JsonUtility.FromJson<LevelDataParser>(levelData);
+            return JsonUtility.FromJson<LevelData>(levelData);
         }
 
         public static string GetLevelJson(int width, int height, int moveCount, string[] grid)
         {
-            var levelData = new LevelDataParser();
+            var levelData = new LevelData();
             levelData.level_number = PlayerPrefsUtility.GetCurrentLevel();
             levelData.grid_width = width;
             levelData.grid_height = height;

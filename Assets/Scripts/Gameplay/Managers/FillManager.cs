@@ -1,6 +1,5 @@
 using DG.Tweening;
 using Enums;
-using Extensions;
 using Gameplay.Items;
 using System;
 using System.Collections.Generic;
@@ -52,7 +51,7 @@ namespace Gameplay.Managers
 
                         fillItems.Add(fillItem);
                     }
-                    else if (!cellView.ItemInside.ItemType.IsFallable())
+                    else if (!cellView.ItemInside.IsFallable)
                     {
                         break;
                     }

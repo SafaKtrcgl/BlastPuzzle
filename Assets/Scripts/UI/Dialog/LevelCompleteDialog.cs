@@ -1,6 +1,7 @@
 using DG.Tweening;
 using Enums;
 using Helpers;
+using System;
 using UnityEngine;
 
 namespace UI.Dialog
@@ -12,8 +13,12 @@ namespace UI.Dialog
         [SerializeField] private Transform tapToContinueTransform;
         [SerializeField] private Transform particleSystemTransform;
 
-        public void Init()
+        private Action _onBackgroundClick;
+
+        public void Init(Action OnBackgroundClick)
         {
+            _onBackgroundClick = OnBackgroundClick;
+
             levelCompletedTextTransform.localScale = Vector3.zero;
             starImageTransform.localScale = Vector3.one * 2f;
             starImageTransform.gameObject.SetActive(false);
@@ -32,6 +37,7 @@ namespace UI.Dialog
 
         public void OnBackgroundClick()
         {
+            _onBackgroundClick?.Invoke();
             HelperResources.Instance.GetHelper<ContextHelper>(HelperEnum.ContextHelper).LoadMainScene();
         }
     }

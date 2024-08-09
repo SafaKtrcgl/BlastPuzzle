@@ -1,6 +1,5 @@
 using Enums;
 using Gameplay.Managers;
-using System;
 using Utilities;
 
 namespace Gameplay.Items
@@ -9,10 +8,11 @@ namespace Gameplay.Items
     {
         private int _perimeter = 2;
 
-        public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
+        public override void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
         {
+            IsFallable = true;
             ItemType = ItemTypeEnum.TntItem;
-            base.Init(boardView, executionManager, poolManager, matchType);
+            base.Init(boardView, executionManager, matchType);
         }
 
         public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType, int executionIndex)
@@ -20,19 +20,12 @@ namespace Gameplay.Items
             if (IsDestinedToDie) return;
             IsDestinedToDie = true;
 
-            var cellsToExecute = _boardView.GetCellViews(cellView =>
-            {
-                int deltaX = Math.Abs(cellView.X - currentCellView.X);
-                int deltaY = Math.Abs(cellView.Y - currentCellView.Y);
-                return deltaX <= _perimeter && deltaY <= _perimeter && !(deltaX == 0 && deltaY == 0);
-            });
-
-            _executionManager.ExecuteCellViews(currentCellView, cellsToExecute, executeType, executionIndex + 1);
+            _executionManager.ExecuteCellViews(currentCellView, _boardView.GetCellViewsInPerimeter(currentCellView, _perimeter), executeType, executionIndex + 1);
         }
 
         public override bool TryInteract(CellView currentCellView)
         {
-            var cellsToExecute = MatchFinder.FindMatchCluster(currentCellView);
+            var cellsToExecute = _boardView.GetMatchClusterFromCellView(currentCellView);
 
             if (cellsToExecute.Count >= Config.TntTnTMinimumRequiredMatch)
             {

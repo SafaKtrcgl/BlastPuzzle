@@ -1,5 +1,4 @@
 using DG.Tweening;
-using Extensions;
 using Gameplay.Items;
 using System;
 using System.Collections.Generic;
@@ -38,7 +37,7 @@ namespace Gameplay.Managers
                     {
                         fallDistance++;
                     }
-                    else if (!cellView.ItemInside.ItemType.IsFallable())
+                    else if (!cellView.ItemInside.IsFallable)
                     {
                         fallDistance = 0;
                     }

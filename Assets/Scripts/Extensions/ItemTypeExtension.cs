@@ -19,14 +19,6 @@ namespace Extensions
                 ItemTypeEnum.TntItem;
         }
 
-        public static bool IsFallable(this ItemTypeEnum itemType)
-        {
-            return itemType is
-                ItemTypeEnum.CubeItem or
-                ItemTypeEnum.TntItem or
-                ItemTypeEnum.VaseItem;
-        }
-
         public static bool IsSpecial(this ItemTypeEnum itemType)
         {
             return itemType is
@@ -34,10 +26,15 @@ namespace Extensions
                 ItemTypeEnum.TntTntItem;
         }
 
-        public static bool IsRecyclable(this ItemTypeEnum itemType)
+        public static RecyclableTypeEnum GetRecyclableType(this ItemTypeEnum itemType)
         {
-            return itemType is
-                ItemTypeEnum.CubeItem;
+            switch (itemType)
+            {
+                case ItemTypeEnum.CubeItem:
+                    return RecyclableTypeEnum.CubeItem;
+                default:
+                    return RecyclableTypeEnum.None;
+            }
         }
     }
 }

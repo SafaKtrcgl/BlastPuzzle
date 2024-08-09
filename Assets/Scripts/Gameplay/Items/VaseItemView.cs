@@ -6,20 +6,21 @@ namespace Gameplay.Items
 {
     public class VaseItemView : ItemView
     {
-        private float _currentHp = 2;
-        int _lastAffectedExecutionId = -1;
+        private int _lastAffectedExecutionId = -1;
 
-        public override void Init(BoardView boardView, ExecutionManager executionManager, PoolManager poolManager, MatchTypeEnum matchType)
+        public override void Init(BoardView boardView, ExecutionManager executionManager, MatchTypeEnum matchType)
         {
+            State = 2;
+            IsFallable = true;
             ItemType = ItemTypeEnum.VaseItem;
-            base.Init(boardView, executionManager, poolManager, matchType);
+            base.Init(boardView, executionManager, matchType);
         }
 
         public override void Execute(int executionId, CellView currentCellView, ExecuteTypeEnum executeType, int executionIndex)
         {
             if (executeType == ExecuteTypeEnum.Special)
             {
-                TakeHit(executionId, executeType);
+                TakeHit(executeType);
             }
         }
 
@@ -30,16 +31,16 @@ namespace Gameplay.Items
                 if (_lastAffectedExecutionId == executionId) return;
                 _lastAffectedExecutionId = executionId;
 
-                TakeHit(executionId, executeType);
+                TakeHit(executeType);
             }
         }
 
-        private void TakeHit(int executionId, ExecuteTypeEnum executeType)
+        private void TakeHit(ExecuteTypeEnum executeType)
         {
-            switch (_currentHp)
+            switch (State)
             {
                 case 2:
-                    SetState("1");
+                    SetState(State - 1);
                     break;
 
                 case 1:
@@ -48,10 +49,10 @@ namespace Gameplay.Items
             }
         }
 
-        public override void SetState(string currentState)
+        public override void SetState(int state)
         {
-            State = currentState;
-            if (State == "1")
+            State = state;
+            if (State == 1)
             {
                 SetStateBroken();
             }
@@ -60,8 +61,6 @@ namespace Gameplay.Items
         private void SetStateBroken()
         {
             mainSprite.sprite = HelperResources.Instance.GetHelper<ItemResourceHelper>(HelperEnum.ItemResourceHelper).TryGetItemResource(ItemType).ItemSprite(1);
-
-            _currentHp = 1;
         }
     }
 }

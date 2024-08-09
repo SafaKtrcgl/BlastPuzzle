@@ -12,12 +12,12 @@ namespace Utilities
 
             HashSet<CellView> matchingCells = new HashSet<CellView>();
 
-            FindMatchCluster(tappedCell, tappedCell.ItemInside.MatchType, matchingCells);
+            FindMatchClusterRecursively(tappedCell, tappedCell.ItemInside.MatchType, matchingCells);
 
             return matchingCells;
         }
 
-        private static void FindMatchCluster(CellView cellView, MatchTypeEnum matchType, HashSet<CellView> matchingCells)
+        private static void FindMatchClusterRecursively(CellView cellView, MatchTypeEnum matchType, HashSet<CellView> matchingCells)
         {
             if (matchingCells.Contains(cellView))
             {
@@ -30,7 +30,7 @@ namespace Utilities
             {
                 if (neighbourCell.ItemInside != null && neighbourCell.ItemInside.MatchType == matchType)
                 {
-                    FindMatchCluster(neighbourCell, matchType, matchingCells);
+                    FindMatchClusterRecursively(neighbourCell, matchType, matchingCells);
                 }
             }
         }
