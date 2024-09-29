@@ -1,1 +1,1 @@
-Blast game developed in unity.
+Match-3 blast game developed in unity.
